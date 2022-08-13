@@ -9,7 +9,7 @@ Convert `dim`, `coords`, and `axis` to a `Dimension` object.
 
   - `dim`: An object specifying the name and potentially indices of a dimension. Can be the
     following types:
-    
+
       + `Symbol`: dimension name.
       + `Type{<:DimensionsionalData.Dimension}`: dimension type
       + `DimensionsionalData.Dimension`: dimension, potentially with indices
@@ -41,7 +41,7 @@ Generate `DimensionsionalData.Dimension` objects for each dimension of `array`.
 
   - `dims`: A collection of objects indicating dimension names. If any dimensions are not
     provided, their names are automatically generated. Acceptable types of entries are:
-    
+
       + `Symbol`: dimension name
       + `Type{<:DimensionsionalData.Dimension}`: dimension type
       + `DimensionsionalData.Dimension`: dimension, potentially with indices
@@ -56,9 +56,17 @@ Generate `DimensionsionalData.Dimension` objects for each dimension of `array`.
 """
 function generate_dims(array, name; dims=(), coords=(;), default_dims=())
     num_default_dims = length(default_dims)
-    length(dims) + num_default_dims > ndims(array) && @error "blah"
+    if length(dims) + num_default_dims > ndims(array)
+        dim_names = Dimensions.name(Dimensions.basedims((dims..., default_dims...)))
+        throw(
+            DimensionMismatch(
+                "Provided dimensions $dim_names more than dimensions of array: $(ndims(array))",
+            ),
+        )
+    end
+    dims_length = length(dims)
     dims_named = ntuple(ndims(array) - length(default_dims)) do i
-        dim = get(dims, i, nothing)
+        dim = i ≤ dims_length ? dims[i] : nothing
         dim === nothing && return Symbol("$(name)_dim_$(i)")
         return dim
     end
