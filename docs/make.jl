@@ -1,7 +1,9 @@
 using InferenceObjects
 using Documenter
 
-DocMeta.setdocmeta!(InferenceObjects, :DocTestSetup, :(using InferenceObjects); recursive=true)
+DocMeta.setdocmeta!(
+    InferenceObjects, :DocTestSetup, :(using InferenceObjects); recursive=true
+)
 
 makedocs(;
     modules=[InferenceObjects],
@@ -14,12 +16,7 @@ makedocs(;
         edit_link="main",
         assets=String[],
     ),
-    pages=[
-        "Home" => "index.md",
-    ],
+    pages=["Home" => "index.md"],
 )
 
-deploydocs(;
-    repo="github.com/arviz-devs/InferenceObjects.jl",
-    devbranch="main",
-)
+deploydocs(; repo="github.com/arviz-devs/InferenceObjects.jl", devbranch="main")
