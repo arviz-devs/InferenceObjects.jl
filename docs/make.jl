@@ -16,7 +16,11 @@ makedocs(;
         edit_link="main",
         assets=String[],
     ),
-    pages=["Home" => "index.md"],
+    pages=[
+        "Home" => "index.md",
+        "Dataset" => "dataset.md",
+        "InferenceData" => "inference_data.md",
+    ],
 )
 
 deploydocs(; repo="github.com/arviz-devs/InferenceObjects.jl", devbranch="main")
