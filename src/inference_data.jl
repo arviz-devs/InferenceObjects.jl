@@ -71,7 +71,7 @@ exception will be raised.
 Select data from all groups for just the specified id values.
 
 ```@repl getindex
-julia> using ArviZ, DimensionalData
+julia> using InferenceObjects, DimensionalData
 
 julia> idata = from_namedtuple(
            (θ=randn(4, 100, 4), τ=randn(4, 100));

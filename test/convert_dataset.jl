@@ -1,4 +1,4 @@
-using ArviZ.InferenceObjects, DimensionalData, Test
+using InferenceObjects, DimensionalData, Test
 
 @testset "conversion to Dataset" begin
     @testset "conversion" begin

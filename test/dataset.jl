@@ -1,4 +1,4 @@
-using ArviZ.InferenceObjects, DimensionalData, OrderedCollections, Test
+using InferenceObjects, DimensionalData, OrderedCollections, Test
 
 @testset "dataset" begin
     @testset "Dataset" begin

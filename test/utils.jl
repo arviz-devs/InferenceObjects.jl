@@ -1,5 +1,4 @@
-using ArviZ, Test
-using ArviZ.InferenceObjects
+using InferenceObjects, Test
 
 module TestSubModule end
 
@@ -22,7 +21,7 @@ module TestSubModule end
     end
 
     @testset "package_version" begin
-        @test InferenceObjects.package_version(ArviZ) isa VersionNumber
+        @test InferenceObjects.package_version(InferenceObjects) isa VersionNumber
         @test InferenceObjects.package_version(TestSubModule) === nothing
     end
 

@@ -20,7 +20,7 @@ whose first dimensions correspond to the dimensions of the containers.
 # Arguments
 
   - `posterior`: The data to be converted. It may be of the following types:
-    
+
       + `::NamedTuple`: The keys are the variable names and the values are arrays with
         dimensions `(nchains, ndraws, sizes...)`.
       + `::Matrix{<:NamedTuple}`: Each element is a single draw from a single chain, with
@@ -57,7 +57,7 @@ whose first dimensions correspond to the dimensions of the containers.
 # Examples
 
 ```@example
-using ArviZ
+using InferenceObjects
 nchains, ndraws = 2, 10
 
 data1 = (

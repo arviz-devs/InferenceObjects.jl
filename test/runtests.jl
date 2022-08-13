@@ -1,4 +1,4 @@
-using ArviZ.InferenceObjects, Test
+using InferenceObjects, Test
 
 @testset "InferenceObjects" begin
     include("test_helpers.jl")

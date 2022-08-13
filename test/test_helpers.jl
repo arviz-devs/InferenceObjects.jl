@@ -1,4 +1,4 @@
-using ArviZ.InferenceObjects, DimensionalData
+using InferenceObjects, DimensionalData
 
 function random_dim_array(var_name, dims, coords, default_dims=())
     _dims = (default_dims..., dims...)

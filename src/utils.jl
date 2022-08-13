@@ -25,10 +25,10 @@ dimensions of the resulting arrays.
 # Examples
 
 ```@example
-using ArviZ
+using InferenceObjects
 nchains, ndraws = 4, 100
 data = [(x=rand(), y=randn(2), z=randn(2, 3)) for _ in 1:nchains, _ in 1:ndraws];
-ntarray = ArviZ.namedtuple_of_arrays(data);
+ntarray = InferenceObjects.namedtuple_of_arrays(data);
 ```
 """
 function namedtuple_of_arrays end
