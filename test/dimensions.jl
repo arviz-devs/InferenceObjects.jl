@@ -1,4 +1,4 @@
-using ArviZ.InferenceObjects, DimensionalData, OffsetArrays, Test
+using InferenceObjects, DimensionalData, OffsetArrays, Test
 
 @testset "dimension-related functions" begin
     @testset "has_all_sample_dims" begin

@@ -1,3 +1,5 @@
+using InferenceObjects, Test
+
 @testset "from_namedtuple" begin
     nchains, ndraws = 4, 10
     sizes = (x=(), y=(2,), z=(3, 5))

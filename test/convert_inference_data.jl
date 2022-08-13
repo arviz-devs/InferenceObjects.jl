@@ -1,4 +1,4 @@
-using ArviZ.InferenceObjects, DimensionalData, Test
+using InferenceObjects, DimensionalData, Test
 
 @testset "conversion to InferenceData" begin
     @testset "default_var_name" begin

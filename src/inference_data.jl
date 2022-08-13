@@ -71,7 +71,7 @@ exception will be raised.
 Select data from all groups for just the specified id values.
 
 ```@repl getindex
-julia> using ArviZ, DimensionalData
+julia> using InferenceObjects, DimensionalData
 
 julia> idata = from_namedtuple(
            (θ=randn(4, 100, 4), τ=randn(4, 100));
@@ -237,8 +237,6 @@ Merge [`InferenceData`](@ref) objects.
 
 The result contains all groups in `data` and `others`.
 If a group appears more than once, the one that occurs first is kept.
-
-See [`concat`](@ref)
 """
 function Base.merge(data::InferenceData, others::InferenceData...)
     return InferenceData(Base.merge(groups(data), map(groups, others)...))
