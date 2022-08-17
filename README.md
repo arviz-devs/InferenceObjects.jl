@@ -1,7 +1,7 @@
 # InferenceObjects
 
-[![Stable](https://img.shields.io/badge/docs-stable-blue.svg)](https://arviz-devs.github.io/InferenceObjects.jl/stable/)
-[![Dev](https://img.shields.io/badge/docs-dev-blue.svg)](https://arviz-devs.github.io/InferenceObjects.jl/dev/)
+[![Stable](https://img.shields.io/badge/docs-stable-blue.svg)](https://inferenceobjects.julia.arviz.org/stable/)
+[![Dev](https://img.shields.io/badge/docs-dev-blue.svg)](https://inferenceobjects.julia.arviz.org/dev/)
 [![Build Status](https://github.com/arviz-devs/InferenceObjects.jl/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/arviz-devs/InferenceObjects.jl/actions/workflows/CI.yml?query=branch%3Amain)
 [![Coverage](https://codecov.io/gh/arviz-devs/InferenceObjects.jl/branch/main/graph/badge.svg)](https://codecov.io/gh/arviz-devs/InferenceObjects.jl)
 [![Code Style: Blue](https://img.shields.io/badge/code%20style-blue-4495d1.svg)](https://github.com/invenia/BlueStyle)
