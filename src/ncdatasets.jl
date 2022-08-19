@@ -25,12 +25,18 @@ function _from_netcdf(ds, load_mode, nomissing)
                 vals = _var_to_array(var, load_mode, nomissing)
                 dims = Tuple(NamedTuple{map(Symbol, NCDatasets.dimnames(var))}(layerdims))
                 name = Symbol(var_name)
-                da = DimensionalData.DimArray(vals, dims; name)
+                attrib = OrderedDict{Symbol,Any}(
+                    Symbol(key) => val for (key, val) in var.attrib if key != "_FillValue"
+                )
+                metadata = isempty(attrib) ? LookupArrays.NoMetadata() : attrib
+                da = DimensionalData.DimArray(vals, dims; name, metadata)
                 return name => da
             end...
         )
-        metadata = Dict{Symbol,Any}(Symbol(key) => val for (key, val) in group.attrib)
-        return Symbol(group_name) => Dataset(data; metadata)
+        group_metadata = OrderedDict{Symbol,Any}(
+            Symbol(key) => val for (key, val) in group.attrib
+        )
+        return Symbol(group_name) => Dataset(data; metadata=group_metadata)
     end
     return InferenceData(; groups...)
 end
