@@ -49,7 +49,8 @@ function __init__()
         "integration/ncdatasets.jl"
     )
     Base.Experimental.register_error_hint(MethodError) do io, exc, argtypes, kwargs
-        if exc.f === from_netcdf && exc.args isa Tuple{AbstractString}
+        if (exc.f === from_netcdf && exc.args isa Tuple{AbstractString}) ||
+            (exc.f === to_netcdf && exc.args isa Tuple{Any,AbstractString})
             printstyled(io, "\nNCDatasets is required to use this method."; bold=true)
         end
     end
