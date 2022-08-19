@@ -3,6 +3,7 @@ module InferenceObjects
 using Dates: Dates
 using DimensionalData: DimensionalData, Dimensions, LookupArrays
 using OrderedCollections: OrderedDict
+using Requires: @require
 
 # groups that are officially listed in the schema
 const SCHEMA_GROUPS = (
