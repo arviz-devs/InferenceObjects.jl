@@ -45,7 +45,9 @@ include("from_namedtuple.jl")
 include("io_netcdf.jl")
 
 function __init__()
-    @require NCDatasets = "85f8d34a-cbdd-5861-8df4-14fed0d494ab" include("ncdatasets.jl")
+    @require NCDatasets = "85f8d34a-cbdd-5861-8df4-14fed0d494ab" include(
+        "integration/ncdatasets.jl"
+    )
     Base.Experimental.register_error_hint(MethodError) do io, exc, argtypes, kwargs
         if exc.f === from_netcdf && exc.args isa Tuple{AbstractString}
             printstyled(io, "\nNCDatasets is required to use this method."; bold=true)
