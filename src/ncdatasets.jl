@@ -19,20 +19,18 @@ function _from_netcdf(ds, load_mode, nomissing)
                     Dimensions.Dim{Symbol(dim_name)}(collect(group[dim_name]))
             end...
         )
-        data = Pair{Symbol,<:DimensionalData.DimArray}[]
-        for (var_name, var) in group
-            k = Symbol(var_name)
-            k ∈ keys(layerdims) && continue
-            var = group[var_name]
-            name = Symbol(NCDatasets.name(var))
-            dims = Tuple(NamedTuple{map(Symbol, NCDatasets.dimnames(var))}(layerdims))
-            da = DimensionalData.DimArray(
-                _var_to_array(var, load_mode, nomissing), dims; name
-            )
-            push!(data, Symbol(String(var_name)) => da)
-        end
+        var_iter = Iterators.filter(∉(keys(layerdims)) ∘ Symbol ∘ first, group)
+        data = (;
+            map(var_iter) do (var_name, var)
+                vals = _var_to_array(var, load_mode, nomissing)
+                dims = Tuple(NamedTuple{map(Symbol, NCDatasets.dimnames(var))}(layerdims))
+                name = Symbol(var_name)
+                da = DimensionalData.DimArray(vals, dims; name)
+                return name => da
+            end...
+        )
         metadata = Dict{Symbol,Any}(Symbol(key) => val for (key, val) in group.attrib)
-        return Symbol(group_name) => Dataset((; data...); metadata)
+        return Symbol(group_name) => Dataset(data; metadata)
     end
     return InferenceData(; groups...)
 end
