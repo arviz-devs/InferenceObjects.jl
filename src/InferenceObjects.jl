@@ -48,10 +48,12 @@ function __init__()
     @require NCDatasets = "85f8d34a-cbdd-5861-8df4-14fed0d494ab" include(
         "integration/ncdatasets.jl"
     )
-    Base.Experimental.register_error_hint(MethodError) do io, exc, argtypes, kwargs
-        if (exc.f === from_netcdf && exc.args isa Tuple{AbstractString}) ||
-            (exc.f === to_netcdf && exc.args isa Tuple{Any,AbstractString})
-            printstyled(io, "\nNCDatasets is required to use this method."; bold=true)
+    if isdefined(Base.Experimental, :register_error_hint)
+        Base.Experimental.register_error_hint(MethodError) do io, exc, argtypes, kwargs
+            if (exc.f === from_netcdf && exc.args isa Tuple{AbstractString}) ||
+                (exc.f === to_netcdf && exc.args isa Tuple{Any,AbstractString})
+                printstyled(io, "\nNCDatasets is required to use this method."; bold=true)
+            end
         end
     end
 end
