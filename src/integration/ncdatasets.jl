@@ -58,7 +58,7 @@ end
 function to_netcdf(data, ds::NCDatasets.NCDataset; group::Symbol=:posterior)
     idata = convert_to_inference_data(data; group)
     for (group_name, group_data) in pairs(idata)
-        group_attrib = [String(k) => v for (k, v) in attributes(group_data)]
+        group_attrib = [String(k) => v for (k, v) in pairs(attributes(group_data))]
         group_ds = NCDatasets.defGroup(ds, String(group_name); attrib=group_attrib)
         for dim in Dimensions.dims(group_data)
             dim_name = String(Dimensions.name(dim))
@@ -69,7 +69,7 @@ function to_netcdf(data, ds::NCDatasets.NCDataset; group::Symbol=:posterior)
         end
         for (var_name, da) in pairs(group_data)
             dimnames = map(String, Dimensions.name(Dimensions.dims(da)))
-            attrib = [String(k) => v for (k, v) in DimensionalData.metadata(da)]
+            attrib = [String(k) => v for (k, v) in pairs(DimensionalData.metadata(da))]
             NCDatasets.defVar(group_ds, String(var_name), parent(da), dimnames; attrib)
         end
     end
