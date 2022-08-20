@@ -2,16 +2,14 @@ using .NCDatasets: NCDatasets
 
 function from_netcdf(path::AbstractString; kwargs...)
     return NCDatasets.NCDataset(path, "r"; kwargs...) do ds
-        return from_netcdf(ds; load_mode=:eager, kwargs...)
+        return from_netcdf(ds; load_mode=:eager)
     end
 end
-function from_netcdf(
-    ds::NCDatasets.NCDataset; load_mode::Symbol=:lazy, nomissing::Bool=load_mode === :eager
-)
-    return _from_netcdf(ds, Val(load_mode), Val(nomissing))
+function from_netcdf(ds::NCDatasets.NCDataset; load_mode::Symbol=:lazy)
+    return _from_netcdf(ds, Val(load_mode))
 end
 
-function _from_netcdf(ds, load_mode, nomissing)
+function _from_netcdf(ds, load_mode)
     groups = map(ds.group) do (group_name, group)
         layerdims = (;
             map(NCDatasets.dimnames(group)) do dim_name
@@ -22,7 +20,7 @@ function _from_netcdf(ds, load_mode, nomissing)
         var_iter = Iterators.filter(∉(keys(layerdims)) ∘ Symbol ∘ first, group)
         data = (;
             map(var_iter) do (var_name, var)
-                vals = _var_to_array(var, load_mode, nomissing)
+                vals = _var_to_array(var, load_mode)
                 dims = Tuple(NamedTuple{map(Symbol, NCDatasets.dimnames(var))}(layerdims))
                 name = Symbol(var_name)
                 attrib = OrderedDict{Symbol,Any}(
@@ -41,11 +39,15 @@ function _from_netcdf(ds, load_mode, nomissing)
     return InferenceData(; groups...)
 end
 
-_var_to_array(var, load_mode, nomissing) = var
-function _var_to_array(var, load_mode::Val{:eager}, nomissing::Val{true})
-    return NCDatasets.nomissing(Array(var))
+_var_to_array(var, load_mode) = var
+function _var_to_array(var, load_mode::Val{:eager})
+    arr = Array(var)
+    try
+        return NCDatasets.nomissing(arr)
+    catch e
+        return arr
+    end
 end
-_var_to_array(var, load_mode::Val{:eager}, nomissing::Val{false}) = Array(var)
 
 convert_to_inference_data(ds::NCDatasets.NCDataset) = from_netcdf(ds)
 

@@ -1,10 +1,7 @@
 """
-    from_netcdf(path::AbstractString; nomissing=true, kwargs...) -> InferenceData
+    from_netcdf(path::AbstractString; kwargs...) -> InferenceData
 
 Load an [`InferenceData`](@ref) from an unopened NetCDF file.
-
-Setting `nomissing=true` indicates that there are no missing values in the NetCDF file, so
-eltypes of variables will not be a type union with `Missing`.
 
 Remaining `kwargs` are passed to [`NCDatasets.NCDataset`](https://alexander-barth.github.io/NCDatasets.jl/stable/dataset/#NCDatasets.NCDataset).
 This method loads data eagerly. To instead load data lazily, pass an opened `NCDataset` to
@@ -22,7 +19,7 @@ InferenceData with groups:
   > observed_data
 ```
 
-    from_netcdf(ds::NCDatasets.NCDataset; load_mode, nomissing) -> InferenceData
+    from_netcdf(ds::NCDatasets.NCDataset; load_mode) -> InferenceData
 
 Load an [`InferenceData`](@ref) from an opened NetCDF file.
 
@@ -30,8 +27,6 @@ Load an [`InferenceData`](@ref) from an opened NetCDF file.
 these arrays will be slow. `load_mode` can also be `:eager`, which copies all variables into
 memory. It is then safe to close `ds`. If `load_mode` is `:lazy` and `ds` is closed after
 constructing `InferenceData`, using the variable arrays will have undefined behavior.
-
-`nomissing` defaults to `true` if `load_mode` is `:eager`, and is otherwise ignored.
 
 # Examples
 
