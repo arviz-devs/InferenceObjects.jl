@@ -113,7 +113,9 @@ function _var_to_array(var, load_mode::Val{:eager})
     end
 end
 
-InferenceObjects.convert_to_inference_data(ds::NCDatasets.NCDataset) = from_netcdf(ds)
+function InferenceObjects.convert_to_inference_data(ds::NCDatasets.NCDataset; kwargs...)
+    return from_netcdf(ds)
+end
 
 """
     to_netcdf(data, dest::AbstractString; group::Symbol=:posterior, kwargs...)
