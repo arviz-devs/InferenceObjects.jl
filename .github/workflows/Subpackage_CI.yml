@@ -1,4 +1,4 @@
-name: CI
+name: Subpackage CI
 on:
   push:
     branches:
@@ -20,6 +20,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+        subpackage:
+          - InferenceObjectsNetCDF
         version:
           - '1.6'
           - '1'
@@ -32,9 +34,11 @@ jobs:
           - version: '1'
             os: windows-latest
             arch: x64
+            subpackage: InferenceObjectsNetCDF
           - version: '1'
             os: macOS-latest
             arch: x64
+            subpackage: InferenceObjectsNetCDF
     steps:
       - uses: actions/checkout@v2
       - uses: julia-actions/setup-julia@v1
@@ -42,29 +46,18 @@ jobs:
           version: ${{ matrix.version }}
           arch: ${{ matrix.arch }}
       - uses: julia-actions/cache@v1
-      - uses: julia-actions/julia-buildpkg@v1
-      - uses: julia-actions/julia-runtest@v1
+      - name: Set up environment
+        shell: julia --project=monorepo {0}
+        run: |
+          using Pkg;
+          pkg"dev . ./lib/${{ matrix.subpackage }}"
+      - name: Run the tests
+        continue-on-error: true
+        run: >
+          julia --color=yes --project=monorepo -e 'using Pkg; Pkg.test("${{ matrix.subpackage }}", coverage=true)'
       - uses: julia-actions/julia-processcoverage@v1
+        with:
+          directories: lib/${{ matrix.subpackage }}/src
       - uses: codecov/codecov-action@v2
         with:
           files: lcov.info
-  docs:
-    name: Documentation
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-    steps:
-      - uses: actions/checkout@v2
-      - uses: julia-actions/setup-julia@v1
-        with:
-          version: '1'
-      - uses: julia-actions/julia-buildpkg@v1
-      - uses: julia-actions/julia-docdeploy@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - run: |
-          julia --project=docs -e '
-            using Documenter: DocMeta, doctest
-            using InferenceObjects
-            DocMeta.setdocmeta!(InferenceObjects, :DocTestSetup, :(using InferenceObjects); recursive=true)
-            doctest(InferenceObjects)'
