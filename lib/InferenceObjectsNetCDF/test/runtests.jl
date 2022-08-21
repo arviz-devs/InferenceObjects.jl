@@ -1,7 +1,10 @@
-using InferenceObjects, Test
+using InferenceObjectsNetCDF
 using NCDatasets: NCDatasets
+using Test
 
-@testset "NCDatasets integration" begin
+include("../../../test/test_helpers.jl")
+
+@testset "InferenceObjectsNetCDF" begin
     idata = random_data()
     @testset "to_netcdf/from_netcdf roundtrip" begin
         mktempdir() do dir
