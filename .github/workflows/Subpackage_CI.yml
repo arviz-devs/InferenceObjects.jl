@@ -50,12 +50,14 @@ jobs:
         shell: julia --project=monorepo {0}
         run: |
           using Pkg;
-          pkg"dev . ./lib/${{ matrix.subpackage}}"
+          pkg"dev . ./lib/${{ matrix.subpackage }}"
       - name: Run the tests
         continue-on-error: true
         run: >
-          julia --color=yes --project=monorepo -e 'using Pkg; Pkg.test("${{ matrix.subpackage}}", coverage=true)'
+          julia --color=yes --project=monorepo -e 'using Pkg; Pkg.test("${{ matrix.subpackage }}", coverage=true)'
       - uses: julia-actions/julia-processcoverage@v1
+        with:
+          directories: lib/${{ matrix.subpackage }}/src
       - uses: codecov/codecov-action@v2
         with:
           files: lcov.info
