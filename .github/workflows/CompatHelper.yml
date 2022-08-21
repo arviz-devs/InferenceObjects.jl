@@ -12,7 +12,7 @@ jobs:
       - name: CompatHelper.main()
         run: |
           using CompatHelper
-          subdirs = [""; "docs"; readdir("lib/"; join=true)]
+          subdirs = [""; readdir("lib/"; join=true)]
           CompatHelper.main(; subdirs)
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
