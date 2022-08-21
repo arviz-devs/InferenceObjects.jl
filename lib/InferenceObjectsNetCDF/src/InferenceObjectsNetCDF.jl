@@ -2,6 +2,7 @@ module InferenceObjectsNetCDF
 
 using DimensionalData: DimensionalData, Dimensions, LookupArrays
 using NCDatasets: NCDatasets
+using OrderedCollections: OrderedDict
 using Reexport: @reexport
 @reexport using InferenceObjects
 
@@ -112,7 +113,7 @@ function _var_to_array(var, load_mode::Val{:eager})
     end
 end
 
-convert_to_inference_data(ds::NCDatasets.NCDataset) = from_netcdf(ds)
+InferenceObjects.convert_to_inference_data(ds::NCDatasets.NCDataset) = from_netcdf(ds)
 
 """
     to_netcdf(data, dest::AbstractString; group::Symbol=:posterior, kwargs...)
@@ -149,7 +150,9 @@ end
 function to_netcdf(data, ds::NCDatasets.NCDataset; group::Symbol=:posterior)
     idata = convert_to_inference_data(data; group)
     for (group_name, group_data) in pairs(idata)
-        group_attrib = [String(k) => v for (k, v) in pairs(attributes(group_data))]
+        group_attrib = [
+            String(k) => v for (k, v) in pairs(InferenceObjects.attributes(group_data))
+        ]
         group_ds = NCDatasets.defGroup(ds, String(group_name); attrib=group_attrib)
         for dim in Dimensions.dims(group_data)
             dim_name = String(Dimensions.name(dim))
