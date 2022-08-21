@@ -1,0 +1,61 @@
+name: Subpackage CI
+on:
+  push:
+    branches:
+      - main
+    tags: ['*']
+  pull_request:
+  schedule:
+    - cron: "0 0 * * *"
+
+concurrency:
+  # Skip intermediate builds: always.
+  # Cancel intermediate builds: only if it is a pull request build.
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ startsWith(github.ref, 'refs/pull/') }}
+
+jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        subpackage:
+          - InferenceObjectsNetCDF
+        version:
+          - '1.6'
+          - '1'
+          - 'nightly'
+        os:
+          - ubuntu-latest
+        arch:
+          - x64
+        include:
+          - version: '1'
+            os: windows-latest
+            arch: x64
+            subpackage: InferenceObjectsNetCDF
+          - version: '1'
+            os: macOS-latest
+            arch: x64
+            subpackage: InferenceObjectsNetCDF
+    steps:
+      - uses: actions/checkout@v2
+      - uses: julia-actions/setup-julia@v1
+        with:
+          version: ${{ matrix.version }}
+          arch: ${{ matrix.arch }}
+      - uses: julia-actions/cache@v1
+      - name: Set up environment
+        shell: julia --project=monorepo {0}
+        run: |
+          using Pkg;
+          pkg"dev . ./InferenceObjects ./lib/${{ matrix.subpackage}}"
+      - name: Run the tests
+        continue-on-error: true
+        run: >
+          julia --color=yes --project=monorepo -e 'using Pkg; Pkg.test("${{ matrix.subpackage}}", coverage=true)'
+      - uses: julia-actions/julia-processcoverage@v1
+      - uses: codecov/codecov-action@v2
+        with:
+          files: lcov.info
