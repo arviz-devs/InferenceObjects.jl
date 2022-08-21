@@ -15,10 +15,13 @@ include("../../../test/test_helpers.jl")
             idata2 = from_netcdf(path)
             test_idata_approx_equal(idata, idata2)
 
-            ds = NCDatasets.NCDataset(path, "r")
-            idata3 = from_netcdf(ds; load_mode=:lazy)
-            test_idata_approx_equal(idata, idata3)
-            close(ds)
+            NCDatasets.NCDataset(path, "r") do ds
+                idata3 = from_netcdf(ds; load_mode=:lazy)
+                test_idata_approx_equal(idata, idata3)
+
+                idata4 = convert_to_inference_data(ds; group=:posterior)
+                test_idata_approx_equal(idata, idata4)
+            end
         end
     end
 end
