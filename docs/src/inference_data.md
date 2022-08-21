@@ -36,13 +36,6 @@ convert_to_inference_data
 from_namedtuple
 ```
 
-## I/O
-
-```@docs
-from_netcdf
-to_netcdf
-```
-
 ## General functions
 
 ```@docs
