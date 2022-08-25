@@ -1,5 +1,6 @@
 module InferenceObjects
 
+using Compat: stack
 using Dates: Dates
 using DimensionalData: DimensionalData, Dimensions, LookupArrays
 using OrderedCollections: OrderedDict
@@ -24,7 +25,7 @@ const SCHEMA_GROUPS = (
     :warmup_log_likelihood,
 )
 const SCHEMA_GROUPS_DICT = Dict(n => i for (i, n) in enumerate(SCHEMA_GROUPS))
-const DEFAULT_SAMPLE_DIMS = Dimensions.key2dim((:chain, :draw))
+const DEFAULT_SAMPLE_DIMS = Dimensions.key2dim((:draw, :chain))
 
 export Dataset, InferenceData
 export convert_to_dataset, convert_to_inference_data, from_namedtuple, namedtuple_to_dataset

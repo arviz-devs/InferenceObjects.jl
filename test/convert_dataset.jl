@@ -7,7 +7,7 @@ using InferenceObjects, DimensionalData, Test
         L = 3
         nchains = 4
         ndraws = 500
-        vars = (a=randn(nchains, ndraws, J), b=randn(nchains, ndraws, K, L))
+        vars = (a=randn(J, ndraws, nchains), b=randn(K, L, ndraws, nchains))
         coords = (bi=2:(K + 1), draw=1:2:1_000)
         dims = (b=[:bi, nothing],)
         attrs = Dict(:mykey => 5)
@@ -23,10 +23,10 @@ using InferenceObjects, DimensionalData, Test
         nchains = 4
         ndraws = 100
         nshared = 3
-        xdims = (:chain, :draw, :shared)
-        x = DimArray(randn(nchains, ndraws, nshared), xdims)
-        ydims = (:chain, :draw, Dim{:ydim1}(Any["a", "b"]), Dim{:shared})
-        y = DimArray(randn(nchains, ndraws, 2, nshared), ydims)
+        xdims = (:shared, :draw, :chain)
+        x = DimArray(randn(nshared, ndraws, nchains), xdims)
+        ydims = (Dim{:ydim1}(Any["a", "b"]), Dim{:shared}, :draw, :chain)
+        y = DimArray(randn(2, nshared, ndraws, nchains), ydims)
         metadata = Dict(:prop1 => "val1", :prop2 => "val2")
         ds = Dataset((; x, y); metadata)
 
@@ -36,17 +36,17 @@ using InferenceObjects, DimensionalData, Test
         end
 
         @testset "convert_to_dataset(::$T; kwargs...)" for T in (Dict, NamedTuple)
-            data = (x=randn(4, 100), y=randn(4, 100, 2))
+            data = (x=randn(100, 4), y=randn(2, 100, 4))
             if T <: Dict
                 data = T(pairs(data))
             end
             ds2 = convert_to_dataset(data)
             @test ds2 isa Dataset
             @test ds2.x == data[:x]
-            @test DimensionalData.name(DimensionalData.dims(ds2.x)) == (:chain, :draw)
+            @test DimensionalData.name(DimensionalData.dims(ds2.x)) == (:draw, :chain)
             @test ds2.y == data[:y]
             @test DimensionalData.name(DimensionalData.dims(ds2.y)) ==
-                (:chain, :draw, :y_dim_1)
+                (:y_dim_1, :draw, :chain)
         end
 
         @testset "convert_to_dataset(::InferenceData; kwargs...)" begin

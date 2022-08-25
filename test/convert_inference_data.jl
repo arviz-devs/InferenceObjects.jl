@@ -34,7 +34,7 @@ using InferenceObjects, DimensionalData, Test
 
     @testset "convert_to_inference_data" begin
         @testset "convert_to_inference_data(::AbstractDimStack)" begin
-            ds = namedtuple_to_dataset((x=randn(4, 10), y=randn(4, 10, 5)))
+            ds = namedtuple_to_dataset((x=randn(10, 4), y=randn(5, 10, 4)))
             idata1 = convert_to_inference_data(ds; group=:prior)
             @test InferenceObjects.groupnames(idata1) == (:prior,)
             idata2 = InferenceData(; prior=ds)
@@ -44,7 +44,7 @@ using InferenceObjects, DimensionalData, Test
         end
 
         @testset "convert_to_inference_data(::$T)" for T in (NamedTuple, Dict)
-            data = (A=randn(2, 10, 2), B=randn(2, 10, 5, 2))
+            data = (A=randn(2, 10, 2), B=randn(5, 2, 10, 2))
             if T <: Dict
                 data = Dict(pairs(data))
             end

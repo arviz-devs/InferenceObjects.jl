@@ -1,18 +1,11 @@
 """
-    flatten(x)
+    recursive_stack(x)
 
-If `x` is an array of arrays, flatten into a single array whose dimensions are ordered with
-dimensions of the outermost container first and innermost container last.
+If `x` is an array of arrays, recursively stack into a single array whose dimensions are
+ordered with dimensions of the innermost container first and outermost last.
 """
-flatten(x) = x
-flatten(x::AbstractArray{<:Number}) = convert(Array, x)
-function flatten(x::AbstractArray{S}) where {T<:Number,N,S<:AbstractArray{T,N}}
-    ret = Array{T}(undef, (size(x)..., size(x[1])...))
-    for k in keys(x)
-        setindex!(ret, x[k], k, (Colon() for _ in 1:N)...)
-    end
-    return ret
-end
+recursive_stack(x) = x
+recursive_stack(x::AbstractArray{<:AbstractArray}) = recursive_stack(stack(x))
 
 """
     namedtuple_of_arrays(x::NamedTuple) -> NamedTuple
@@ -27,18 +20,15 @@ dimensions of the resulting arrays.
 ```@example
 using InferenceObjects
 nchains, ndraws = 4, 100
-data = [(x=rand(), y=randn(2), z=randn(2, 3)) for _ in 1:nchains, _ in 1:ndraws];
+data = [(x=rand(), y=randn(2), z=randn(2, 3)) for _ in 1:ndraws, _ in 1:nchains];
 ntarray = InferenceObjects.namedtuple_of_arrays(data);
 ```
 """
 function namedtuple_of_arrays end
-namedtuple_of_arrays(x::NamedTuple) = map(flatten, x)
+namedtuple_of_arrays(x::NamedTuple) = map(recursive_stack, x)
 namedtuple_of_arrays(x::AbstractArray) = namedtuple_of_arrays(namedtuple_of_arrays.(x))
 function namedtuple_of_arrays(x::AbstractArray{<:NamedTuple{K}}) where {K}
-    return mapreduce(merge, K) do k
-        v = flatten.(getproperty.(x, k))
-        return (; k => flatten(v))
-    end
+    return NamedTuple{K}(recursive_stack(getproperty.(x, k)) for k in K)
 end
 
 """
