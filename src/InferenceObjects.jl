@@ -1,5 +1,6 @@
 module InferenceObjects
 
+using Compat: stack
 using Dates: Dates
 using DimensionalData: DimensionalData, Dimensions, LookupArrays
 using OrderedCollections: OrderedDict
