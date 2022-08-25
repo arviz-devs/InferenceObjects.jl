@@ -58,17 +58,18 @@ whose first dimensions correspond to the dimensions of the containers.
 
 ```@example
 using InferenceObjects
-nchains, ndraws = 2, 10
+nchains = 2
+ndraws = 100
 
 data1 = (
-    x=rand(nchains, ndraws), y=randn(nchains, ndraws, 2), z=randn(nchains, ndraws, 3, 2)
+    x=rand(ndraws, nchains), y=randn(2, ndraws, nchains), z=randn(3, 2, ndraws, nchains)
 )
 idata1 = from_namedtuple(data1)
 
-data2 = [(x=rand(ndraws), y=randn(ndraws, 2), z=randn(ndraws, 3, 2)) for _ in 1:nchains];
+data2 = [(x=rand(ndraws), y=randn(2, ndraws), z=randn(3, 2, ndraws)) for _ in 1:nchains];
 idata2 = from_namedtuple(data2)
 
-data3 = [(x=rand(), y=randn(2), z=randn(3, 2)) for _ in 1:nchains, _ in 1:ndraws];
+data3 = [(x=rand(), y=randn(2), z=randn(3, 2)) for _ in 1:ndraws, _ in 1:nchains];
 idata3 = from_namedtuple(data3)
 
 data4 = [[(x=rand(), y=randn(2), z=randn(3, 2)) for _ in 1:ndraws] for _ in 1:nchains];

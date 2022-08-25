@@ -51,7 +51,7 @@ Generate `DimensionsionalData.Dimension` objects for each dimension of `array`.
     dimension. If indices for a dimension in `dims` are provided, they are used even if
     the dimension contains its own indices. If a dimension is missing, its indices are
     automatically generated.
-  - `default_dims`: A collection of dims to be prepended to `dims` whose elements have the
+  - `default_dims`: A collection of dims to be appended to `dims` whose elements have the
     same constraints.
 """
 function generate_dims(array, name; dims=(), coords=(;), default_dims=())
@@ -70,7 +70,7 @@ function generate_dims(array, name; dims=(), coords=(;), default_dims=())
         dim === nothing && return Symbol("$(name)_dim_$(i)")
         return dim
     end
-    dims_all = (default_dims..., dims_named...)
+    dims_all = (dims_named..., default_dims...)
     axes_all = axes(array)
     T = NTuple{ndims(array),Dimensions.Dimension}
     dims_with_coords = as_dimension.(dims_all, Ref(coords), axes_all)::T
