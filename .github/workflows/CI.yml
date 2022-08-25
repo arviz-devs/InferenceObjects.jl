@@ -68,7 +68,7 @@ jobs:
           end
           Pkg.develop(pkg_specs)
           Pkg.instantiate()
-        shell: julia --project=docs {}
+        shell: julia --project=docs {0}
       - uses: julia-actions/julia-docdeploy@v1
         with:
           install-package: false
