@@ -94,8 +94,8 @@ and 2 layers:
   :θ Float64 dims: Dim{:chain}, Dim{:draw}, Dim{:id} (4×100×4)
   :τ Float64 dims: Dim{:chain}, Dim{:draw} (4×100)
 
-with metadata OrderedCollections.OrderedDict{Symbol, Any} with 1 entry:
-  :created_at => "2022-08-11T11:15:21.4"
+with metadata Dict{String, Any} with 1 entry:
+  "created_at" => "2022-08-11T11:15:21.4"
 
 julia> idata_sel = idata[id=At(["a", "b"])]
 InferenceData with groups:
@@ -112,8 +112,8 @@ and 2 layers:
   :θ Float64 dims: Dim{:chain}, Dim{:draw}, Dim{:id} (4×100×2)
   :τ Float64 dims: Dim{:chain}, Dim{:draw} (4×100)
 
-with metadata OrderedCollections.OrderedDict{Symbol, Any} with 1 entry:
-  :created_at => "2022-08-11T11:15:21.4"
+with metadata Dict{String, Any} with 1 entry:
+  "created_at" => "2022-08-11T11:15:21.4"
 ```
 
 Select data from just the posterior, returning a `Dataset` if the indices index more than
@@ -126,8 +126,8 @@ Dataset with dimensions:
 and 1 layer:
   :y Float64 dims: Dim{:id} (1)
 
-with metadata OrderedCollections.OrderedDict{Symbol, Any} with 1 entry:
-  :created_at => "2022-08-11T11:19:25.982"
+with metadata Dict{String, Any} with 1 entry:
+  "created_at" => "2022-08-11T11:19:25.982"
 ```
 
 Note that if a single index is provided, the behavior is still to slice so that the
