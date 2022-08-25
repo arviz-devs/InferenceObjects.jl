@@ -12,7 +12,7 @@ Reexport = "189a3867-3050-52da-a836-e630ba90ab69"
 
 [compat]
 DimensionalData = "0.20, 0.21"
-InferenceObjects = "0.1, 0.2"
+InferenceObjects = "0.1, 0.2.0-DEV"
 NCDatasets = "0.12"
 OrderedCollections = "1"
 Reexport = "1"
