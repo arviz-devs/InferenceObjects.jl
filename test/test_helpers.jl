@@ -24,7 +24,7 @@ function random_data()
         chain=1:4, draw=1:100, shared=["s1", "s2", "s3"], dima=1:4, dimb=2:6, dimy=1:5
     )
     dims = (a=(:shared, :dima), b=(:shared, :dimb), y=(:shared, :dimy))
-    metadata = (inference_library="PPL",)
+    metadata = Dict{String,Any}("inference_library" => "PPL")
     posterior = random_dataset(var_names, dims, coords, metadata)
     posterior_predictive = random_dataset(data_names, dims, coords, metadata)
     prior = random_dataset(var_names, dims, coords, metadata)
@@ -46,8 +46,8 @@ function check_idata_schema(idata)
             end
             @testset "attributes" begin
                 attrs = InferenceObjects.attributes(group)
-                @test attrs isa AbstractDict{Symbol,Any}
-                @test :created_at in keys(attrs)
+                @test attrs isa AbstractDict{String,Any}
+                @test "created_at" in keys(attrs)
             end
         end
     end
@@ -73,7 +73,7 @@ function test_idata_approx_equal(
             metadata2 = DimensionalData.metadata(ds2)
             @test issetequal(keys(metadata1), keys(metadata2))
             for k in keys(metadata1)
-                Symbol(k) === :created_at && continue
+                k == "created_at" && continue
                 @test metadata1[k] == metadata2[k]
             end
         end
@@ -110,9 +110,9 @@ function test_idata_group_correct(
     end
     metadata = DimensionalData.metadata(ds)
     if library !== nothing
-        @test metadata[:inference_library] == library
+        @test metadata["inference_library"] == library
     end
-    for k in [:created_at]
+    for k in ["created_at"]
         @test k in keys(metadata)
     end
     return nothing

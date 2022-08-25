@@ -10,7 +10,7 @@ using InferenceObjects, DimensionalData, Test
         vars = (a=randn(J, ndraws, nchains), b=randn(K, L, ndraws, nchains))
         coords = (bi=2:(K + 1), draw=1:2:1_000)
         dims = (b=[:bi, nothing],)
-        attrs = Dict(:mykey => 5)
+        attrs = Dict("mykey" => 5)
         ds = namedtuple_to_dataset(vars; library="MyLib", coords, dims, attrs)
         @test convert(Dataset, ds) === ds
         ds2 = convert(Dataset, [1.0, 2.0, 3.0, 4.0])
@@ -27,7 +27,7 @@ using InferenceObjects, DimensionalData, Test
         x = DimArray(randn(nshared, ndraws, nchains), xdims)
         ydims = (Dim{:ydim1}(Any["a", "b"]), Dim{:shared}, :draw, :chain)
         y = DimArray(randn(2, nshared, ndraws, nchains), ydims)
-        metadata = Dict(:prop1 => "val1", :prop2 => "val2")
+        metadata = Dict("prop1" => "val1", "prop2" => "val2")
         ds = Dataset((; x, y); metadata)
 
         @testset "convert_to_dataset(::Dataset; kwargs...)" begin
