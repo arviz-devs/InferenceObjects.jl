@@ -1,4 +1,4 @@
-using InferenceObjects, DimensionalData, OrderedCollections, Test
+using InferenceObjects, DimensionalData, Test
 
 @testset "dataset" begin
     @testset "Dataset" begin

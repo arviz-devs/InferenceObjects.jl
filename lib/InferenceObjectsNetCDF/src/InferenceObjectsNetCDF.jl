@@ -2,7 +2,6 @@ module InferenceObjectsNetCDF
 
 using DimensionalData: DimensionalData, Dimensions, LookupArrays
 using NCDatasets: NCDatasets
-using OrderedCollections: OrderedDict
 using Reexport: @reexport
 @reexport using InferenceObjects
 
