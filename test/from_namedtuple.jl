@@ -7,10 +7,10 @@ using InferenceObjects, Test
     coords = (yx=["y1", "y2"], zx=1:3, zy=1:5)
 
     nts = [
-        "NamedTuple" => map(sz -> randn(nchains, ndraws, sz...), sizes),
-        "Vector{NamedTuple}" => [map(sz -> randn(ndraws, sz...), sizes) for _ in 1:nchains],
+        "NamedTuple" => map(sz -> randn(sz..., ndraws, nchains), sizes),
+        "Vector{NamedTuple}" => [map(sz -> randn(sz..., ndraws), sizes) for _ in 1:nchains],
         "Matrix{NamedTuple}" =>
-            [map(sz -> randn(sz...), sizes) for _ in 1:nchains, _ in 1:ndraws],
+            [map(sz -> randn(sz...), sizes) for _ in 1:ndraws, _ in 1:nchains],
         "Vector{Vector{NamedTuple}}" =>
             [[map(sz -> randn(sz...), sizes) for _ in 1:ndraws] for _ in 1:nchains],
     ]

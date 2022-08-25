@@ -6,10 +6,10 @@ using InferenceObjects, DimensionalData, OrderedCollections, Test
             nchains = 4
             ndraws = 100
             nshared = 3
-            xdims = (:chain, :draw, :shared)
-            x = DimArray(randn(nchains, ndraws, nshared), xdims)
-            ydims = (:chain, :draw, :ydim1, :shared)
-            y = DimArray(randn(nchains, ndraws, 2, nshared), ydims)
+            xdims = (:shared, :draw, :chain)
+            x = DimArray(randn(nshared, ndraws, nchains), xdims)
+            ydims = (:ydim1, :shared, :draw, :chain)
+            y = DimArray(randn(2, nshared, ndraws, nchains), ydims)
             metadata = Dict(:prop1 => "val1", :prop2 => "val2")
 
             @testset "from NamedTuple" begin
@@ -60,7 +60,7 @@ using InferenceObjects, DimensionalData, OrderedCollections, Test
             @testset "errors with mismatched dimensions" begin
                 data_bad = (
                     x=DimArray(randn(3, 100, 3), (:chains, :draws, :shared)),
-                    y=DimArray(randn(4, 100, 2, 3), (:chains, :draws, :ydim1, :shared)),
+                    y=DimArray(randn(2, 3, 100, 4), (:chains, :draws, :ydim1, :shared)),
                 )
                 @test_throws Exception Dataset(data_bad)
             end
@@ -69,10 +69,10 @@ using InferenceObjects, DimensionalData, OrderedCollections, Test
         nchains = 4
         ndraws = 100
         nshared = 3
-        xdims = (:chain, :draw, :shared)
-        x = DimArray(randn(nchains, ndraws, nshared), xdims)
-        ydims = (:chain, :draw, :ydim1, :shared)
-        y = DimArray(randn(nchains, ndraws, 2, nshared), ydims)
+        xdims = (:shared, :draw, :chain)
+        x = DimArray(randn(nshared, ndraws, nchains), xdims)
+        ydims = (:ydim1, :shared, :draw, :chain)
+        y = DimArray(randn(2, nshared, ndraws, nchains), ydims)
         metadata = Dict(:prop1 => "val1", :prop2 => "val2")
         ds = Dataset((; x, y); metadata)
 
@@ -117,20 +117,20 @@ using InferenceObjects, DimensionalData, OrderedCollections, Test
         L = 3
         nchains = 4
         ndraws = 500
-        vars = (a=randn(nchains, ndraws, J), b=randn(nchains, ndraws, K, L))
+        vars = (a=randn(J, ndraws, nchains), b=randn(K, L, ndraws, nchains))
         coords = (bi=2:(K + 1), draw=1:2:1_000)
         dims = (b=[:bi, nothing],)
         expected_dims = (
             a=(
-                Dimensions.Dim{:chain}(1:nchains),
-                Dimensions.Dim{:draw}(1:2:1_000),
                 Dimensions.Dim{:a_dim_1}(1:J),
+                Dimensions.Dim{:draw}(1:2:1_000),
+                Dimensions.Dim{:chain}(1:nchains),
             ),
             b=(
-                Dimensions.Dim{:chain}(1:nchains),
-                Dimensions.Dim{:draw}(1:2:1_000),
                 Dimensions.Dim{:bi}(2:(K + 1)),
                 Dimensions.Dim{:b_dim_2}(1:L),
+                Dimensions.Dim{:draw}(1:2:1_000),
+                Dimensions.Dim{:chain}(1:nchains),
             ),
         )
         attrs = Dict(:mykey => 5)

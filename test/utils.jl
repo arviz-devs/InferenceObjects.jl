@@ -17,7 +17,7 @@ module TestSubModule end
             (x=[3, 5], y=[4, 6])
         @test InferenceObjects.namedtuple_of_arrays([
             [(x=3, y=4), (x=5, y=6)], [(x=7, y=8), (x=9, y=10)]
-        ]) == (x=[3 5; 7 9], y=[4 6; 8 10])
+        ]) == (x=[3 7; 5 9], y=[4 8; 6 10])
     end
 
     @testset "package_version" begin
