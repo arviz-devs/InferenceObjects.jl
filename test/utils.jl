@@ -3,12 +3,12 @@ using InferenceObjects, Test
 module TestSubModule end
 
 @testset "utils" begin
-    @testset "flatten" begin
-        @test InferenceObjects.flatten([1, 2]) == [1, 2]
-        @test InferenceObjects.flatten([[1, 2]]) == [1 2]
-        @test InferenceObjects.flatten([[1, 3], [2, 4]]) == reshape(1:4, 2, 2)
-        @test InferenceObjects.flatten(1) === 1
-        @test InferenceObjects.flatten(1:5) isa Array
+    @testset "recursive_stack" begin
+        @test InferenceObjects.recursive_stack([1, 2]) == [1, 2]
+        @test InferenceObjects.recursive_stack([[1, 2]]) == permutedims([1 2])
+        @test InferenceObjects.recursive_stack([[1, 2], [3, 4]]) == reshape(1:4, 2, 2)
+        @test InferenceObjects.recursive_stack(1) === 1
+        @test InferenceObjects.recursive_stack(1:5) == 1:5
     end
 
     @testset "namedtuple_of_arrays" begin
