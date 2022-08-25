@@ -62,14 +62,13 @@ jobs:
       - name: Install dependencies
         run: |
           using Pkg
-          Pkg.activate("docs")
           pkg_specs = [PackageSpec(path=pwd())]
           for subpath in readdir("lib"; join=true)
               push!(pkg_specs, PackageSpec(path=subpath))
           end
           Pkg.develop(pkg_specs)
           Pkg.instantiate()
-        shell: julia
+        shell: julia --project=docs {}
       - uses: julia-actions/julia-docdeploy@v1
         with:
           install-package: false
