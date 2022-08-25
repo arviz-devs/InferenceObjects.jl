@@ -20,18 +20,15 @@ dimensions of the resulting arrays.
 ```@example
 using InferenceObjects
 nchains, ndraws = 4, 100
-data = [(x=rand(), y=randn(2), z=randn(2, 3)) for _ in 1:nchains, _ in 1:ndraws];
+data = [(x=rand(), y=randn(2), z=randn(2, 3)) for _ in 1:ndraws, _ in 1:nchains];
 ntarray = InferenceObjects.namedtuple_of_arrays(data);
 ```
 """
 function namedtuple_of_arrays end
-namedtuple_of_arrays(x::NamedTuple) = map(flatten, x)
+namedtuple_of_arrays(x::NamedTuple) = map(recursive_stack, x)
 namedtuple_of_arrays(x::AbstractArray) = namedtuple_of_arrays(namedtuple_of_arrays.(x))
 function namedtuple_of_arrays(x::AbstractArray{<:NamedTuple{K}}) where {K}
-    return mapreduce(merge, K) do k
-        v = flatten.(getproperty.(x, k))
-        return (; k => flatten(v))
-    end
+    return NamedTuple{K}(recursive_stack(getproperty.(x, k)) for k in K)
 end
 
 """
