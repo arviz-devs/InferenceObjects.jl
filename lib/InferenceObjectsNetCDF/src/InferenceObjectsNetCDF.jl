@@ -2,7 +2,6 @@ module InferenceObjectsNetCDF
 
 using DimensionalData: DimensionalData, Dimensions, LookupArrays
 using NCDatasets: NCDatasets
-using OrderedCollections: OrderedDict
 using Reexport: @reexport
 @reexport using InferenceObjects
 
@@ -87,17 +86,21 @@ function _from_netcdf(ds, load_mode)
                 vals = _var_to_array(var, load_mode)
                 dims = Tuple(NamedTuple{map(Symbol, NCDatasets.dimnames(var))}(layerdims))
                 name = Symbol(var_name)
-                attrib = OrderedDict{Symbol,Any}(
-                    Symbol(key) => val for (key, val) in var.attrib if key != "_FillValue"
-                )
+                attrib = if load_mode isa Val{:eager}
+                    filter(!=("_FillValue") ∘ first, Dict{String,Any}(var.attrib))
+                else
+                    var.attrib
+                end
                 metadata = isempty(attrib) ? LookupArrays.NoMetadata() : attrib
                 da = DimensionalData.DimArray(vals, dims; name, metadata)
                 return name => da
             end...
         )
-        group_metadata = OrderedDict{Symbol,Any}(
-            Symbol(key) => val for (key, val) in group.attrib
-        )
+        group_metadata = if load_mode isa Val{:eager}
+            Dict{String,Any}(group.attrib)
+        else
+            group.attrib
+        end
         return Symbol(group_name) => Dataset(data; metadata=group_metadata)
     end
     return InferenceData(; groups...)
@@ -152,9 +155,7 @@ end
 function to_netcdf(data, ds::NCDatasets.NCDataset; group::Symbol=:posterior)
     idata = convert_to_inference_data(data; group)
     for (group_name, group_data) in pairs(idata)
-        group_attrib = [
-            String(k) => v for (k, v) in pairs(InferenceObjects.attributes(group_data))
-        ]
+        group_attrib = collect(InferenceObjects.attributes(group_data))
         group_ds = NCDatasets.defGroup(ds, String(group_name); attrib=group_attrib)
         for dim in Dimensions.dims(group_data)
             dim_name = String(Dimensions.name(dim))
@@ -165,7 +166,7 @@ function to_netcdf(data, ds::NCDatasets.NCDataset; group::Symbol=:posterior)
         end
         for (var_name, da) in pairs(group_data)
             dimnames = map(String, Dimensions.name(Dimensions.dims(da)))
-            attrib = [String(k) => v for (k, v) in pairs(DimensionalData.metadata(da))]
+            attrib = collect(DimensionalData.metadata(da))
             NCDatasets.defVar(group_ds, String(var_name), parent(da), dimnames; attrib)
         end
     end

@@ -1,4 +1,4 @@
-using InferenceObjects, DimensionalData, OrderedCollections, Test
+using InferenceObjects, DimensionalData, Test
 
 @testset "dataset" begin
     @testset "Dataset" begin
@@ -10,7 +10,7 @@ using InferenceObjects, DimensionalData, OrderedCollections, Test
             x = DimArray(randn(nshared, ndraws, nchains), xdims)
             ydims = (:ydim1, :shared, :draw, :chain)
             y = DimArray(randn(2, nshared, ndraws, nchains), ydims)
-            metadata = Dict(:prop1 => "val1", :prop2 => "val2")
+            metadata = Dict("prop1" => "val1", "prop2" => "val2")
 
             @testset "from NamedTuple" begin
                 data = (; x, y)
@@ -73,7 +73,7 @@ using InferenceObjects, DimensionalData, OrderedCollections, Test
         x = DimArray(randn(nshared, ndraws, nchains), xdims)
         ydims = (:ydim1, :shared, :draw, :chain)
         y = DimArray(randn(2, nshared, ndraws, nchains), ydims)
-        metadata = Dict(:prop1 => "val1", :prop2 => "val2")
+        metadata = Dict("prop1" => "val1", "prop2" => "val2")
         ds = Dataset((; x, y); metadata)
 
         @testset "parent" begin
@@ -104,10 +104,10 @@ using InferenceObjects, DimensionalData, OrderedCollections, Test
         @testset "attributes" begin
             @test InferenceObjects.attributes(ds) == metadata
             dscopy = deepcopy(ds)
-            InferenceObjects.setattribute!(dscopy, :prop3, "val3")
-            @test InferenceObjects.attributes(dscopy)[:prop3] == "val3"
-            @test_deprecated InferenceObjects.setattribute!(dscopy, "prop3", "val4")
-            @test InferenceObjects.attributes(dscopy)[:prop3] == "val4"
+            InferenceObjects.setattribute!(dscopy, "prop3", "val3")
+            @test InferenceObjects.attributes(dscopy)["prop3"] == "val3"
+            @test_deprecated InferenceObjects.setattribute!(dscopy, :prop3, "val4")
+            @test InferenceObjects.attributes(dscopy)["prop3"] == "val4"
         end
     end
 
@@ -133,7 +133,7 @@ using InferenceObjects, DimensionalData, OrderedCollections, Test
                 Dimensions.Dim{:chain}(1:nchains),
             ),
         )
-        attrs = Dict(:mykey => 5)
+        attrs = Dict("mykey" => 5)
         @test_broken @inferred namedtuple_to_dataset(
             vars; library="MyLib", coords, dims, attrs
         )
@@ -147,10 +147,10 @@ using InferenceObjects, DimensionalData, OrderedCollections, Test
             @test _dims == expected_dims[var_name]
         end
         metadata = DimensionalData.metadata(ds)
-        @test metadata isa OrderedDict
-        @test haskey(metadata, :created_at)
-        @test metadata[:inference_library] == "MyLib"
-        @test !haskey(metadata, :inference_library_version)
-        @test metadata[:mykey] == 5
+        @test metadata isa AbstractDict{<:AbstractString}
+        @test haskey(metadata, "created_at")
+        @test metadata["inference_library"] == "MyLib"
+        @test !haskey(metadata, "inference_library_version")
+        @test metadata["mykey"] == 5
     end
 end
