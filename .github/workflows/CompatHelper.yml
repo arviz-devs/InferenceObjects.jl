@@ -13,6 +13,8 @@ jobs:
         shell: julia {0}
         run: |
           using CompatHelper
+          print(pwd())
+          print(readdir(pwd()))
           subdirs = [""; readdir("lib/"; join=true)]
           CompatHelper.main(; subdirs)
         env:
