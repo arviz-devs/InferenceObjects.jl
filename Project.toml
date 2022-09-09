@@ -1,7 +1,7 @@
 name = "InferenceObjects"
 uuid = "b5cf5a8d-e756-4ee3-b014-01d49d192c00"
 authors = ["Seth Axen <seth.axen@gmail.com> and contributors"]
-version = "0.2.1"
+version = "0.2.2"
 
 [deps]
 Compat = "34da2185-b29b-5c13-b0c7-acf172513d20"
@@ -10,7 +10,7 @@ DimensionalData = "0703355e-b756-11e9-17c0-8b28908087d0"
 
 [compat]
 Compat = "3.46.0, 4.2.0"
-DimensionalData = "0.20, 0.21"
+DimensionalData = "0.20, 0.21, 0.22"
 OffsetArrays = "1"
 julia = "1.6"
 
