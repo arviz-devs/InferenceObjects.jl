@@ -192,14 +192,14 @@ Base.eltype(data::InferenceData) = eltype(parent(data))
 function Base.show(io::IO, ::MIME"text/plain", data::InferenceData)
     print(io, "InferenceData with groups:")
     prefix = "\n  > "
-    for name in groupnames(data)
+    for name in _order_groups_by_name(groupnames(data))
         print(io, prefix, name)
     end
     return nothing
 end
 function Base.show(io::IO, mime::MIME"text/html", data::InferenceData)
     show(io, mime, HTML("<div>InferenceData"))
-    for (name, group) in pairs(groups(data))
+    for (name, group) in _order_groups_by_name(groups(data))
         show(io, mime, HTML("""
         <details>
         <summary>$name</summary>
@@ -231,12 +231,10 @@ Return `true` if a group with name `name` is stored in `data`.
 """
 hasgroup(data::InferenceData, name::Symbol) = haskey(data, name)
 
-@generated function _reorder_group_names(::Val{names}) where {names}
-    lt = (a, b) -> (a isa Integer && b isa Integer) ? a < b : string(a) < string(b)
-    return Tuple(sort(collect(names); lt, by=k -> get(SCHEMA_GROUPS_DICT, k, string(k))))
-end
+_lt_symint(a, b) = (a isa Integer && b isa Integer) ? a < b : string(a) < string(b)
+_scheme_order(k) = get(SCHEMA_GROUPS_DICT, k, string(k))
 
-@generated _keys_and_types(::NamedTuple{keys,types}) where {keys,types} = (keys, types)
+_order_groups_by_name(groups) = sort(groups; lt=_lt_symint, by=_scheme_order)
 
 """
     merge(data::InferenceData, others::InferenceData...) -> InferenceData
