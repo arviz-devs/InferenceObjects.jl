@@ -30,6 +30,7 @@ struct InferenceData
         )
         return InferenceData(groups_new)
     end
+    InferenceData(groups::InferenceDataStorageType) = new(groups)
 end
 InferenceData(data::NamedTuple) = InferenceData(; data...)
 InferenceData(; kwargs...) = InferenceData(kwargs)
