@@ -146,11 +146,6 @@ function Base.getindex(data::InferenceData, k::Symbol; kwargs...)
     isempty(kwargs) && return ds
     return getindex(ds; kwargs...)
 end
-function Base.getindex(data::InferenceData, i::Int; kwargs...)
-    ds = parent(data)[i]
-    isempty(kwargs) && return ds
-    return getindex(ds; kwargs...)
-end
 function Base.getindex(data::InferenceData, ks::AbstractVector{Symbol}; kwargs...)
     missing_ks = setdiff(ks, keys(data))
     isempty(missing_ks) || throw(KeyError(first(missing_ks)))
@@ -230,11 +225,6 @@ groupnames(data::InferenceData) = groups(data).keys
 Return `true` if a group with name `name` is stored in `data`.
 """
 hasgroup(data::InferenceData, name::Symbol) = haskey(data, name)
-
-_lt_symint(a, b) = (a isa Integer && b isa Integer) ? a < b : string(a) < string(b)
-_scheme_order(k) = get(SCHEMA_GROUPS_DICT, k, string(k))
-
-_order_groups_by_name(groups) = sort(groups; lt=_lt_symint, by=_scheme_order)
 
 """
     merge(data::InferenceData, others::InferenceData...) -> InferenceData
