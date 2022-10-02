@@ -146,7 +146,7 @@ function Base.getindex(data::InferenceData, k::Symbol; kwargs...)
     isempty(kwargs) && return ds
     return getindex(ds; kwargs...)
 end
-function Base.getindex(data::InferenceData, ks::AbstractVector{Symbol}; kwargs...)
+function Base.getindex(data::InferenceData, ks; kwargs...)
     missing_ks = setdiff(ks, keys(data))
     isempty(missing_ks) || throw(KeyError(first(missing_ks)))
     data_new = InferenceData(filter(∈(ks) ∘ first, parent(data)))
