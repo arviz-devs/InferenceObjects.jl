@@ -205,6 +205,11 @@ function Base.show(io::IO, mime::MIME"text/html", data::InferenceData)
     return show(io, mime, HTML("</div>"))
 end
 
+_lt_symint(a, b) = (a isa Integer && b isa Integer) ? a < b : string(a) < string(b)
+_scheme_order(k) = get(SCHEMA_GROUPS_DICT, k, string(k))
+
+_order_groups_by_name(groups) = sort(groups; lt=_lt_symint, by=_scheme_order)
+
 """
     groups(data::InferenceData)
 
