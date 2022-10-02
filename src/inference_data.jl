@@ -38,6 +38,8 @@ InferenceData(data::InferenceData) = data
 
 Base.parent(data::InferenceData) = getfield(data, :groups)
 
+Base.:(==)(data::InferenceData, other::InferenceData) = parent(data) == parent(other)
+
 # these 3 interfaces ensure InferenceData behaves like a NamedTuple
 
 # properties interface
