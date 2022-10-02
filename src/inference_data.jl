@@ -1,3 +1,7 @@
+const InferenceDataStorageType = OrderedCollections.LittleDict{
+    Symbol,Dataset,Vector{Symbol},Vector{Dataset}
+}
+
 """
     InferenceData{group_names,group_types}
 
@@ -5,32 +9,30 @@ Container for inference data storage using DimensionalData.
 
 This object implements the [InferenceData schema](https://python.arviz.org/en/latest/schema/schema.html).
 
-Internally, groups are stored in a `NamedTuple`, which can be accessed using
-`parent(::InferenceData)`.
-
 # Constructors
 
+    InferenceData(groups::AbstractDict{Symbol,Dataset})
     InferenceData(groups::NamedTuple)
     InferenceData(; groups...)
 
-Construct an inference data from either a `NamedTuple` or keyword arguments of groups.
+Construct an inference data from groups.
 
 Groups must be [`Dataset`](@ref) objects.
 
 Instead of directly creating an `InferenceData`, use the exported `from_xyz` functions or
 [`convert_to_inference_data`](@ref).
 """
-struct InferenceData{group_names,group_types<:Tuple{Vararg{Dataset}}}
-    groups::NamedTuple{group_names,group_types}
-    function InferenceData(
-        groups::NamedTuple{group_names,<:Tuple{Vararg{Dataset}}}
-    ) where {group_names}
-        group_names_ordered = _reorder_group_names(Val{group_names}())
-        groups_ordered = NamedTuple{group_names_ordered}(groups)
-        return new{group_names_ordered,typeof(values(groups_ordered))}(groups_ordered)
+struct InferenceData
+    groups::InferenceDataStorageType
+    function InferenceData(groups::AbstractDict)
+        groups_new = InferenceDataStorageType(
+            Symbol[keys(groups)...], Dataset[values(groups)...]
+        )
+        return InferenceData(groups_new)
     end
 end
-InferenceData(; kwargs...) = InferenceData(NamedTuple(kwargs))
+InferenceData(data::NamedTuple) = InferenceData(; data...)
+InferenceData(; kwargs...) = InferenceData(kwargs)
 InferenceData(data::InferenceData) = data
 
 Base.parent(data::InferenceData) = getfield(data, :groups)
