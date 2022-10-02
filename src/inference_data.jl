@@ -249,8 +249,6 @@ function Base.merge(data::InferenceData, others::InferenceData...)
 end
 
 function rekey(data::InferenceData, keymap)
-    groups_old = groups(data)
-    names_new = map(k -> get(keymap, k, k), propertynames(groups_old))
-    groups_new = NamedTuple{names_new}(Tuple(groups_old))
-    return InferenceData(groups_new)
+    pairs_new = (get(keymap, k, k) => v for (k, v) in pairs(groups(data)))
+    return InferenceData(; pairs_new...)
 end
