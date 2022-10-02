@@ -46,14 +46,16 @@ Base.parent(data::InferenceData) = getfield(data, :groups)
 
 Get names of groups
 """
-Base.propertynames(data::InferenceData) = propertynames(parent(data))
+Base.propertynames(data::InferenceData) = keys(data)
 
 """
     getproperty(data::InferenceData, name::Symbol) -> Dataset
 
 Get group with the specified `name`.
 """
-Base.getproperty(data::InferenceData, k::Symbol) = getproperty(parent(data), k)
+Base.getproperty(data::InferenceData, k::Symbol) = getindex(data, k)
+
+Base.setproperty!(data::InferenceData, k::Symbol, v) = setindex!(data, v, k)
 
 # indexing interface
 """
@@ -147,8 +149,10 @@ function Base.getindex(data::InferenceData, i::Int; kwargs...)
     isempty(kwargs) && return ds
     return getindex(ds; kwargs...)
 end
-function Base.getindex(data::InferenceData, ks; kwargs...)
-    data_new = InferenceData(parent(data)[ks])
+function Base.getindex(data::InferenceData, ks::AbstractVector{Symbol}; kwargs...)
+    missing_ks = setdiff(ks, keys(data))
+    isempty(missing_ks) || throw(KeyError(first(missing_ks)))
+    data_new = InferenceData(filter(∈(ks) ∘ first, parent(data)))
     isempty(kwargs) && return data_new
     return getindex(data_new; kwargs...)
 end
@@ -158,27 +162,26 @@ function Base.getindex(data::InferenceData; kwargs...)
     # if it has no other dimensions.
     # So we promote to an array of indices
     new_kwargs = map(index_to_indices, NamedTuple(kwargs))
-    groups = map(parent(data)) do ds
-        return getindex(ds; new_kwargs...)
-    end
-    return InferenceData(groups)
+    groups = (k => getindex(v; new_kwargs...) for (k, v) in data)
+    return InferenceData(; groups...)
 end
 
 """
-    Base.setindex(data::InferenceData, group::Dataset, name::Symbol) -> InferenceData
+    Base.setindex!(data::InferenceData, group::Dataset, name::Symbol) -> InferenceData
 
-Create a new `InferenceData` containing the `group` with the specified `name`.
+Add to `data` the `group` with the specified `name`.
 
 If a group with `name` is already in `data`, it is replaced.
 """
-function Base.setindex(data::InferenceData, v, k::Symbol)
-    return InferenceData(Base.setindex(parent(data), v, k))
+function Base.setindex!(data::InferenceData, v, k::Symbol)
+    parent(data)[k] = v
+    return data
 end
 
 # iteration interface
-Base.keys(data::InferenceData) = keys(parent(data))
+Base.keys(data::InferenceData) = parent(data).keys
 Base.haskey(data::InferenceData, k::Symbol) = haskey(parent(data), k)
-Base.values(data::InferenceData) = values(parent(data))
+Base.values(data::InferenceData) = parent(data).vals
 Base.pairs(data::InferenceData) = pairs(parent(data))
 Base.length(data::InferenceData) = length(parent(data))
 Base.iterate(data::InferenceData, i...) = iterate(parent(data), i...)
@@ -217,7 +220,7 @@ groups(data::InferenceData) = parent(data)
 
 Get the names of the groups (datasets) in `data` as a tuple of symbols.
 """
-groupnames(data::InferenceData) = keys(groups(data))
+groupnames(data::InferenceData) = groups(data).keys
 
 """
     hasgroup(data::InferenceData, name::Symbol) -> Bool
