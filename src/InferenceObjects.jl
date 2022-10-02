@@ -3,6 +3,7 @@ module InferenceObjects
 using Compat: stack
 using Dates: Dates
 using DimensionalData: DimensionalData, Dimensions, LookupArrays
+using OrderedCollections: OrderedCollections
 
 # groups that are officially listed in the schema
 const SCHEMA_GROUPS = (
