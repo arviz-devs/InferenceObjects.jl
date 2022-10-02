@@ -139,7 +139,8 @@ using InferenceObjects, DimensionalData, Test
         )
         ds = namedtuple_to_dataset(vars; library="MyLib", coords, dims, attrs)
         @test ds isa Dataset
-        for (var_name, var_data) in pairs(DimensionalData.layers(ds))
+        for var_name in keys(ds)
+            var_data = ds[var_name]
             @test var_data isa DimensionalData.DimArray
             @test var_name === DimensionalData.name(var_data)
             @test var_data == vars[var_name]
