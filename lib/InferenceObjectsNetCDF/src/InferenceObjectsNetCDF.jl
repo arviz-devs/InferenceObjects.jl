@@ -109,9 +109,17 @@ end
 _var_to_array(var, load_mode) = var
 function _var_to_array(var, load_mode::Val{:eager})
     arr = Array(var)
+    attr = var.attrib
     try
-        return NCDatasets.nomissing(arr)
+        arr_nomissing = NCDatasets.nomissing(arr)
+        if eltype(arr_nomissing) <: Integer && (get(attr, "dtype", nothing) == "bool")
+            return convert(Array{Bool}, arr_nomissing)
+        end
+        return arr_nomissing
     catch e
+        if eltype(arr) <: Union{Integer,Missing} && (get(attr, "dtype", nothing) == "bool")
+            return convert(Array{Union{Missing,Bool}}, arr)
+        end
         return arr
     end
 end
@@ -166,8 +174,14 @@ function to_netcdf(data, ds::NCDatasets.NCDataset; group::Symbol=:posterior)
         end
         for (var_name, da) in pairs(group_data)
             dimnames = map(String, Dimensions.name(Dimensions.dims(da)))
-            attrib = collect(DimensionalData.metadata(da))
-            NCDatasets.defVar(group_ds, String(var_name), parent(da), dimnames; attrib)
+            attrib = Dict(DimensionalData.metadata(da))
+            if eltype(da) <: Bool && (get(attrib, "dtype", "bool") == "bool")
+                da = convert(AbstractArray{Int8}, da)
+                attrib["dtype"] = "bool"
+            end
+            NCDatasets.defVar(
+                group_ds, String(var_name), parent(da), dimnames; attrib=collect(attrib)
+            )
         end
     end
     return ds
