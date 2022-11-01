@@ -8,9 +8,9 @@ using InferenceObjects, DimensionalData, Test
     )
     dims = (a=(:shared, :dima), b=(:shared, :dimb), y=(:shared, :dimy))
     metadata = Dict("inference_library" => "PPL")
-    posterior = random_dataset(var_names, dims, coords, metadata)
-    prior = random_dataset(var_names, dims, coords, metadata)
-    observed_data = random_dataset(data_names, dims, coords, metadata)
+    posterior = random_dataset(var_names, dims, coords, metadata, (;))
+    prior = random_dataset(var_names, dims, coords, metadata, (;))
+    observed_data = random_dataset(data_names, dims, coords, metadata, (;))
     group_data = (; prior, observed_data, posterior)
     group_data_ordered = (; posterior, prior, observed_data)
 
