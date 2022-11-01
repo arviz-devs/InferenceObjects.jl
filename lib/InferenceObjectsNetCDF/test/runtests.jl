@@ -17,7 +17,7 @@ include("../../../test/test_helpers.jl")
 
             NCDatasets.NCDataset(path, "r") do ds
                 idata3 = from_netcdf(ds; load_mode=:lazy)
-                test_idata_approx_equal(idata, idata3)
+                test_idata_approx_equal(idata, idata3; check_eltypes=false)
 
                 idata4 = convert_to_inference_data(ds; group=:posterior)
                 test_idata_approx_equal(idata, idata4)
