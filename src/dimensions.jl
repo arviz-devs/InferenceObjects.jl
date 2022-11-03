@@ -87,7 +87,7 @@ See [`generate_dims`](@ref) for a description of `kwargs`.
 """
 function array_to_dimarray(data, name; dims=(), coords=(;), default_dims=())
     array = if ndims(data) < 2 && has_all_sample_dims(default_dims)
-        reshape(data, 1, :)
+        reshape(data, :, 1)
     else
         data
     end
