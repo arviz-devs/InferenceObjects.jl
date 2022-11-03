@@ -61,7 +61,7 @@ using InferenceObjects, DimensionalData, OffsetArrays, Test
         @test Dimensions.index(gdims) == (-1:0, 2:4, 11:20, 0:3)
     end
 
-    @testset "array_to_dim_array" begin
+    @testset "array_to_dimarray" begin
         x = OffsetArray(randn(2, 3, 10, 4), -1:0, 2:4, 11:20, 0:3)
         da = @inferred DimArray InferenceObjects.array_to_dimarray(x, :x)
         @test da == x
@@ -88,6 +88,28 @@ using InferenceObjects, DimensionalData, OffsetArrays, Test
         @test gdims isa NTuple{4,Dim}
         @test Dimensions.name(gdims) === (:c, :d, :draw, :chain)
         @test Dimensions.index(gdims) == (-1:0, 2:4, 11:20, 0:3)
+
+        v = randn(1_000)
+        da = @inferred DimArray InferenceObjects.array_to_dimarray(
+            v, :v; dims=(), default_dims=(:draw, :chain)
+        )
+        @test da == reshape(v, :, 1)
+        @test DimensionalData.name(da) === :v
+        gdims = Dimensions.dims(da)
+        @test gdims isa NTuple{2,Dim}
+        @test Dimensions.name(gdims) === (:draw, :chain)
+        @test Dimensions.index(gdims) == (1:1000, 1:1)
+
+        s = fill(1) # 0-dimensional array
+        da = @inferred DimArray InferenceObjects.array_to_dimarray(
+            s, :s; dims=(), default_dims=(:draw, :chain)
+        )
+        @test da == reshape(s, 1, 1)
+        @test DimensionalData.name(da) === :s
+        gdims = Dimensions.dims(da)
+        @test gdims isa NTuple{2,Dim}
+        @test Dimensions.name(gdims) === (:draw, :chain)
+        @test Dimensions.index(gdims) == (1:1, 1:1)
     end
 
     @testset "AsSlice" begin
