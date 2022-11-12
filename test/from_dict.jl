@@ -1,4 +1,4 @@
-using InferenceObjects, Test
+using InferenceObjects, OrderedCollections, Test
 
 @testset "from_dict" begin
     nchains, ndraws = 4, 10
@@ -9,7 +9,7 @@ using InferenceObjects, Test
     dicts = [
         "Dict{Symbol}" =>
             Dict(Symbol(k) => randn(sz..., ndraws, nchains) for (k, sz) in pairs(sizes)),
-        "Dict{String}" =>
+        "OrderedDict{String}" =>
             Dict(string(k) => randn(sz..., ndraws, nchains) for (k, sz) in pairs(sizes)),
     ]
 
