@@ -33,7 +33,7 @@ whose first dimensions correspond to the dimensions of the containers.
   - `posterior_predictive::Any=nothing`: Draws from the posterior predictive distribution
   - `sample_stats::Any=nothing`: Statistics of the posterior sampling process
   - `predictions::Any=nothing`: Out-of-sample predictions for the posterior.
-  - `prior::Any=nothing`: Draws from the prior
+  - `prior=nothing`: Draws from the prior. Accepts the same types as `posterior`.
   - `prior_predictive::Any=nothing`: Draws from the prior predictive distribution
   - `sample_stats_prior::Any=nothing`: Statistics of the prior sampling process
   - `observed_data::NamedTuple`: Observed data on which the `posterior` is
