@@ -51,8 +51,10 @@ idata = from_dict(data)
 """
 from_dict
 
-function from_dict(posterior::Dict; prior=nothing, kwargs...)
-    nt = as_namedtuple(posterior)
+function from_dict(
+    posterior::Union{<:AbstractDict,Nothing}=nothing; prior=nothing, kwargs...
+)
+    nt = posterior === nothing ? posterior : as_namedtuple(posterior)
     nt_prior = prior === nothing ? prior : as_namedtuple(prior)
     return from_namedtuple(nt; prior=nt_prior, kwargs...)
 end
