@@ -1,4 +1,4 @@
-using InferenceObjects, OrderedDict, Test
+using InferenceObjects, OrderedCollections, Test
 
 module TestSubModule end
 
