@@ -1,4 +1,4 @@
-using InferenceObjects, Test
+using InferenceObjects, OrderedCollections, Test
 
 module TestSubModule end
 
@@ -39,5 +39,11 @@ module TestSubModule end
             @test new isa typeof(orig_dict)
             @test new == Dict(:y => 3, :a => 4, :z => 5)
         end
+    end
+
+    @testset "as_namedtuple" begin
+        @test InferenceObjects.as_namedtuple(OrderedDict(:x => 3, :y => 4)) === (x=3, y=4)
+        @test InferenceObjects.as_namedtuple(OrderedDict("x" => 4, "y" => 5)) === (x=4, y=5)
+        @test InferenceObjects.as_namedtuple((y=6, x=7)) === (y=6, x=7)
     end
 end

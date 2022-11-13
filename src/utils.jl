@@ -67,3 +67,9 @@ function rekey(d::NamedTuple, keymap)
     new_keys = map(k -> get(keymap, k, k), keys(d))
     return NamedTuple{new_keys}(values(d))
 end
+
+as_namedtuple(dict::AbstractDict{Symbol}) = NamedTuple(dict)
+function as_namedtuple(dict::AbstractDict{<:AbstractString})
+    return NamedTuple(Symbol(k) => v for (k, v) in dict)
+end
+as_namedtuple(nt::NamedTuple) = nt
