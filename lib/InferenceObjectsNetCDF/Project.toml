@@ -1,7 +1,7 @@
 name = "InferenceObjectsNetCDF"
 uuid = "7cb6d088-77df-42c3-8f05-5ca8d42599d1"
 authors = ["Seth Axen <seth.axen@gmail.com>"]
-version = "0.2.3"
+version = "0.2.4"
 
 [deps]
 DimensionalData = "0703355e-b756-11e9-17c0-8b28908087d0"
