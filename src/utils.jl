@@ -7,6 +7,9 @@ ordered with dimensions of the innermost container first and outermost last.
 recursive_stack(x) = x
 recursive_stack(x::AbstractArray{<:AbstractArray}) = recursive_stack(stack(x))
 
+as_array(x) = fill(x)
+as_array(x::AbstractArray) = x
+
 """
     namedtuple_of_arrays(x::NamedTuple) -> NamedTuple
     namedtuple_of_arrays(x::AbstractArray{NamedTuple}) -> NamedTuple
