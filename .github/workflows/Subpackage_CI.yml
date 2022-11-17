@@ -52,7 +52,6 @@ jobs:
           using Pkg;
           pkg"dev . ./lib/${{ matrix.subpackage }}"
       - name: Run the tests
-        continue-on-error: true
         run: >
           julia --color=yes --project=monorepo -e 'using Pkg; Pkg.test("${{ matrix.subpackage }}", coverage=true)'
       - uses: julia-actions/julia-processcoverage@v1
