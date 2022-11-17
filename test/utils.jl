@@ -24,7 +24,7 @@ module TestSubModule end
     end
 
     @testset "namedtuple_of_arrays" begin
-        @test InferenceObjects.namedtuple_of_arrays((x=3, y=4)) === (x=3, y=4)
+        @test InferenceObjects.namedtuple_of_arrays((x=3, y=4)) == (x=fill(3), y=fill(4))
         @test InferenceObjects.namedtuple_of_arrays([(x=3, y=4), (x=5, y=6)]) ==
             (x=[3, 5], y=[4, 6])
         @test InferenceObjects.namedtuple_of_arrays([
