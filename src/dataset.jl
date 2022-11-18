@@ -52,6 +52,8 @@ end
 
 Convert `NamedTuple` mapping variable names to arrays to a [`Dataset`](@ref).
 
+Any non-array values will be converted to a 0-dimensional array.
+
 # Keywords
 
   - `attrs::AbstractDict{<:AbstractString}`: a collection of metadata to attach to the
