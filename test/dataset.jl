@@ -152,5 +152,12 @@ using InferenceObjects, DimensionalData, Test
         @test metadata["inference_library"] == "MyLib"
         @test !haskey(metadata, "inference_library_version")
         @test metadata["mykey"] == 5
+
+        ds2 = namedtuple_to_dataset((x=1, y=randn(10)); default_dims=())
+        @test ds2 isa Dataset
+        @test ds2.x isa DimensionalData.DimArray{<:Any,0}
+        @test DimensionalData.dims(ds2.x) == ()
+        @test ds2.y isa DimensionalData.DimArray{<:Any,1}
+        @test DimensionalData.dims(ds2.y) == (Dim{:y_dim_1}(1:10),)
     end
 end
