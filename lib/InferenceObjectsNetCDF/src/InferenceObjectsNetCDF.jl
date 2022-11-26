@@ -76,8 +76,12 @@ function _from_netcdf(ds, load_mode)
     groups = map(ds.group) do (group_name, group)
         layerdims = (;
             map(NCDatasets.dimnames(group)) do dim_name
-                return Symbol(dim_name) =>
-                    Dimensions.Dim{Symbol(dim_name)}(collect(group[dim_name]))
+                index = collect(group[dim_name])
+                if index == eachindex(index)
+                    # discard the index if it is just the default
+                    index = LookupArrays.NoLookup()
+                end
+                return Symbol(dim_name) => Dimensions.Dim{Symbol(dim_name)}(index)
             end...
         )
         var_iter = Iterators.filter(∉(keys(layerdims)) ∘ Symbol ∘ first, group)
