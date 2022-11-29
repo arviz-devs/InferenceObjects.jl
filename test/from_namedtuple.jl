@@ -8,11 +8,8 @@ using InferenceObjects, Test
 
     nts = [
         "NamedTuple" => map(sz -> randn(sz..., ndraws, nchains), sizes),
-        "Vector{NamedTuple}" => [map(sz -> randn(sz..., ndraws), sizes) for _ in 1:nchains],
-        "Matrix{NamedTuple}" =>
-            [map(sz -> randn(sz...), sizes) for _ in 1:ndraws, _ in 1:nchains],
         "Vector{Vector{NamedTuple}}" =>
-            [[map(sz -> randn(sz...), sizes) for _ in 1:ndraws] for _ in 1:nchains],
+            [[map(Base.splat(randn), sizes) for _ in 1:ndraws] for _ in 1:nchains],
     ]
 
     @testset "posterior::$(type)" for (type, nt) in nts
