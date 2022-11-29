@@ -160,7 +160,7 @@ function from_namedtuple(
     return all_idata
 end
 function from_namedtuple(data::AbstractVector{<:AbstractVector{<:NamedTuple}}; kwargs...)
-    return from_namedtuple(namedtuple_of_arrays(data); kwargs...)
+    return from_namedtuple(stack_chains(map(stack_draws, data)); kwargs...)
 end
 
 """

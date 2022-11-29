@@ -8,9 +8,9 @@ using InferenceObjects, OrderedCollections, Test
 
     dicts = [
         "Dict{Symbol}" =>
-            Dict(Symbol(k) => randn(sz..., ndraws, nchains) for (k, sz) in pairs(sizes)),
+            Dict(Symbol(k) => randn(ndraws, nchains, sz...) for (k, sz) in pairs(sizes)),
         "OrderedDict{String}" =>
-            Dict(string(k) => randn(sz..., ndraws, nchains) for (k, sz) in pairs(sizes)),
+            Dict(string(k) => randn(ndraws, nchains, sz...) for (k, sz) in pairs(sizes)),
     ]
 
     @testset "posterior::$(type)" for (type, dict) in dicts

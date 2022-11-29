@@ -1,7 +1,7 @@
 using InferenceObjects, DimensionalData
 
 function random_dim_array(var_name, dims, coords, T, default_dims=())
-    _dims = (dims..., default_dims...)
+    _dims = (default_dims..., dims...)
     _coords = NamedTuple{_dims}(getproperty.(Ref(coords), _dims))
     size = map(length, values(_coords))
     set = T isa Bool ? T : (T isa Integer ? (T(0):T(100)) : T)
@@ -111,7 +111,7 @@ function test_idata_group_correct(
         da = ds[name]
         @test DimensionalData.name(da) === name
         _dims = DimensionalData.dims(da)
-        _dim_names_exp = (get(dims, name, ())..., default_dims...)
+        _dim_names_exp = (default_dims..., get(dims, name, ())...)
         _dim_names = DimensionalData.name(_dims)
         @test issubset(_dim_names_exp, _dim_names)
         for dim in _dims
