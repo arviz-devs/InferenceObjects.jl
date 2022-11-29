@@ -172,14 +172,7 @@ of `obj` possibilities and `kwargs`.
 """
 function convert_to_inference_data(
     data::T; group=:posterior, kwargs...
-) where {
-    T<:Union{
-        NamedTuple,
-        AbstractVector{<:NamedTuple},
-        AbstractMatrix{<:NamedTuple},
-        AbstractVector{<:AbstractVector{<:NamedTuple}},
-    },
-}
+) where {T<:Union{NamedTuple,AbstractVector{<:AbstractVector{<:NamedTuple}}}}
     group = Symbol(group)
     group === :posterior && return from_namedtuple(data; kwargs...)
     return from_namedtuple(; group => data, kwargs...)
