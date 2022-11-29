@@ -7,7 +7,7 @@ using InferenceObjects, Test
     coords = (yx=["y1", "y2"], zx=1:3, zy=1:5)
 
     nts = [
-        "NamedTuple" => map(sz -> randn(sz..., ndraws, nchains), sizes),
+        "NamedTuple" => map(sz -> randn(ndraws, nchains, sz...), sizes),
         "Vector{Vector{NamedTuple}}" =>
             [[map(Base.splat(randn), sizes) for _ in 1:ndraws] for _ in 1:nchains],
     ]
