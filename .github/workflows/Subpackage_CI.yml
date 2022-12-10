@@ -50,7 +50,8 @@ jobs:
         shell: julia --project=monorepo {0}
         run: |
           using Pkg;
-          pkg"dev . ./lib/${{ matrix.subpackage }}"
+          Pkg.develop([Pkg.PackageSpec(; path="."),
+                       Pkg.PackageSpec(; path="./lib/${{ matrix.subpackage }}"])
       - name: Run the tests
         run: >
           julia --color=yes --project=monorepo -e 'using Pkg; Pkg.test("${{ matrix.subpackage }}", coverage=true)'
