@@ -51,7 +51,7 @@ jobs:
         run: |
           using Pkg;
           Pkg.develop([Pkg.PackageSpec(; path="."),
-                       Pkg.PackageSpec(; path="./lib/${{ matrix.subpackage }}"])
+                       Pkg.PackageSpec(; path="./lib/${{ matrix.subpackage }}")])
       - name: Run the tests
         run: |
           using Pkg
