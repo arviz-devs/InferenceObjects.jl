@@ -50,6 +50,11 @@ whose first dimensions correspond to the dimensions of the containers.
 
   - `InferenceData`: The data with groups corresponding to the provided data
 
+!!! note
+    If a `NamedTuple` is provided for `observed_data`, `constant_data`, or
+    predictions_constant_data`, any non-array values (e.g. integers) are converted to
+    0-dimensional arrays.
+
 # Examples
 
 ```@example

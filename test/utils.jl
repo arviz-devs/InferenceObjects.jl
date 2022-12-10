@@ -25,8 +25,20 @@ module TestSubModule end
         @test size.(values(vals)) == ((10, 5), (10, 5, 2), (10, 5, 3, 4))
     end
 
+    @testset "as_array" begin
+        @test InferenceObjects.as_array(3) == fill(3)
+        @test InferenceObjects.as_array(2.5) == fill(2.5)
+        @test InferenceObjects.as_array("var") == fill("var")
+        x = randn(3)
+        @test InferenceObjects.as_array(x) == x
+        x = randn(2, 3)
+        @test InferenceObjects.as_array(x) == x
+        x = randn(2, 3, 4)
+        @test InferenceObjects.as_array(x) == x
+    end
+
     @testset "namedtuple_of_arrays" begin
-        @test InferenceObjects.namedtuple_of_arrays((x=3, y=4)) === (x=3, y=4)
+        @test InferenceObjects.namedtuple_of_arrays((x=3, y=4)) == (x=fill(3), y=fill(4))
         @test InferenceObjects.namedtuple_of_arrays([(x=3, y=4), (x=5, y=6)]) ==
             (x=[3, 5], y=[4, 6])
         @test InferenceObjects.namedtuple_of_arrays([

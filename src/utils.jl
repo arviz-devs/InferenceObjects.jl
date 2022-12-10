@@ -7,6 +7,9 @@ ordered with dimensions of the innermost container first and outermost last.
 recursive_stack(x) = x
 recursive_stack(x::AbstractArray{<:AbstractArray}) = recursive_stack(stack(x))
 
+as_array(x) = fill(x)
+as_array(x::AbstractArray) = x
+
 """
     stack_draws(draws_table) -> NamedTuple
 
@@ -49,7 +52,7 @@ ntarray = InferenceObjects.namedtuple_of_arrays(data);
 ```
 """
 function namedtuple_of_arrays end
-namedtuple_of_arrays(x::NamedTuple) = map(recursive_stack, x)
+namedtuple_of_arrays(x::NamedTuple) = map(as_array ∘ recursive_stack, x)
 namedtuple_of_arrays(x::AbstractArray) = namedtuple_of_arrays(namedtuple_of_arrays.(x))
 function namedtuple_of_arrays(x::AbstractArray{<:NamedTuple{K}}) where {K}
     return NamedTuple{K}(recursive_stack(getproperty.(x, k)) for k in K)

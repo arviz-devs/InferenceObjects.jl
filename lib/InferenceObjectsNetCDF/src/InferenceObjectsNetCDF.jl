@@ -108,7 +108,7 @@ end
 
 _var_to_array(var, load_mode) = var
 function _var_to_array(var, load_mode::Val{:eager})
-    arr = Array(var)
+    arr = as_array(Array(var))
     attr = var.attrib
     try
         arr_nomissing = NCDatasets.nomissing(arr)
@@ -186,5 +186,8 @@ function to_netcdf(data, ds::NCDatasets.NCDataset; group::Symbol=:posterior)
     end
     return ds
 end
+
+as_array(x) = fill(x)
+as_array(x::AbstractArray) = x
 
 end
