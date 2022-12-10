@@ -53,18 +53,22 @@ using InferenceObjects, OrderedCollections, Test
         library = "MyLib"
         dims = (; w=[:wx])
         coords = (; wx=1:2)
-        idata1 = from_dict(dict; group => Dict(:w => [1.0, 2.0]), dims, coords, library)
+        idata1 = from_dict(
+            dict; group => Dict(:w => [1.0, 2.0], :v => 2.5), dims, coords, library
+        )
         test_idata_group_correct(idata1, :posterior, keys(sizes); library, dims, coords)
         test_idata_group_correct(
-            idata1, group, (:w,); library, dims, coords, default_dims=()
+            idata1, group, (:w, :v); library, dims, coords, default_dims=()
         )
 
         # ensure that dims are matched to named tuple keys
         # https://github.com/arviz-devs/ArviZ.jl/issues/96
-        idata2 = from_dict(dict; group => Dict(:w => [1.0, 2.0]), dims, coords, library)
+        idata2 = from_dict(
+            dict; group => Dict(:w => [1.0, 2.0], :v => 2.5), dims, coords, library
+        )
         test_idata_group_correct(idata2, :posterior, keys(sizes); library, dims, coords)
         test_idata_group_correct(
-            idata2, group, (:w,); library, dims, coords, default_dims=()
+            idata2, group, (:w, :v); library, dims, coords, default_dims=()
         )
     end
 end

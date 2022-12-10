@@ -23,13 +23,13 @@ random_dataset(args...) = Dataset(random_dim_stack(args...))
 
 function random_data()
     var_names = (:a, :b)
-    data_names = (:y,)
+    data_names = (:y, :v)
     stats_names = (:diverging, :energy, :n_steps)
     stats_eltypes = (diverging=Bool, n_steps=Int)
     coords = (
         chain=1:4, draw=1:100, shared=["s1", "s2", "s3"], dima=1:4, dimb=2:6, dimy=1:5
     )
-    dims = (a=(:shared, :dima), b=(:shared, :dimb), y=(:shared, :dimy))
+    dims = (a=(:shared, :dima), b=(:shared, :dimb), y=(:shared, :dimy), v=())
     metadata = Dict{String,Any}("inference_library" => "PPL")
     posterior = random_dataset(var_names, dims, coords, metadata, (;))
     posterior_predictive = random_dataset(data_names, dims, coords, metadata, (;))

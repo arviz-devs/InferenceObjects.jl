@@ -52,6 +52,8 @@ end
 
 Convert `NamedTuple` mapping variable names to arrays to a [`Dataset`](@ref).
 
+Any non-array values will be converted to a 0-dimensional array.
+
 # Keywords
 
   - `attrs::AbstractDict{<:AbstractString}`: a collection of metadata to attach to the
@@ -79,7 +81,7 @@ function namedtuple_to_dataset(
     default_dims=DEFAULT_SAMPLE_DIMS,
 )
     dim_arrays = map(keys(data)) do var_name
-        var_data = data[var_name]
+        var_data = as_array(data[var_name])
         var_dims = get(dims, var_name, ())
         return array_to_dimarray(var_data, var_name; dims=var_dims, coords, default_dims)
     end
