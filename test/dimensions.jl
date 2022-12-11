@@ -59,6 +59,18 @@ using InferenceObjects, DimensionalData, OffsetArrays, Test
         @test gdims isa NTuple{4,Dim}
         @test Dimensions.name(gdims) === (:draw, :chain, :c, :d)
         @test Dimensions.index(gdims) == (11:20, 0:3, -1:0, 2:4)
+
+        x = randn(2, 3)
+        InferenceObjects.generate_dims(x, :x; dims=(:a, :b))
+        @test_throws DimensionMismatch InferenceObjects.generate_dims(
+            x, :x; dims=(:a,), default_dims=[:b, :c]
+        )
+        @test_throws DimensionMismatch InferenceObjects.generate_dims(
+            x, :x; dims=(:a, :b), default_dims=[:c]
+        )
+        @test_throws DimensionMismatch InferenceObjects.generate_dims(
+            x, :x; dims=(:a, :b, :c), default_dims=[:c]
+        )
     end
 
     @testset "array_to_dimarray" begin
