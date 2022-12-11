@@ -11,6 +11,30 @@ as_array(x) = fill(x)
 as_array(x::AbstractArray) = x
 
 """
+    stack_draws(draws_table) -> NamedTuple
+
+Combine draws from a single chain into a single array by stacking on a new first dimension.
+
+`draws_table` must implement the Tables.jl interface. The stacking is performed separately
+for each column, and the resulting `NamedTuple` has the same fields as the columns.
+"""
+stack_draws
+stack_draws(draws) = _stack_cols(draws; dims=DEFAULT_DRAW_DIM)
+
+"""
+    stack_chains(chains_table) -> NamedTuple
+
+Combine `chains` into a single array by stacking on a new second dimension.
+
+`chains_table` must implement the Tables.jl interface. The stacking is performed separately
+for each column, and the resulting `NamedTuple` has the same fields as the columns.
+"""
+stack_chains
+stack_chains(chains) = _stack_cols(chains; dims=DEFAULT_CHAIN_DIM)
+
+_stack_cols(table; dims) = map(col -> stack(col; dims), Tables.columntable(table))
+
+"""
     namedtuple_of_arrays(x::NamedTuple) -> NamedTuple
     namedtuple_of_arrays(x::AbstractArray{NamedTuple}) -> NamedTuple
     namedtuple_of_arrays(x::AbstractArray{AbstractArray{<:NamedTuple}}) -> NamedTuple

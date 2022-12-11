@@ -7,7 +7,7 @@ using InferenceObjects, DimensionalData, Test
         L = 3
         nchains = 4
         ndraws = 500
-        vars = (a=randn(J, ndraws, nchains), b=randn(K, L, ndraws, nchains))
+        vars = (a=randn(ndraws, nchains, J), b=randn(ndraws, nchains, K, L))
         coords = (bi=2:(K + 1), draw=1:2:1_000)
         dims = (b=[:bi, nothing],)
         attrs = Dict("mykey" => 5)
@@ -23,10 +23,10 @@ using InferenceObjects, DimensionalData, Test
         nchains = 4
         ndraws = 100
         nshared = 3
-        xdims = (:shared, :draw, :chain)
-        x = DimArray(randn(nshared, ndraws, nchains), xdims)
-        ydims = (Dim{:ydim1}(Any["a", "b"]), Dim{:shared}, :draw, :chain)
-        y = DimArray(randn(2, nshared, ndraws, nchains), ydims)
+        xdims = (:draw, :chain, :shared)
+        x = DimArray(randn(ndraws, nchains, nshared), xdims)
+        ydims = (:draw, :chain, Dim{:ydim1}(Any["a", "b"]), Dim{:shared})
+        y = DimArray(randn(ndraws, nchains, 2, nshared), ydims)
         metadata = Dict("prop1" => "val1", "prop2" => "val2")
         ds = Dataset((; x, y); metadata)
 
@@ -36,7 +36,7 @@ using InferenceObjects, DimensionalData, Test
         end
 
         @testset "convert_to_dataset(::$T; kwargs...)" for T in (Dict, NamedTuple)
-            data = (x=randn(100, 4), y=randn(2, 100, 4))
+            data = (x=randn(100, 4), y=randn(100, 4, 2))
             if T <: Dict
                 data = T(pairs(data))
             end
@@ -46,7 +46,7 @@ using InferenceObjects, DimensionalData, Test
             @test DimensionalData.name(DimensionalData.dims(ds2.x)) == (:draw, :chain)
             @test ds2.y == data[:y]
             @test DimensionalData.name(DimensionalData.dims(ds2.y)) ==
-                (:y_dim_1, :draw, :chain)
+                (:draw, :chain, :y_dim_1)
         end
 
         @testset "convert_to_dataset(::InferenceData; kwargs...)" begin

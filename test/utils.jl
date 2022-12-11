@@ -11,6 +11,20 @@ module TestSubModule end
         @test InferenceObjects.recursive_stack(1:5) == 1:5
     end
 
+    @testset "stack_draws" begin
+        draws = [(x=rand(), y=rand(2), z=randn(3, 4)) for _ in 1:10]
+        chain = @inferred InferenceObjects.stack_draws(draws)
+        @test chain isa NamedTuple{(:x, :y, :z)}
+        @test size.(values(chain)) == ((10,), (10, 2), (10, 3, 4))
+    end
+
+    @testset "stack_chains" begin
+        chains = [(x=rand(10), y=rand(10, 2), z=randn(10, 3, 4)) for _ in 1:5]
+        vals = @inferred InferenceObjects.stack_chains(chains)
+        @test vals isa NamedTuple{(:x, :y, :z)}
+        @test size.(values(vals)) == ((10, 5), (10, 5, 2), (10, 5, 3, 4))
+    end
+
     @testset "as_array" begin
         @test InferenceObjects.as_array(3) == fill(3)
         @test InferenceObjects.as_array(2.5) == fill(2.5)
