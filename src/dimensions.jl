@@ -51,13 +51,13 @@ Generate `DimensionsionalData.Dimension` objects for each dimension of `array`.
     dimension. If indices for a dimension in `dims` are provided, they are used even if
     the dimension contains its own indices. If a dimension is missing, its indices are
     automatically generated.
-  - `default_dims`: A collection of dims to be appended to `dims` whose elements have the
+  - `default_dims`: A collection of dims to be prepended to `dims` whose elements have the
     same constraints.
 """
 function generate_dims(array, name; dims=(), coords=(;), default_dims=())
     num_default_dims = length(default_dims)
     if length(dims) + num_default_dims > ndims(array)
-        dim_names = Dimensions.name(Dimensions.basedims((dims..., default_dims...)))
+        dim_names = Dimensions.name(Dimensions.basedims((default_dims..., dims...)))
         throw(
             DimensionMismatch(
                 "Provided dimensions $dim_names more than dimensions of array: $(ndims(array))",
@@ -70,7 +70,7 @@ function generate_dims(array, name; dims=(), coords=(;), default_dims=())
         dim === nothing && return Symbol("$(name)_dim_$(i)")
         return dim
     end
-    dims_all = (dims_named..., default_dims...)
+    dims_all = (default_dims..., dims_named...)
     # default to the axes if no coords are provided
     axes_all = map(_ -> LookupArrays.NoLookup(), dims_all)
     T = NTuple{ndims(array),Dimensions.Dimension}

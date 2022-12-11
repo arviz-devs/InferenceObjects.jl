@@ -38,13 +38,13 @@ using InferenceObjects, DimensionalData, OffsetArrays, Test
     end
 
     @testset "generate_dims" begin
-        x = OffsetArray(randn(2, 3, 10, 4), -1:0, 2:4, 11:20, 0:3)
+        x = OffsetArray(randn(10, 4, 2, 3), 11:20, 0:3, -1:0, 2:4)
         gdims = @inferred NTuple{4,Dimensions.Dimension} InferenceObjects.generate_dims(
             x, :x
         )
         @test gdims isa NTuple{4,Dim}
         @test Dimensions.name(gdims) === (:x_dim_1, :x_dim_2, :x_dim_3, :x_dim_4)
-        @test Dimensions.index(gdims) == (-1:0, 2:4, 11:20, 0:3)
+        @test Dimensions.index(gdims) == (11:20, 0:3, -1:0, 2:4)
         @test Dimensions.val.(Dimensions.dims(gdims)) isa NTuple{4,LookupArrays.NoLookup}
 
         gdims = @inferred NTuple{4,Dimensions.Dimension} InferenceObjects.generate_dims(
@@ -52,27 +52,39 @@ using InferenceObjects, DimensionalData, OffsetArrays, Test
         )
         @test gdims isa NTuple{4,Dim}
         @test Dimensions.name(gdims) === (:a, :b, :y_dim_3, :y_dim_4)
-        @test Dimensions.index(gdims) == (-1:0, 2:4, 11:20, 0:3)
+        @test Dimensions.index(gdims) == (11:20, 0:3, -1:0, 2:4)
         @test Dimensions.val.(Dimensions.dims(gdims)) isa NTuple{4,LookupArrays.NoLookup}
 
         gdims = @inferred NTuple{4,Dimensions.Dimension} InferenceObjects.generate_dims(
             x, :z; dims=(:c, :d), default_dims=(:draw, :chain)
         )
         @test gdims isa NTuple{4,Dim}
-        @test Dimensions.name(gdims) === (:c, :d, :draw, :chain)
-        @test Dimensions.index(gdims) == (-1:0, 2:4, 11:20, 0:3)
+        @test Dimensions.name(gdims) === (:draw, :chain, :c, :d)
+        @test Dimensions.index(gdims) == (11:20, 0:3, -1:0, 2:4)
         @test Dimensions.val.(Dimensions.dims(gdims)) isa NTuple{4,LookupArrays.NoLookup}
+
+        x = randn(2, 3)
+        InferenceObjects.generate_dims(x, :x; dims=(:a, :b))
+        @test_throws DimensionMismatch InferenceObjects.generate_dims(
+            x, :x; dims=(:a,), default_dims=[:b, :c]
+        )
+        @test_throws DimensionMismatch InferenceObjects.generate_dims(
+            x, :x; dims=(:a, :b), default_dims=[:c]
+        )
+        @test_throws DimensionMismatch InferenceObjects.generate_dims(
+            x, :x; dims=(:a, :b, :c), default_dims=[:c]
+        )
     end
 
     @testset "array_to_dimarray" begin
-        x = OffsetArray(randn(2, 3, 10, 4), -1:0, 2:4, 11:20, 0:3)
+        x = OffsetArray(randn(10, 4, 2, 3), 11:20, 0:3, -1:0, 2:4)
         da = @inferred DimArray InferenceObjects.array_to_dimarray(x, :x)
         @test da == x
         @test DimensionalData.name(da) === :x
         gdims = Dimensions.dims(da)
         @test gdims isa NTuple{4,Dim}
         @test Dimensions.name(gdims) === (:x_dim_1, :x_dim_2, :x_dim_3, :x_dim_4)
-        @test Dimensions.index(gdims) == (-1:0, 2:4, 11:20, 0:3)
+        @test Dimensions.index(gdims) == (11:20, 0:3, -1:0, 2:4)
 
         da = @inferred DimArray InferenceObjects.array_to_dimarray(x, :y; dims=(:a, :b))
         @test da == x
@@ -80,7 +92,7 @@ using InferenceObjects, DimensionalData, OffsetArrays, Test
         gdims = Dimensions.dims(da)
         @test gdims isa NTuple{4,Dim}
         @test Dimensions.name(gdims) === (:a, :b, :y_dim_3, :y_dim_4)
-        @test Dimensions.index(gdims) == (-1:0, 2:4, 11:20, 0:3)
+        @test Dimensions.index(gdims) == (11:20, 0:3, -1:0, 2:4)
 
         da = @inferred DimArray InferenceObjects.array_to_dimarray(
             x, :z; dims=(:c, :d), default_dims=(:draw, :chain)
@@ -89,8 +101,8 @@ using InferenceObjects, DimensionalData, OffsetArrays, Test
         @test DimensionalData.name(da) === :z
         gdims = Dimensions.dims(da)
         @test gdims isa NTuple{4,Dim}
-        @test Dimensions.name(gdims) === (:c, :d, :draw, :chain)
-        @test Dimensions.index(gdims) == (-1:0, 2:4, 11:20, 0:3)
+        @test Dimensions.name(gdims) === (:draw, :chain, :c, :d)
+        @test Dimensions.index(gdims) == (11:20, 0:3, -1:0, 2:4)
 
         v = randn(1_000)
         da = @inferred DimArray InferenceObjects.array_to_dimarray(

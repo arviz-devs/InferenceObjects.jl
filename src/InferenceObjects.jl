@@ -3,6 +3,7 @@ module InferenceObjects
 using Compat: stack
 using Dates: Dates
 using DimensionalData: DimensionalData, Dimensions, LookupArrays
+using Tables: Tables
 
 # groups that are officially listed in the schema
 const SCHEMA_GROUPS = (
@@ -25,6 +26,8 @@ const SCHEMA_GROUPS = (
 )
 const SCHEMA_GROUPS_DICT = Dict(n => i for (i, n) in enumerate(SCHEMA_GROUPS))
 const DEFAULT_SAMPLE_DIMS = Dimensions.key2dim((:draw, :chain))
+const DEFAULT_DRAW_DIM = 1
+const DEFAULT_CHAIN_DIM = 2
 
 export Dataset, InferenceData
 export convert_to_dataset,

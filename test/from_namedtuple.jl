@@ -7,12 +7,9 @@ using InferenceObjects, Test
     coords = (yx=["y1", "y2"], zx=1:3, zy=1:5)
 
     nts = [
-        "NamedTuple" => map(sz -> randn(sz..., ndraws, nchains), sizes),
-        "Vector{NamedTuple}" => [map(sz -> randn(sz..., ndraws), sizes) for _ in 1:nchains],
-        "Matrix{NamedTuple}" =>
-            [map(sz -> randn(sz...), sizes) for _ in 1:ndraws, _ in 1:nchains],
+        "NamedTuple" => map(sz -> randn(ndraws, nchains, sz...), sizes),
         "Vector{Vector{NamedTuple}}" =>
-            [[map(sz -> randn(sz...), sizes) for _ in 1:ndraws] for _ in 1:nchains],
+            [[map(Base.splat(randn), sizes) for _ in 1:ndraws] for _ in 1:nchains],
     ]
 
     @testset "posterior::$(type)" for (type, nt) in nts
@@ -68,5 +65,14 @@ using InferenceObjects, Test
         test_idata_group_correct(
             idata2, group, (:w, :v); library, dims, coords, default_dims=()
         )
+    end
+
+    @testset "convert_to_inference_data with non-posterior `group`" begin
+        data = (x=3, y=randn(2))
+        idata = convert_to_inference_data(data; group=:observed_data)
+        @test issetequal(keys(idata), (:observed_data,))
+        @test issetequal(keys(idata.observed_data), (:x, :y))
+        @test idata.observed_data.x == fill(data.x)
+        @test idata.observed_data.y == data.y
     end
 end
