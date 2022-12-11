@@ -66,4 +66,13 @@ using InferenceObjects, Test
             idata2, group, (:w, :v); library, dims, coords, default_dims=()
         )
     end
+
+    @testset "convert_to_inference_data with non-posterior `group`" begin
+        data = (x=3, y=randn(2))
+        idata = convert_to_inference_data(data; group=:observed_data)
+        @test issetequal(keys(idata), (:observed_data,))
+        @test issetequal(keys(idata.observed_data), (:x, :y))
+        @test idata.observed_data.x == fill(data.x)
+        @test idata.observed_data.y == data.y
+    end
 end
