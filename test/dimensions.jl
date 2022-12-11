@@ -45,6 +45,7 @@ using InferenceObjects, DimensionalData, OffsetArrays, Test
         @test gdims isa NTuple{4,Dim}
         @test Dimensions.name(gdims) === (:x_dim_1, :x_dim_2, :x_dim_3, :x_dim_4)
         @test Dimensions.index(gdims) == (11:20, 0:3, -1:0, 2:4)
+        @test Dimensions.val.(Dimensions.dims(gdims)) isa NTuple{4,LookupArrays.NoLookup}
 
         gdims = @inferred NTuple{4,Dimensions.Dimension} InferenceObjects.generate_dims(
             x, :y; dims=(:a, :b)
@@ -52,6 +53,7 @@ using InferenceObjects, DimensionalData, OffsetArrays, Test
         @test gdims isa NTuple{4,Dim}
         @test Dimensions.name(gdims) === (:a, :b, :y_dim_3, :y_dim_4)
         @test Dimensions.index(gdims) == (11:20, 0:3, -1:0, 2:4)
+        @test Dimensions.val.(Dimensions.dims(gdims)) isa NTuple{4,LookupArrays.NoLookup}
 
         gdims = @inferred NTuple{4,Dimensions.Dimension} InferenceObjects.generate_dims(
             x, :z; dims=(:c, :d), default_dims=(:draw, :chain)
@@ -59,6 +61,7 @@ using InferenceObjects, DimensionalData, OffsetArrays, Test
         @test gdims isa NTuple{4,Dim}
         @test Dimensions.name(gdims) === (:draw, :chain, :c, :d)
         @test Dimensions.index(gdims) == (11:20, 0:3, -1:0, 2:4)
+        @test Dimensions.val.(Dimensions.dims(gdims)) isa NTuple{4,LookupArrays.NoLookup}
 
         x = randn(2, 3)
         InferenceObjects.generate_dims(x, :x; dims=(:a, :b))

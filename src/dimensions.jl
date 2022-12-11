@@ -71,7 +71,8 @@ function generate_dims(array, name; dims=(), coords=(;), default_dims=())
         return dim
     end
     dims_all = (default_dims..., dims_named...)
-    axes_all = axes(array)
+    # default to the axes if no coords are provided
+    axes_all = map(_ -> LookupArrays.NoLookup(), dims_all)
     T = NTuple{ndims(array),Dimensions.Dimension}
     dims_with_coords = as_dimension.(dims_all, Ref(coords), axes_all)::T
     return Dimensions.format(dims_with_coords, array)::T
