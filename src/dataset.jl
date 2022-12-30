@@ -35,10 +35,6 @@ Dataset(data::Dataset) = data
 
 Base.parent(data::Dataset) = getfield(data, :data)
 
-Base.propertynames(data::Dataset) = keys(data)
-
-Base.getproperty(data::Dataset, k::Symbol) = getindex(data, k)
-
 function setattribute!(data::Dataset, k::AbstractString, value)
     setindex!(DimensionalData.metadata(data), value, k)
     return value
