@@ -11,7 +11,7 @@ Tables = "bd369af6-aec1-5ad0-b16a-f7cc5008161c"
 
 [compat]
 Compat = "3.46.0, 4.2.0"
-DimensionalData = "0.23.1, 0.24"
+DimensionalData = "0.24"
 OffsetArrays = "1"
 OrderedCollections = "1"
 Tables = "1"
