@@ -239,6 +239,26 @@ The result contains all groups in `data` and `others`.
 If a group appears more than once, the one that occurs last is kept.
 
 See also: [`cat`](@ref)
+
+# Examples
+
+Here we merge an `InferenceData` containing only a posterior group with one containing only
+a prior group to create a new one containing both groups.
+
+```jldoctest
+julia> idata1 = from_dict(Dict(:a => randn(100, 4, 3), :b => randn(100, 4)))
+InferenceData with groups:
+  > posterior
+
+julia> idata2 = from_dict(; prior=Dict(:a => randn(100, 1, 3), :c => randn(100, 1)))
+InferenceData with groups:
+  > prior
+
+julia> idata_merged = merge(idata1, idata2)
+InferenceData with groups:
+  > posterior
+  > prior
+```
 """
 function Base.merge(data::InferenceData, others::InferenceData...)
     return InferenceData(Base.merge(groups(data), map(groups, others)...))
