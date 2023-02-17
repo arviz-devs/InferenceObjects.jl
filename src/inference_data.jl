@@ -370,6 +370,7 @@ and 1 layer:
 
 with metadata Dict{String, Any} with 1 entry:
   "created_at" => "2023-02-17T15:11:00.59"
+```
 """
 function Base.cat(data::InferenceData, others::InferenceData...; groups=keys(data), dims)
     groups_cat = map(groups) do k
