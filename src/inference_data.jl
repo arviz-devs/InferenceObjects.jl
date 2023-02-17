@@ -231,12 +231,12 @@ end
 @generated _keys_and_types(::NamedTuple{keys,types}) where {keys,types} = (keys, types)
 
 """
-    merge(data::InferenceData, others::InferenceData...) -> InferenceData
+    merge(data::InferenceData...) -> InferenceData
 
 Merge [`InferenceData`](@ref) objects.
 
 The result contains all groups in `data` and `others`.
-If a group appears more than once, the one that occurs first is kept.
+If a group appears more than once, the one that occurs last is kept.
 """
 function Base.merge(data::InferenceData, others::InferenceData...)
     return InferenceData(Base.merge(groups(data), map(groups, others)...))
