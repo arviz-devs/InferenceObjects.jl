@@ -1,5 +1,15 @@
 has_all_sample_dims(dims) = all(Dimensions.hasdim(dims, DEFAULT_SAMPLE_DIMS))
 
+# Like Dimensions.key2dim but doesn't allow users to inject their own dimensions using
+# Dimensions.@dim. See https://github.com/arviz-devs/InferenceObjects.jl/issues/37
+_key2dim(d::Symbol) = Dimensions.Dim{d}(LookupArrays.NoLookup())
+_key2dim(d::Tuple) = map(_key2dim, d)
+_key2dim(d) = d
+
+# make sure dim has a lookup value accessible with `val`
+_valdim(d) = d
+_valdim(d::Type{<:Dimensions.Dimension}) = d(LookupArrays.NoLookup())
+
 """
     as_dimension(dim, coords, axis) -> DimensionsionalData.Dimension
 

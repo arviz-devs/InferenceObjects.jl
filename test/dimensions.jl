@@ -1,4 +1,7 @@
 using InferenceObjects, DimensionalData, OffsetArrays, Test
+using DimensionalData.LookupArrays
+
+Dimensions.@dim foo "foo"
 
 @testset "dimension-related functions" begin
     @testset "has_all_sample_dims" begin
@@ -21,6 +24,27 @@ using InferenceObjects, DimensionalData, OffsetArrays, Test
         @test InferenceObjects.has_all_sample_dims((
             Dim{:draw}(1:10), Dim{:chain}(1:4), Dim{:x}(1:2)
         ))
+    end
+
+    @testset "_key2dim" begin
+        @testset for k in (:chain, :draw, :foo)
+            @test InferenceObjects._key2dim(k) === Dim{k}(NoLookup())
+            @test @inferred(InferenceObjects._key2dim(Dim{k})) === Dim{k}
+            @test @inferred(InferenceObjects._key2dim(Dim{k}())) === Dim{k}()
+            @test @inferred(InferenceObjects._key2dim(Dim{k}(1:4))) == Dim{k}(1:4)
+        end
+        @test InferenceObjects._key2dim((:chain, :draw, :foo)) ===
+            (Dim{:chain}(NoLookup()), Dim{:draw}(NoLookup()), Dim{:foo}(NoLookup()))
+    end
+
+    @testset "_valdim" begin
+        @testset for d in (X(), X(1:10))
+            @test @inferred(InferenceObjects._valdim(d)) === d
+        end
+        @test InferenceObjects._valdim(X) === X(NoLookup())
+        @test InferenceObjects._valdim(Dim{:a}) === Dim{:a}(NoLookup())
+        d = Dim{:a}(1:5)
+        @test InferenceObjects._valdim(d) === d
     end
 
     @testset "as_dimension" begin
