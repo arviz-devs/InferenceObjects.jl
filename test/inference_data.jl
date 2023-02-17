@@ -136,4 +136,32 @@ using InferenceObjects, DimensionalData, Test
             InferenceData(; posterior=posterior, prior=prior, observed_data=observed_data)
     end
 
+    @testset "cat" begin
+        posterior2 = random_dataset(var_names, dims, coords, metadata, (;))
+        idata1 = InferenceData(; posterior=posterior)
+        idata2 = InferenceData(; posterior=posterior2)
+
+        # existing dimension
+        idata_cat1 = @inferred InferenceData cat(idata1, idata2; dims=Dim{:chain}())
+        @test idata_cat1 isa InferenceData
+        @test issetequal(keys(idata_cat1), (:posterior,))
+        @test idata_cat1.posterior == cat(posterior, posterior2; dims=Dim{:chain}())
+        @test idata_cat1.posterior == cat(posterior, posterior2; dims=:chain)
+
+        # new dimension
+        idata_cat2 = @inferred InferenceData cat(idata1, idata2; dims=Dim{:run}())
+        @test idata_cat2 isa InferenceData
+        @test issetequal(keys(idata_cat1), (:posterior,))
+        @test idata_cat2.posterior == cat(posterior, posterior2; dims=:run)
+
+        # filtering to subset of groups uses merge for remaining groups
+        idata3 = InferenceData(; posterior=posterior2, observed_data=observed_data)
+        idata_cat3 = @inferred InferenceData cat(
+            idata3, idata3; dims=Dim{:chain}(), groups=(:posterior,)
+        )
+        @test idata_cat3 isa InferenceData
+        @test issetequal(keys(idata_cat3), (:posterior, :observed_data))
+        @test idata_cat3.posterior == cat(posterior2, posterior2; dims=Dim{:chain}())
+        @test idata_cat3.observed_data === observed_data
+    end
 end
