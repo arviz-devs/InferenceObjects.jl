@@ -74,9 +74,3 @@ jobs:
           install-package: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - run: |
-          julia --project=docs -e '
-            using Documenter: DocMeta, doctest
-            using InferenceObjects
-            DocMeta.setdocmeta!(InferenceObjects, :DocTestSetup, :(using InferenceObjects); recursive=true)
-            doctest(InferenceObjects)'
