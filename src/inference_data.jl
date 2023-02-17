@@ -237,6 +237,8 @@ Merge [`InferenceData`](@ref) objects.
 
 The result contains all groups in `data` and `others`.
 If a group appears more than once, the one that occurs last is kept.
+
+See also: [`cat`](@ref)
 """
 function Base.merge(data::InferenceData, others::InferenceData...)
     return InferenceData(Base.merge(groups(data), map(groups, others)...))
@@ -247,4 +249,112 @@ function rekey(data::InferenceData, keymap)
     names_new = map(k -> get(keymap, k, k), propertynames(groups_old))
     groups_new = NamedTuple{names_new}(Tuple(groups_old))
     return InferenceData(groups_new)
+end
+
+"""
+    cat(data::InferenceData...; [groups=keys(data[1]),] dims) -> InferenceData
+
+Concatenate [`InferenceData`](@ref) objects along the specified dimension `dims`.
+
+Only the groups in `groups` are concatenated. Remaining groups are [`merge`](@ref)d into the
+new `InferenceData` object.
+
+# Examples
+
+Here is how we can concatenate all groups of two `InferenceData` objects along the existing
+`chain` dimension:
+
+```jldoctest cat
+julia> coords = (; a_dim=["x", "y", "z"]);
+
+julia> dims = dims=(; a=[:a_dim]);
+
+julia> data = Dict(:a => randn(100, 4, 3), :b => randn(100, 4));
+
+julia> idata = from_dict(data; coords=coords, dims=dims)
+InferenceData with groups:
+  > posterior
+
+julia> idata_cat1 = cat(idata, idata; dims=:chain)
+InferenceData with groups:
+  > posterior
+
+julia> idata_cat1.posterior
+Dataset with dimensions:
+  Dim{:draw},
+  Dim{:chain},
+  Dim{:a_dim} Categorical{String} String[x, y, z] ForwardOrdered
+and 2 layers:
+  :a Float64 dims: Dim{:draw}, Dim{:chain}, Dim{:a_dim} (100×8×3)
+  :b Float64 dims: Dim{:draw}, Dim{:chain} (100×8)
+
+with metadata Dict{String, Any} with 1 entry:
+  "created_at" => "2023-02-17T18:47:29.679"
+```
+
+Alternatively, we can concatenate along a new `run` dimension, which will be created.
+
+```jldoctest cat
+julia> idata_cat2 = cat(idata, idata; dims=:run)
+InferenceData with groups:
+  > posterior
+
+julia> idata_cat2.posterior
+Dataset with dimensions:
+  Dim{:draw},
+  Dim{:chain},
+  Dim{:a_dim} Categorical{String} String[x, y, z] ForwardOrdered,
+  Dim{:run}
+and 2 layers:
+  :a Float64 dims: Dim{:draw}, Dim{:chain}, Dim{:a_dim}, Dim{:run} (100×4×3×2)
+  :b Float64 dims: Dim{:draw}, Dim{:chain}, Dim{:run} (100×4×2)
+
+with metadata Dict{String, Any} with 1 entry:
+  "created_at" => "2023-02-17T18:47:29.679"
+```
+
+We can also concatenate only a subset of groups and merge the rest, which is especially
+useful when some groups are present only in some of the `InferenceData` objects or will be
+identical in all of them:
+
+```jldoctest cat
+julia> observed_data = Dict(:y => randn(10));
+
+julia> idata2 = from_dict(data; observed_data=observed_data, coords=coords, dims=dims)
+InferenceData with groups:
+  > posterior
+  > observed_data
+
+julia> idata_cat3 = cat(idata, idata2; groups=(:posterior,), dims=:run)
+InferenceData with groups:
+  > posterior
+  > observed_data
+
+julia> idata_cat3.posterior
+Dataset with dimensions:
+  Dim{:draw},
+  Dim{:chain},
+  Dim{:a_dim} Categorical{String} String[x, y, z] ForwardOrdered,
+  Dim{:run}
+and 2 layers:
+  :a Float64 dims: Dim{:draw}, Dim{:chain}, Dim{:a_dim}, Dim{:run} (100×4×3×2)
+  :b Float64 dims: Dim{:draw}, Dim{:chain}, Dim{:run} (100×4×2)
+
+with metadata Dict{String, Any} with 1 entry:
+  "created_at" => "2023-02-17T18:47:29.679"
+
+julia> idata_cat3.observed_data
+Dataset with dimensions: Dim{:y_dim_1}
+and 1 layer:
+  :y Float64 dims: Dim{:y_dim_1} (10)
+
+with metadata Dict{String, Any} with 1 entry:
+  "created_at" => "2023-02-17T15:11:00.59"
+"""
+function Base.cat(data::InferenceData, others::InferenceData...; groups=keys(data), dims)
+    groups_cat = map(groups) do k
+        k => cat(data[k], (other[k] for other in others)...; dims=dims)
+    end
+    # keep other non-concatenated groups
+    return merge(data, others..., InferenceData(; groups_cat...))
 end
