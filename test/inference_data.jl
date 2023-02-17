@@ -124,4 +124,16 @@ using InferenceObjects, DimensionalData, Test
             @test occursin("Dataset", text)
         end
     end
+
+    @testset "merge" begin
+        posterior2 = random_dataset(var_names, dims, coords, metadata, (;))
+        idata1 = InferenceData(; posterior=posterior)
+        idata2 = InferenceData(; posterior=posterior2, prior=prior)
+        idata3 = InferenceData(; observed_data=observed_data)
+        @test @inferred(merge(idata1, idata2)) ==
+            InferenceData(; posterior=posterior2, prior=prior)
+        @test @inferred(merge(idata2, idata1, idata3)) ==
+            InferenceData(; posterior=posterior, prior=prior, observed_data=observed_data)
+    end
+
 end
