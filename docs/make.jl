@@ -28,6 +28,7 @@ makedocs(;
         "Subpackages" => ["subpackages/inferenceobjectsnetcdf.md"],
     ],
     doctestfilters=doctestfilters,
+    strict=Documenter.except(:missing_docs),
 )
 
 deploydocs(; repo="github.com/arviz-devs/InferenceObjects.jl", devbranch="main")
