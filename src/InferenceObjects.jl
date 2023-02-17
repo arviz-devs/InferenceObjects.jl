@@ -4,6 +4,7 @@ using Compat: stack
 using Dates: Dates
 using DimensionalData: DimensionalData, Dimensions, LookupArrays
 using OrderedCollections: OrderedCollections
+using Tables: Tables
 
 # groups that are officially listed in the schema
 const SCHEMA_GROUPS = (
@@ -26,9 +27,12 @@ const SCHEMA_GROUPS = (
 )
 const SCHEMA_GROUPS_DICT = Dict(n => i for (i, n) in enumerate(SCHEMA_GROUPS))
 const DEFAULT_SAMPLE_DIMS = Dimensions.key2dim((:draw, :chain))
+const DEFAULT_DRAW_DIM = 1
+const DEFAULT_CHAIN_DIM = 2
 
 export Dataset, InferenceData
-export convert_to_dataset, convert_to_inference_data, from_namedtuple, namedtuple_to_dataset
+export convert_to_dataset,
+    convert_to_inference_data, from_dict, from_namedtuple, namedtuple_to_dataset
 
 include("utils.jl")
 include("dimensions.jl")
@@ -37,5 +41,6 @@ include("inference_data.jl")
 include("convert_dataset.jl")
 include("convert_inference_data.jl")
 include("from_namedtuple.jl")
+include("from_dict.jl")
 
 end # module

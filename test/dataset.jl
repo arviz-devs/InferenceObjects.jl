@@ -6,10 +6,10 @@ using InferenceObjects, DimensionalData, Test
             nchains = 4
             ndraws = 100
             nshared = 3
-            xdims = (:shared, :draw, :chain)
-            x = DimArray(randn(nshared, ndraws, nchains), xdims)
-            ydims = (:ydim1, :shared, :draw, :chain)
-            y = DimArray(randn(2, nshared, ndraws, nchains), ydims)
+            xdims = (:draw, :chain, :shared)
+            x = DimArray(randn(ndraws, nchains, nshared), xdims)
+            ydims = (:draw, :chain, :ydim1, :shared)
+            y = DimArray(randn(ndraws, nchains, 2, nshared), ydims)
             metadata = Dict("prop1" => "val1", "prop2" => "val2")
 
             @testset "from NamedTuple" begin
@@ -69,10 +69,10 @@ using InferenceObjects, DimensionalData, Test
         nchains = 4
         ndraws = 100
         nshared = 3
-        xdims = (:shared, :draw, :chain)
-        x = DimArray(randn(nshared, ndraws, nchains), xdims)
-        ydims = (:ydim1, :shared, :draw, :chain)
-        y = DimArray(randn(2, nshared, ndraws, nchains), ydims)
+        xdims = (:draw, :chain, :shared)
+        x = DimArray(randn(ndraws, nchains, nshared), xdims)
+        ydims = (:draw, :chain, :ydim1, :shared)
+        y = DimArray(randn(ndraws, nchains, 2, nshared), ydims)
         metadata = Dict("prop1" => "val1", "prop2" => "val2")
         ds = Dataset((; x, y); metadata)
 
@@ -117,20 +117,20 @@ using InferenceObjects, DimensionalData, Test
         L = 3
         nchains = 4
         ndraws = 500
-        vars = (a=randn(J, ndraws, nchains), b=randn(K, L, ndraws, nchains))
+        vars = (a=randn(ndraws, nchains, J), b=randn(ndraws, nchains, K, L))
         coords = (bi=2:(K + 1), draw=1:2:1_000)
         dims = (b=[:bi, nothing],)
         expected_dims = (
             a=(
-                Dimensions.Dim{:a_dim_1}(1:J),
                 Dimensions.Dim{:draw}(1:2:1_000),
                 Dimensions.Dim{:chain}(1:nchains),
+                Dimensions.Dim{:a_dim_1}(1:J),
             ),
             b=(
-                Dimensions.Dim{:bi}(2:(K + 1)),
-                Dimensions.Dim{:b_dim_2}(1:L),
                 Dimensions.Dim{:draw}(1:2:1_000),
                 Dimensions.Dim{:chain}(1:nchains),
+                Dimensions.Dim{:bi}(2:(K + 1)),
+                Dimensions.Dim{:b_dim_2}(1:L),
             ),
         )
         attrs = Dict("mykey" => 5)
@@ -153,5 +153,12 @@ using InferenceObjects, DimensionalData, Test
         @test metadata["inference_library"] == "MyLib"
         @test !haskey(metadata, "inference_library_version")
         @test metadata["mykey"] == 5
+
+        ds2 = namedtuple_to_dataset((x=1, y=randn(10)); default_dims=())
+        @test ds2 isa Dataset
+        @test ds2.x isa DimensionalData.DimArray{<:Any,0}
+        @test DimensionalData.dims(ds2.x) == ()
+        @test ds2.y isa DimensionalData.DimArray{<:Any,1}
+        @test DimensionalData.dims(ds2.y) == (Dim{:y_dim_1}(1:10),)
     end
 end

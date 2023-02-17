@@ -7,6 +7,33 @@ ordered with dimensions of the innermost container first and outermost last.
 recursive_stack(x) = x
 recursive_stack(x::AbstractArray{<:AbstractArray}) = recursive_stack(stack(x))
 
+as_array(x) = fill(x)
+as_array(x::AbstractArray) = x
+
+"""
+    stack_draws(draws_table) -> NamedTuple
+
+Combine draws from a single chain into a single array by stacking on a new first dimension.
+
+`draws_table` must implement the Tables.jl interface. The stacking is performed separately
+for each column, and the resulting `NamedTuple` has the same fields as the columns.
+"""
+stack_draws
+stack_draws(draws) = _stack_cols(draws; dims=DEFAULT_DRAW_DIM)
+
+"""
+    stack_chains(chains_table) -> NamedTuple
+
+Combine `chains` into a single array by stacking on a new second dimension.
+
+`chains_table` must implement the Tables.jl interface. The stacking is performed separately
+for each column, and the resulting `NamedTuple` has the same fields as the columns.
+"""
+stack_chains
+stack_chains(chains) = _stack_cols(chains; dims=DEFAULT_CHAIN_DIM)
+
+_stack_cols(table; dims) = map(col -> stack(col; dims), Tables.columntable(table))
+
 """
     namedtuple_of_arrays(x::NamedTuple) -> NamedTuple
     namedtuple_of_arrays(x::AbstractArray{NamedTuple}) -> NamedTuple
@@ -25,7 +52,7 @@ ntarray = InferenceObjects.namedtuple_of_arrays(data);
 ```
 """
 function namedtuple_of_arrays end
-namedtuple_of_arrays(x::NamedTuple) = map(recursive_stack, x)
+namedtuple_of_arrays(x::NamedTuple) = map(as_array ∘ recursive_stack, x)
 namedtuple_of_arrays(x::AbstractArray) = namedtuple_of_arrays(namedtuple_of_arrays.(x))
 function namedtuple_of_arrays(x::AbstractArray{<:NamedTuple{K}}) where {K}
     return NamedTuple{K}(recursive_stack(getproperty.(x, k)) for k in K)
@@ -67,3 +94,9 @@ function rekey(d::NamedTuple, keymap)
     new_keys = map(k -> get(keymap, k, k), keys(d))
     return NamedTuple{new_keys}(values(d))
 end
+
+as_namedtuple(dict::AbstractDict{Symbol}) = NamedTuple(dict)
+function as_namedtuple(dict::AbstractDict{<:AbstractString})
+    return NamedTuple(Symbol(k) => v for (k, v) in dict)
+end
+as_namedtuple(nt::NamedTuple) = nt

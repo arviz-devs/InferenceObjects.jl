@@ -76,8 +76,12 @@ function _from_netcdf(ds, load_mode)
     groups = map(ds.group) do (group_name, group)
         layerdims = (;
             map(NCDatasets.dimnames(group)) do dim_name
-                return Symbol(dim_name) =>
-                    Dimensions.Dim{Symbol(dim_name)}(collect(group[dim_name]))
+                index = collect(group[dim_name])
+                if index == eachindex(index)
+                    # discard the index if it is just the default
+                    index = LookupArrays.NoLookup()
+                end
+                return Symbol(dim_name) => Dimensions.Dim{Symbol(dim_name)}(index)
             end...
         )
         var_iter = Iterators.filter(∉(keys(layerdims)) ∘ Symbol ∘ first, group)
@@ -108,10 +112,18 @@ end
 
 _var_to_array(var, load_mode) = var
 function _var_to_array(var, load_mode::Val{:eager})
-    arr = Array(var)
+    arr = as_array(Array(var))
+    attr = var.attrib
     try
-        return NCDatasets.nomissing(arr)
+        arr_nomissing = NCDatasets.nomissing(arr)
+        if eltype(arr_nomissing) <: Integer && (get(attr, "dtype", nothing) == "bool")
+            return convert(Array{Bool}, arr_nomissing)
+        end
+        return arr_nomissing
     catch e
+        if eltype(arr) <: Union{Integer,Missing} && (get(attr, "dtype", nothing) == "bool")
+            return convert(Array{Union{Missing,Bool}}, arr)
+        end
         return arr
     end
 end
@@ -160,17 +172,26 @@ function to_netcdf(data, ds::NCDatasets.NCDataset; group::Symbol=:posterior)
         for dim in Dimensions.dims(group_data)
             dim_name = String(Dimensions.name(dim))
             NCDatasets.defDim(group_ds, dim_name, length(dim))
-            val = LookupArrays.val(dim)
-            var = NCDatasets.defVar(group_ds, dim_name, eltype(val), (dim_name,))
-            copyto!(var, val)
+            index = LookupArrays.index(group_data, dim)
+            var = NCDatasets.defVar(group_ds, dim_name, eltype(index), (dim_name,))
+            copyto!(var, index)
         end
         for (var_name, da) in pairs(group_data)
             dimnames = map(String, Dimensions.name(Dimensions.dims(da)))
-            attrib = collect(DimensionalData.metadata(da))
-            NCDatasets.defVar(group_ds, String(var_name), parent(da), dimnames; attrib)
+            attrib = Dict(DimensionalData.metadata(da))
+            if eltype(da) <: Bool && (get(attrib, "dtype", "bool") == "bool")
+                da = convert(AbstractArray{Int8}, da)
+                attrib["dtype"] = "bool"
+            end
+            NCDatasets.defVar(
+                group_ds, String(var_name), parent(da), dimnames; attrib=collect(attrib)
+            )
         end
     end
     return ds
 end
+
+as_array(x) = fill(x)
+as_array(x::AbstractArray) = x
 
 end

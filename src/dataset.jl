@@ -34,10 +34,6 @@ Dataset(data::Dataset) = data
 
 Base.parent(data::Dataset) = getfield(data, :data)
 
-Base.propertynames(data::Dataset) = keys(data)
-
-Base.getproperty(data::Dataset, k::Symbol) = getindex(data, k)
-
 function setattribute!(data::Dataset, k::AbstractString, value)
     setindex!(DimensionalData.metadata(data), value, k)
     return value
@@ -50,6 +46,8 @@ end
     namedtuple_to_dataset(data; kwargs...) -> Dataset
 
 Convert `NamedTuple` mapping variable names to arrays to a [`Dataset`](@ref).
+
+Any non-array values will be converted to a 0-dimensional array.
 
 # Keywords
 
@@ -78,7 +76,7 @@ function namedtuple_to_dataset(
     default_dims=DEFAULT_SAMPLE_DIMS,
 )
     dim_arrays = map(keys(data)) do var_name
-        var_data = data[var_name]
+        var_data = as_array(data[var_name])
         var_dims = get(dims, var_name, ())
         return array_to_dimarray(var_data, var_name; dims=var_dims, coords, default_dims)
     end

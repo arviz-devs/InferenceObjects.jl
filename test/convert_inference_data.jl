@@ -19,9 +19,9 @@ using InferenceObjects, DimensionalData, Test
         )
         dims = (a=(:shared, :dima), b=(:shared, :dimb), y=(:shared, :dimy))
         metadata = (inference_library="PPL",)
-        posterior = random_dataset(var_names, dims, coords, metadata)
-        prior = random_dataset(var_names, dims, coords, metadata)
-        observed_data = random_dataset(data_names, dims, coords, metadata)
+        posterior = random_dataset(var_names, dims, coords, metadata, (;))
+        prior = random_dataset(var_names, dims, coords, metadata, (;))
+        observed_data = random_dataset(data_names, dims, coords, metadata, (;))
         group_data = (; prior, observed_data, posterior)
         idata = InferenceData(group_data)
         @test convert(InferenceData, idata) === idata
@@ -34,7 +34,7 @@ using InferenceObjects, DimensionalData, Test
 
     @testset "convert_to_inference_data" begin
         @testset "convert_to_inference_data(::AbstractDimStack)" begin
-            ds = namedtuple_to_dataset((x=randn(10, 4), y=randn(5, 10, 4)))
+            ds = namedtuple_to_dataset((x=randn(10, 4), y=randn(10, 4, 5)))
             idata1 = convert_to_inference_data(ds; group=:prior)
             @test issetequal(InferenceObjects.groupnames(idata1), [:prior])
             idata2 = InferenceData(; prior=ds)
@@ -44,7 +44,7 @@ using InferenceObjects, DimensionalData, Test
         end
 
         @testset "convert_to_inference_data(::$T)" for T in (NamedTuple, Dict)
-            data = (A=randn(2, 10, 2), B=randn(5, 2, 10, 2))
+            data = (A=randn(10, 2, 2), B=randn(10, 2, 5, 2))
             if T <: Dict
                 data = Dict(pairs(data))
             end
@@ -62,7 +62,7 @@ using InferenceObjects, DimensionalData, Test
 
         @testset "convert_to_inference_data(::$T)" for T in
                                                        (Array, DimensionalData.DimArray)
-            data = randn(2, 10, 2)
+            data = randn(10, 2, 2)
             if T <: DimensionalData.DimArray
                 data = DimensionalData.DimArray(data, (:a, :b, :c); name=:y)
             end

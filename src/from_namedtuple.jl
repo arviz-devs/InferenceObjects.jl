@@ -1,7 +1,5 @@
 """
     from_namedtuple(posterior::NamedTuple; kwargs...) -> InferenceData
-    from_namedtuple(posterior::Vector{<:NamedTuple}; kwargs...) -> InferenceData
-    from_namedtuple(posterior::Matrix{<:NamedTuple}; kwargs...) -> InferenceData
     from_namedtuple(posterior::Vector{Vector{<:NamedTuple}}; kwargs...) -> InferenceData
     from_namedtuple(
         posterior::NamedTuple,
@@ -22,18 +20,16 @@ whose first dimensions correspond to the dimensions of the containers.
   - `posterior`: The data to be converted. It may be of the following types:
 
       + `::NamedTuple`: The keys are the variable names and the values are arrays with
-        dimensions `(nchains, ndraws, sizes...)`.
-      + `::Matrix{<:NamedTuple}`: Each element is a single draw from a single chain, with
-        array/scalar values with dimensions `sizes`. The dimensions of the matrix container
-        are `(nchains, ndraws)`
-      + `::Vector{Vector{<:NamedTuple}}`: The same as the above case.
+        dimensions `(ndraws, nchains[, sizes...])`.
+      + `::Vector{Vector{<:NamedTuple}}`: A vector of length `nchains` whose elements have
+        length `ndraws`.
 
 # Keywords
 
   - `posterior_predictive::Any=nothing`: Draws from the posterior predictive distribution
   - `sample_stats::Any=nothing`: Statistics of the posterior sampling process
   - `predictions::Any=nothing`: Out-of-sample predictions for the posterior.
-  - `prior::Any=nothing`: Draws from the prior
+  - `prior=nothing`: Draws from the prior. Accepts the same types as `posterior`.
   - `prior_predictive::Any=nothing`: Draws from the prior predictive distribution
   - `sample_stats_prior::Any=nothing`: Statistics of the prior sampling process
   - `observed_data::NamedTuple`: Observed data on which the `posterior` is
@@ -54,6 +50,11 @@ whose first dimensions correspond to the dimensions of the containers.
 
   - `InferenceData`: The data with groups corresponding to the provided data
 
+!!! note
+    If a `NamedTuple` is provided for `observed_data`, `constant_data`, or
+    predictions_constant_data`, any non-array values (e.g. integers) are converted to
+    0-dimensional arrays.
+
 # Examples
 
 ```@example
@@ -62,18 +63,12 @@ nchains = 2
 ndraws = 100
 
 data1 = (
-    x=rand(ndraws, nchains), y=randn(2, ndraws, nchains), z=randn(3, 2, ndraws, nchains)
+    x=rand(ndraws, nchains), y=randn(ndraws, nchains, 2), z=randn(ndraws, nchains, 3, 2)
 )
 idata1 = from_namedtuple(data1)
 
-data2 = [(x=rand(ndraws), y=randn(2, ndraws), z=randn(3, 2, ndraws)) for _ in 1:nchains];
+data2 = [[(x=rand(), y=randn(2), z=randn(3, 2)) for _ in 1:ndraws] for _ in 1:nchains];
 idata2 = from_namedtuple(data2)
-
-data3 = [(x=rand(), y=randn(2), z=randn(3, 2)) for _ in 1:ndraws, _ in 1:nchains];
-idata3 = from_namedtuple(data3)
-
-data4 = [[(x=rand(), y=randn(2), z=randn(3, 2)) for _ in 1:ndraws] for _ in 1:nchains];
-idata4 = from_namedtuple(data4)
 ```
 """
 from_namedtuple
@@ -169,20 +164,12 @@ function from_namedtuple(
 
     return all_idata
 end
-function from_namedtuple(data::AbstractVector{<:NamedTuple}; kwargs...)
-    return from_namedtuple(namedtuple_of_arrays(data); kwargs...)
-end
-function from_namedtuple(data::AbstractMatrix{<:NamedTuple}; kwargs...)
-    return from_namedtuple(namedtuple_of_arrays(data); kwargs...)
-end
 function from_namedtuple(data::AbstractVector{<:AbstractVector{<:NamedTuple}}; kwargs...)
-    return from_namedtuple(namedtuple_of_arrays(data); kwargs...)
+    return from_namedtuple(stack_chains(map(stack_draws, data)); kwargs...)
 end
 
 """
     convert_to_inference_data(obj::NamedTuple; kwargs...) -> InferenceData
-    convert_to_inference_data(obj::Vector{<:NamedTuple}; kwargs...) -> InferenceData
-    convert_to_inference_data(obj::Matrix{<:NamedTuple}; kwargs...) -> InferenceData
     convert_to_inference_data(obj::Vector{Vector{<:NamedTuple}}; kwargs...) -> InferenceData
 
 Convert `obj` to an [`InferenceData`](@ref). See [`from_namedtuple`](@ref) for a description
@@ -190,14 +177,7 @@ of `obj` possibilities and `kwargs`.
 """
 function convert_to_inference_data(
     data::T; group=:posterior, kwargs...
-) where {
-    T<:Union{
-        NamedTuple,
-        AbstractVector{<:NamedTuple},
-        AbstractMatrix{<:NamedTuple},
-        AbstractVector{<:AbstractVector{<:NamedTuple}},
-    },
-}
+) where {T<:Union{NamedTuple,AbstractVector{<:AbstractVector{<:NamedTuple}}}}
     group = Symbol(group)
     group === :posterior && return from_namedtuple(data; kwargs...)
     return from_namedtuple(; group => data, kwargs...)
