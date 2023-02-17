@@ -49,13 +49,14 @@ Dimensions.@dim foo "foo"
 
     @testset "as_dimension" begin
         coords = (;)
-        @testset for dim in (:foo, Dim{:foo}, Dim{:foo,Colon})
+        @testset for dim in (:foo, Dim{:foo}, Dim{:foo}(), Dim{:foo}(NoLookup()))
             @test InferenceObjects.as_dimension(dim, coords, 2:10) === Dim{:foo}(2:10)
             dim === :foo || @inferred InferenceObjects.as_dimension(dim, coords, 2:10)
         end
         @test InferenceObjects.as_dimension(Dim{:foo}(1:5), coords, 2:10) === Dim{:foo}(1:5)
         coords = (; foo=3:8)
-        @testset for dim in (:foo, Dim{:foo}, Dim{:foo,Colon}, Dim{:foo}(1:5))
+        @testset for dim in
+                     (:foo, Dim{:foo}, Dim{:foo}(), Dim{:foo}(NoLookup()), Dim{:foo}(1:5))
             @test InferenceObjects.as_dimension(dim, coords, 2:10) === Dim{:foo}(3:8)
             dim === :foo || @inferred InferenceObjects.as_dimension(dim, coords, 2:10)
         end
