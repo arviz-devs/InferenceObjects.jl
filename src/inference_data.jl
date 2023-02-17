@@ -313,9 +313,9 @@ with metadata Dict{String, Any} with 1 entry:
   "created_at" => "2023-02-17T18:47:29.679"
 ```
 
-We can also concatenate only a subset of groups and merge the rest, which is especially
-useful when some groups are present only in some of the `InferenceData` objects or will be
-identical in all of them:
+We can also concatenate only a subset of groups and merge the rest, which is useful when
+some groups are present only in some of the `InferenceData` objects or will be identical in
+all of them:
 
 ```jldoctest cat
 julia> observed_data = Dict(:y => randn(10));
