@@ -134,7 +134,7 @@ using InferenceObjects, DimensionalData, Test
             ),
         )
         attrs = Dict("mykey" => 5)
-        @test_broken @inferred namedtuple_to_dataset(
+        VERSION ≥ v"1.9" && @inferred namedtuple_to_dataset(
             vars; library="MyLib", coords, dims, attrs
         )
         ds = namedtuple_to_dataset(vars; library="MyLib", coords, dims, attrs)
