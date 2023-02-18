@@ -170,7 +170,7 @@ Add to `data` the `group` with the specified `name`.
 
 If a group with `name` is already in `data`, it is replaced.
 """
-function Base.setindex!(data::InferenceData, v, k::Symbol)
+function Base.setindex!(data::InferenceData, v::Dataset, k::Symbol)
     parent(data)[k] = v
     return data
 end
