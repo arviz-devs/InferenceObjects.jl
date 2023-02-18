@@ -134,9 +134,8 @@ using InferenceObjects, DimensionalData, Test
             ),
         )
         attrs = Dict("mykey" => 5)
-        VERSION ≥ v"1.9" && @inferred namedtuple_to_dataset(
-            vars; library="MyLib", coords, dims, attrs
-        )
+        VERSION ≥ v"1.9" &&
+            @inferred namedtuple_to_dataset(vars; library="MyLib", coords, dims, attrs)
         ds = namedtuple_to_dataset(vars; library="MyLib", coords, dims, attrs)
         @test ds isa Dataset
         for (var_name, var_data) in pairs(DimensionalData.layers(ds))
