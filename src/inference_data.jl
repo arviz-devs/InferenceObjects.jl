@@ -1,3 +1,7 @@
+const InferenceDataStorageType = OrderedCollections.LittleDict{
+    Symbol,Dataset,Vector{Symbol},Vector{Dataset}
+}
+
 """
     InferenceData{group_names,group_types}
 
@@ -5,35 +9,36 @@ Container for inference data storage using DimensionalData.
 
 This object implements the [InferenceData schema](https://python.arviz.org/en/latest/schema/schema.html).
 
-Internally, groups are stored in a `NamedTuple`, which can be accessed using
-`parent(::InferenceData)`.
-
 # Constructors
 
+    InferenceData(groups::AbstractDict{Symbol,Dataset})
     InferenceData(groups::NamedTuple)
     InferenceData(; groups...)
 
-Construct an inference data from either a `NamedTuple` or keyword arguments of groups.
+Construct an inference data from groups.
 
 Groups must be [`Dataset`](@ref) objects.
 
 Instead of directly creating an `InferenceData`, use the exported `from_xyz` functions or
 [`convert_to_inference_data`](@ref).
 """
-struct InferenceData{group_names,group_types<:Tuple{Vararg{Dataset}}}
-    groups::NamedTuple{group_names,group_types}
-    function InferenceData(
-        groups::NamedTuple{group_names,<:Tuple{Vararg{Dataset}}}
-    ) where {group_names}
-        group_names_ordered = _reorder_group_names(Val{group_names}())
-        groups_ordered = NamedTuple{group_names_ordered}(groups)
-        return new{group_names_ordered,typeof(values(groups_ordered))}(groups_ordered)
+struct InferenceData
+    groups::InferenceDataStorageType
+    function InferenceData(groups::AbstractDict)
+        groups_new = InferenceDataStorageType(
+            Symbol[keys(groups)...], Dataset[values(groups)...]
+        )
+        return InferenceData(groups_new)
     end
+    InferenceData(groups::InferenceDataStorageType) = new(groups)
 end
-InferenceData(; kwargs...) = InferenceData(NamedTuple(kwargs))
+InferenceData(data::NamedTuple) = InferenceData(; data...)
+InferenceData(; kwargs...) = InferenceData(kwargs)
 InferenceData(data::InferenceData) = data
 
 Base.parent(data::InferenceData) = getfield(data, :groups)
+
+Base.:(==)(data::InferenceData, other::InferenceData) = parent(data) == parent(other)
 
 # these 3 interfaces ensure InferenceData behaves like a NamedTuple
 
@@ -43,14 +48,16 @@ Base.parent(data::InferenceData) = getfield(data, :groups)
 
 Get names of groups
 """
-Base.propertynames(data::InferenceData) = propertynames(parent(data))
+Base.propertynames(data::InferenceData) = keys(data)
 
 """
     getproperty(data::InferenceData, name::Symbol) -> Dataset
 
 Get group with the specified `name`.
 """
-Base.getproperty(data::InferenceData, k::Symbol) = getproperty(parent(data), k)
+Base.getproperty(data::InferenceData, k::Symbol) = getindex(data, k)
+
+Base.setproperty!(data::InferenceData, k::Symbol, v) = setindex!(data, v, k)
 
 # indexing interface
 """
@@ -139,13 +146,10 @@ function Base.getindex(data::InferenceData, k::Symbol; kwargs...)
     isempty(kwargs) && return ds
     return getindex(ds; kwargs...)
 end
-function Base.getindex(data::InferenceData, i::Int; kwargs...)
-    ds = parent(data)[i]
-    isempty(kwargs) && return ds
-    return getindex(ds; kwargs...)
-end
 function Base.getindex(data::InferenceData, ks; kwargs...)
-    data_new = InferenceData(parent(data)[ks])
+    missing_ks = setdiff(ks, keys(data))
+    isempty(missing_ks) || throw(KeyError(first(missing_ks)))
+    data_new = InferenceData(filter(∈(ks) ∘ first, parent(data)))
     isempty(kwargs) && return data_new
     return getindex(data_new; kwargs...)
 end
@@ -155,27 +159,26 @@ function Base.getindex(data::InferenceData; kwargs...)
     # if it has no other dimensions.
     # So we promote to an array of indices
     new_kwargs = map(index_to_indices, NamedTuple(kwargs))
-    groups = map(parent(data)) do ds
-        return getindex(ds; new_kwargs...)
-    end
-    return InferenceData(groups)
+    groups = (k => getindex(v; new_kwargs...) for (k, v) in data)
+    return InferenceData(; groups...)
 end
 
 """
-    Base.setindex(data::InferenceData, group::Dataset, name::Symbol) -> InferenceData
+    Base.setindex!(data::InferenceData, group::Dataset, name::Symbol) -> InferenceData
 
-Create a new `InferenceData` containing the `group` with the specified `name`.
+Add to `data` the `group` with the specified `name`.
 
 If a group with `name` is already in `data`, it is replaced.
 """
-function Base.setindex(data::InferenceData, v, k::Symbol)
-    return InferenceData(Base.setindex(parent(data), v, k))
+function Base.setindex!(data::InferenceData, v::Dataset, k::Symbol)
+    parent(data)[k] = v
+    return data
 end
 
 # iteration interface
-Base.keys(data::InferenceData) = keys(parent(data))
+Base.keys(data::InferenceData) = parent(data).keys
 Base.haskey(data::InferenceData, k::Symbol) = haskey(parent(data), k)
-Base.values(data::InferenceData) = values(parent(data))
+Base.values(data::InferenceData) = parent(data).vals
 Base.pairs(data::InferenceData) = pairs(parent(data))
 Base.length(data::InferenceData) = length(parent(data))
 Base.iterate(data::InferenceData, i...) = iterate(parent(data), i...)
@@ -184,14 +187,14 @@ Base.eltype(data::InferenceData) = eltype(parent(data))
 function Base.show(io::IO, ::MIME"text/plain", data::InferenceData)
     print(io, "InferenceData with groups:")
     prefix = "\n  > "
-    for name in groupnames(data)
+    for name in _order_groups_by_name(groupnames(data))
         print(io, prefix, name)
     end
     return nothing
 end
 function Base.show(io::IO, mime::MIME"text/html", data::InferenceData)
     show(io, mime, HTML("<div>InferenceData"))
-    for (name, group) in pairs(groups(data))
+    for (name, group) in _order_groups_by_name(groups(data))
         show(io, mime, HTML("""
         <details>
         <summary>$name</summary>
@@ -201,6 +204,11 @@ function Base.show(io::IO, mime::MIME"text/html", data::InferenceData)
     end
     return show(io, mime, HTML("</div>"))
 end
+
+_lt_symint(a, b) = (a isa Integer && b isa Integer) ? a < b : string(a) < string(b)
+_scheme_order(k) = get(SCHEMA_GROUPS_DICT, k, string(k))
+
+_order_groups_by_name(groups) = sort(groups; lt=_lt_symint, by=_scheme_order)
 
 """
     groups(data::InferenceData)
@@ -214,7 +222,7 @@ groups(data::InferenceData) = parent(data)
 
 Get the names of the groups (datasets) in `data` as a tuple of symbols.
 """
-groupnames(data::InferenceData) = keys(groups(data))
+groupnames(data::InferenceData) = groups(data).keys
 
 """
     hasgroup(data::InferenceData, name::Symbol) -> Bool
@@ -222,13 +230,6 @@ groupnames(data::InferenceData) = keys(groups(data))
 Return `true` if a group with name `name` is stored in `data`.
 """
 hasgroup(data::InferenceData, name::Symbol) = haskey(data, name)
-
-@generated function _reorder_group_names(::Val{names}) where {names}
-    lt = (a, b) -> (a isa Integer && b isa Integer) ? a < b : string(a) < string(b)
-    return Tuple(sort(collect(names); lt, by=k -> get(SCHEMA_GROUPS_DICT, k, string(k))))
-end
-
-@generated _keys_and_types(::NamedTuple{keys,types}) where {keys,types} = (keys, types)
 
 """
     merge(data::InferenceData...) -> InferenceData
@@ -265,10 +266,11 @@ function Base.merge(data::InferenceData, others::InferenceData...)
 end
 
 function rekey(data::InferenceData, keymap)
-    groups_old = groups(data)
-    names_new = map(k -> get(keymap, k, k), propertynames(groups_old))
-    groups_new = NamedTuple{names_new}(Tuple(groups_old))
-    return InferenceData(groups_new)
+    idata_new = InferenceData()
+    for (k, v) in pairs(groups(data))
+        idata_new[get(keymap, k, k)] = v
+    end
+    return idata_new
 end
 
 """
@@ -373,9 +375,9 @@ with metadata Dict{String, Any} with 1 entry:
 ```
 """
 function Base.cat(data::InferenceData, others::InferenceData...; groups=keys(data), dims)
-    groups_cat = map(groups) do k
-        k => cat(data[k], (other[k] for other in others)...; dims=dims)
+    idata_cat = InferenceData()
+    for k in groups
+        idata_cat[k] = cat(data[k], (other[k] for other in others)...; dims=dims)
     end
-    # keep other non-concatenated groups
-    return merge(data, others..., InferenceData(; groups_cat...))
+    return merge(data, others..., idata_cat)
 end

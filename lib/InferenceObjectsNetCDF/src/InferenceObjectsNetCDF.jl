@@ -73,7 +73,8 @@ function from_netcdf(ds::NCDatasets.NCDataset; load_mode::Symbol=:lazy)
 end
 
 function _from_netcdf(ds, load_mode)
-    groups = map(ds.group) do (group_name, group)
+    idata = InferenceData()
+    for (group_name, group) in ds.group
         layerdims = (;
             map(NCDatasets.dimnames(group)) do dim_name
                 index = collect(group[dim_name])
@@ -105,9 +106,9 @@ function _from_netcdf(ds, load_mode)
         else
             group.attrib
         end
-        return Symbol(group_name) => Dataset(data; metadata=group_metadata)
+        idata[Symbol(group_name)] = Dataset(data; metadata=group_metadata)
     end
-    return InferenceData(; groups...)
+    return idata
 end
 
 _var_to_array(var, load_mode) = var

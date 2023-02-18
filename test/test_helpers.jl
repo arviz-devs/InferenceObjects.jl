@@ -68,8 +68,8 @@ end
 function test_idata_approx_equal(
     idata1::InferenceData, idata2::InferenceData; check_metadata=true, check_eltypes=false
 )
-    @test InferenceObjects.groupnames(idata1) === InferenceObjects.groupnames(idata2)
-    for (ds1, ds2) in zip(idata1, idata2)
+    @test InferenceObjects.groupnames(idata1) == InferenceObjects.groupnames(idata2)
+    for (ds1, ds2) in zip(values(idata1), values(idata2))
         @test issetequal(keys(ds1), keys(ds2))
         for var_name in keys(ds1)
             da1 = ds1[var_name]

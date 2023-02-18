@@ -36,7 +36,7 @@ using InferenceObjects, DimensionalData, Test
         @testset "convert_to_inference_data(::AbstractDimStack)" begin
             ds = namedtuple_to_dataset((x=randn(10, 4), y=randn(10, 4, 5)))
             idata1 = convert_to_inference_data(ds; group=:prior)
-            @test InferenceObjects.groupnames(idata1) == (:prior,)
+            @test issetequal(InferenceObjects.groupnames(idata1), [:prior])
             idata2 = InferenceData(; prior=ds)
             @test idata2 == idata1
             idata3 = convert_to_inference_data(parent(ds); group=:prior)
@@ -50,13 +50,13 @@ using InferenceObjects, DimensionalData, Test
             end
             idata = convert_to_inference_data(data)
             check_idata_schema(idata)
-            @test InferenceObjects.groupnames(idata) == (:posterior,)
+            @test issetequal(InferenceObjects.groupnames(idata), [:posterior])
             posterior = idata.posterior
             @test posterior.A == data[:A]
             @test posterior.B == data[:B]
             idata2 = convert_to_inference_data(data; group=:prior)
             check_idata_schema(idata2)
-            @test InferenceObjects.groupnames(idata2) == (:prior,)
+            @test issetequal(InferenceObjects.groupnames(idata2), [:prior])
             @test idata2.prior == idata.posterior
         end
 
@@ -68,7 +68,7 @@ using InferenceObjects, DimensionalData, Test
             end
             idata = convert_to_inference_data(data)
             check_idata_schema(idata)
-            @test InferenceObjects.groupnames(idata) == (:posterior,)
+            @test issetequal(InferenceObjects.groupnames(idata), [:posterior])
             posterior = idata.posterior
             if T <: DimensionalData.DimArray
                 @test posterior.y == data
@@ -77,7 +77,7 @@ using InferenceObjects, DimensionalData, Test
             end
             idata2 = convert_to_inference_data(data; group=:prior)
             check_idata_schema(idata2)
-            @test InferenceObjects.groupnames(idata2) == (:prior,)
+            @test issetequal(InferenceObjects.groupnames(idata2), [:prior])
             @test idata2.prior == idata.posterior
         end
     end

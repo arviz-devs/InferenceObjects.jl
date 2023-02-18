@@ -3,6 +3,7 @@ module InferenceObjects
 using Compat: stack
 using Dates: Dates
 using DimensionalData: DimensionalData, Dimensions, LookupArrays
+using OrderedCollections: OrderedCollections
 using Tables: Tables
 
 # groups that are officially listed in the schema

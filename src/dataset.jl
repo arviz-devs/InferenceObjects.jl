@@ -112,7 +112,7 @@ end
 
 # DimensionalData interop
 
-for f in [:data, :dims, :refdims, :metadata, :layerdims, :layermetadata]
+for f in [:data, :dims, :refdims, :metadata, :layerdims, :layermetadata, :layers]
     @eval begin
         DimensionalData.$(f)(ds::Dataset) = DimensionalData.$(f)(parent(ds))
     end

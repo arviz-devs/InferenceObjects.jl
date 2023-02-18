@@ -11,13 +11,12 @@ using InferenceObjects, DimensionalData, Test
     posterior = random_dataset(var_names, dims, coords, metadata, (;))
     prior = random_dataset(var_names, dims, coords, metadata, (;))
     observed_data = random_dataset(data_names, dims, coords, metadata, (;))
-    group_data = (; prior, observed_data, posterior)
-    group_data_ordered = (; posterior, prior, observed_data)
+    group_data = Dict(pairs((; prior, observed_data, posterior)))
 
     @testset "constructors" begin
         idata = @inferred(InferenceData(group_data))
         @test idata isa InferenceData
-        @test getfield(idata, :groups) === group_data_ordered
+        @test parent(idata) == group_data
 
         @test InferenceData(; group_data...) == idata
         @test InferenceData(idata) === idata
@@ -26,7 +25,7 @@ using InferenceObjects, DimensionalData, Test
     idata = InferenceData(group_data)
 
     @testset "properties" begin
-        @test propertynames(idata) === propertynames(group_data_ordered)
+        @test propertynames(idata) == collect(keys(group_data))
         @test getproperty(idata, :posterior) === posterior
         @test getproperty(idata, :prior) === prior
         @test hasproperty(idata, :posterior)
@@ -35,40 +34,38 @@ using InferenceObjects, DimensionalData, Test
     end
 
     @testset "iteration" begin
-        @test keys(idata) === keys(group_data_ordered)
+        @test keys(idata) == collect(keys(group_data))
         @test haskey(idata, :posterior)
         @test haskey(idata, :prior)
         @test !haskey(idata, :log_likelihood)
-        @test values(idata) === values(group_data_ordered)
-        @test pairs(idata) isa Base.Iterators.Pairs
-        @test pairs(idata) === pairs(group_data_ordered)
-        @test length(idata) == length(group_data_ordered)
-        @test iterate(idata) === iterate(group_data_ordered)
+        @test values(idata) == collect(values(group_data))
+        @test pairs(idata) isa AbstractDict{Symbol,Dataset}
+        @test pairs(idata) == pairs(group_data)
+        @test length(idata) == length(group_data)
+        @test iterate(idata) == iterate(parent(idata))
         for i in 1:(length(idata) + 1)
-            @test iterate(idata, i) === iterate(group_data_ordered, i)
+            @test iterate(idata, i) === iterate(parent(idata), i)
         end
-        @test eltype(idata) <: Dataset
-        @test collect(idata) isa Vector{<:Dataset}
+        @test eltype(idata) <: Pair{Symbol,Dataset}
+        @test collect(idata) isa Vector{Pair{Symbol,Dataset}}
     end
 
     @testset "indexing" begin
         @test idata[:posterior] === posterior
         @test idata[:prior] === prior
-        @test idata[1] === posterior
-        @test idata[2] === prior
 
         idata_sel = idata[dima=At(2:3), dimb=At(6)]
         @test idata_sel isa InferenceData
-        @test InferenceObjects.groupnames(idata_sel) === InferenceObjects.groupnames(idata)
+        @test InferenceObjects.groupnames(idata_sel) == InferenceObjects.groupnames(idata)
         @test Dimensions.index(idata_sel.posterior, :dima) == 2:3
         @test Dimensions.index(idata_sel.prior, :dima) == 2:3
         @test Dimensions.index(idata_sel.posterior, :dimb) == [6]
         @test Dimensions.index(idata_sel.prior, :dimb) == [6]
 
         if VERSION ≥ v"1.7"
-            idata_sel = idata[(:posterior, :observed_data), dimy=1, dimb=1, shared=At("s1")]
+            idata_sel = idata[[:posterior, :observed_data], dimy=1, dimb=1, shared=At("s1")]
             @test idata_sel isa InferenceData
-            @test InferenceObjects.groupnames(idata_sel) === (:posterior, :observed_data)
+            @test InferenceObjects.groupnames(idata_sel) == [:posterior, :observed_data]
             @test Dimensions.index(idata_sel.posterior, :dima) == coords.dima
             @test Dimensions.index(idata_sel.posterior, :dimb) == coords.dimb[[1]]
             @test Dimensions.index(idata_sel.posterior, :shared) == ["s1"]
@@ -80,9 +77,9 @@ using InferenceObjects, DimensionalData, Test
         @test ds_sel isa Dataset
         @test !hasdim(ds_sel, :chain)
 
-        idata2 = Base.setindex(idata, posterior, :warmup_posterior)
-        @test keys(idata2) === (keys(idata)..., :warmup_posterior)
-        @test idata2[:warmup_posterior] === posterior
+        idata.warmup_posterior = posterior
+        @test issetequal(keys(idata), [keys(group_data)..., :warmup_posterior])
+        @test idata[:warmup_posterior] == posterior
     end
 
     @testset "isempty" begin
@@ -91,8 +88,8 @@ using InferenceObjects, DimensionalData, Test
     end
 
     @testset "groups" begin
-        @test InferenceObjects.groups(idata) === group_data_ordered
-        @test InferenceObjects.groups(InferenceData(; prior)) === (; prior)
+        @test InferenceObjects.groups(idata) === getfield(idata, :groups)
+        @test InferenceObjects.groups(InferenceData(; prior)) == pairs((; prior))
     end
 
     @testset "hasgroup" begin
@@ -102,8 +99,10 @@ using InferenceObjects, DimensionalData, Test
     end
 
     @testset "groupnames" begin
-        @test InferenceObjects.groupnames(idata) === propertynames(group_data_ordered)
-        @test InferenceObjects.groupnames(InferenceData(; posterior)) === (:posterior,)
+        @test issetequal(
+            InferenceObjects.groupnames(idata), [keys(group_data)..., :warmup_posterior]
+        )
+        @test InferenceObjects.groupnames(InferenceData(; posterior)) == [:posterior]
     end
 
     @testset "show" begin
@@ -113,7 +112,8 @@ using InferenceObjects, DimensionalData, Test
             InferenceData with groups:
               > posterior
               > prior
-              > observed_data"""
+              > observed_data
+              > warmup_posterior"""
         end
 
         @testset "html" begin
