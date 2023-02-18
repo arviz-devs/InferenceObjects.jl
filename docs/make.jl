@@ -6,6 +6,10 @@ DocMeta.setdocmeta!(
     InferenceObjects, :DocTestSetup, :(using InferenceObjects); recursive=true
 )
 
+doctestfilters = [
+    r"\s+\"created_at\" => .*",  # ignore timestamps in doctests
+]
+
 makedocs(;
     modules=[InferenceObjects, InferenceObjectsNetCDF],
     authors="Seth Axen <seth.axen@gmail.com> and contributors",
@@ -23,6 +27,8 @@ makedocs(;
         "InferenceData" => "inference_data.md",
         "Subpackages" => ["subpackages/inferenceobjectsnetcdf.md"],
     ],
+    doctestfilters=doctestfilters,
+    strict=Documenter.except(:missing_docs),
 )
 
 deploydocs(; repo="github.com/arviz-devs/InferenceObjects.jl", devbranch="main")

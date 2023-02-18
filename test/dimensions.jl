@@ -1,4 +1,7 @@
 using InferenceObjects, DimensionalData, OffsetArrays, Test
+using DimensionalData.LookupArrays
+
+Dimensions.@dim foo "foo"
 
 @testset "dimension-related functions" begin
     @testset "has_all_sample_dims" begin
@@ -23,15 +26,37 @@ using InferenceObjects, DimensionalData, OffsetArrays, Test
         ))
     end
 
+    @testset "_key2dim" begin
+        @testset for k in (:chain, :draw, :foo)
+            @test InferenceObjects._key2dim(k) === Dim{k}(NoLookup())
+            @test @inferred(InferenceObjects._key2dim(Dim{k})) === Dim{k}
+            @test @inferred(InferenceObjects._key2dim(Dim{k}())) === Dim{k}()
+            @test @inferred(InferenceObjects._key2dim(Dim{k}(1:4))) == Dim{k}(1:4)
+        end
+        @test InferenceObjects._key2dim((:chain, :draw, :foo)) ===
+            (Dim{:chain}(NoLookup()), Dim{:draw}(NoLookup()), Dim{:foo}(NoLookup()))
+    end
+
+    @testset "_valdim" begin
+        @testset for d in (X(), X(1:10))
+            @test @inferred(InferenceObjects._valdim(d)) === d
+        end
+        @test InferenceObjects._valdim(X) === X(NoLookup())
+        @test InferenceObjects._valdim(Dim{:a}) === Dim{:a}(NoLookup())
+        d = Dim{:a}(1:5)
+        @test InferenceObjects._valdim(d) === d
+    end
+
     @testset "as_dimension" begin
         coords = (;)
-        @testset for dim in (:foo, Dim{:foo}, Dim{:foo,Colon})
+        @testset for dim in (:foo, Dim{:foo}, Dim{:foo}(), Dim{:foo}(NoLookup()))
             @test InferenceObjects.as_dimension(dim, coords, 2:10) === Dim{:foo}(2:10)
             dim === :foo || @inferred InferenceObjects.as_dimension(dim, coords, 2:10)
         end
         @test InferenceObjects.as_dimension(Dim{:foo}(1:5), coords, 2:10) === Dim{:foo}(1:5)
         coords = (; foo=3:8)
-        @testset for dim in (:foo, Dim{:foo}, Dim{:foo,Colon}, Dim{:foo}(1:5))
+        @testset for dim in
+                     (:foo, Dim{:foo}, Dim{:foo}(), Dim{:foo}(NoLookup()), Dim{:foo}(1:5))
             @test InferenceObjects.as_dimension(dim, coords, 2:10) === Dim{:foo}(3:8)
             dim === :foo || @inferred InferenceObjects.as_dimension(dim, coords, 2:10)
         end
