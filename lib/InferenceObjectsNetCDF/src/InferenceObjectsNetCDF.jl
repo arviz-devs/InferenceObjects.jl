@@ -106,7 +106,7 @@ function _from_netcdf(ds, load_mode)
         else
             group.attrib
         end
-        idata[group_name] = Dataset(data; metadata=group_metadata)
+        idata[Symbol(group_name)] = Dataset(data; metadata=group_metadata)
     end
     return idata
 end
