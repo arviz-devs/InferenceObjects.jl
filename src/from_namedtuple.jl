@@ -98,13 +98,13 @@ function from_namedtuple(
             isempty(group_data) && continue
         end
         group_dataset = convert_to_dataset(group_data; kwargs...)
-        all_idata = merge(all_idata, InferenceData(; group => group_dataset))
+        all_idata[group] = group_dataset
     end
 
     (post_data === nothing || isempty(post_data)) && return all_idata
 
     post_dataset = convert_to_dataset(post_data; kwargs...)
-    all_idata = merge(all_idata, InferenceData(; posterior=post_dataset))
+    all_idata[:posterior] = post_dataset
 
     return all_idata
 end
@@ -159,7 +159,7 @@ function from_namedtuple(
     ]
         group_data === nothing && continue
         group_dataset = convert_to_dataset(group_data; library, default_dims=(), kwargs...)
-        all_idata = merge(all_idata, InferenceData(; group => group_dataset))
+        all_idata[group] = group_dataset
     end
 
     return all_idata

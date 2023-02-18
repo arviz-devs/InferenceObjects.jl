@@ -266,8 +266,11 @@ function Base.merge(data::InferenceData, others::InferenceData...)
 end
 
 function rekey(data::InferenceData, keymap)
-    pairs_new = (get(keymap, k, k) => v for (k, v) in pairs(groups(data)))
-    return InferenceData(; pairs_new...)
+    idata_new = InferenceData()
+    for (k, v) in pairs(groups(data))
+        idata_new[get(keymap, k, k)] = v
+    end
+    return idata_new
 end
 
 """
@@ -372,9 +375,9 @@ with metadata Dict{String, Any} with 1 entry:
 ```
 """
 function Base.cat(data::InferenceData, others::InferenceData...; groups=keys(data), dims)
-    groups_cat = map(groups) do k
-        k => cat(data[k], (other[k] for other in others)...; dims=dims)
+    idata_cat = InferenceData()
+    for k in groups
+        idata_cat[k] = cat(data[k], (other[k] for other in others)...; dims=dims)
     end
-    # keep other non-concatenated groups
-    return merge(data, others..., InferenceData(; groups_cat...))
+    return merge(data, others..., idata_cat)
 end
