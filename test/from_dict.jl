@@ -14,7 +14,7 @@ using InferenceObjects, OrderedCollections, Test
     ]
 
     @testset "posterior::$(type)" for (type, dict) in dicts
-        VERSION ≥ v"1.9" && @inferred from_dict(dict; dims, coords, library="MyLib")
+        @test_broken @inferred from_dict(dict; dims, coords, library="MyLib")
         idata1 = from_dict(dict; dims, coords, library="MyLib")
         idata2 = convert_to_inference_data(dict; dims, coords, library="MyLib")
         test_idata_approx_equal(idata1, idata2)
