@@ -49,6 +49,7 @@ jobs:
       - name: Set up environment
         run: |
           using Pkg;
+          Pkg.instantiate()
           Pkg.develop([Pkg.PackageSpec(; path="."),
                        Pkg.PackageSpec(; path="./lib/${{ matrix.subpackage }}")])
         shell: julia --color=yes {0}
