@@ -47,16 +47,20 @@ jobs:
           arch: ${{ matrix.arch }}
       - uses: julia-actions/cache@v1
       - name: Set up environment
-        shell: julia --project=${{ runner.temp }}/monorepo {0}
         run: |
           using Pkg;
           Pkg.develop([Pkg.PackageSpec(; path="."),
                        Pkg.PackageSpec(; path="./lib/${{ matrix.subpackage }}")])
+        shell: julia --color=yes {0}
+        with:
+          JULIA_PROJECT: ${{ runner.temp }}/monorepo
       - name: Run the tests
         run: |
           using Pkg
           Pkg.test("${{ matrix.subpackage }}"; coverage=true)
-        shell: julia --color=yes --project=${{ runner.temp }}/monorepo {0}
+        shell: julia --color=yes {0}
+        with:
+          JULIA_PROJECT: ${{ runner.temp }}/monorepo
       - uses: julia-actions/julia-processcoverage@v1
         with:
           directories: lib/${{ matrix.subpackage }}/src
