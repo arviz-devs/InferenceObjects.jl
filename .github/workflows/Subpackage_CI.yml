@@ -52,14 +52,14 @@ jobs:
           Pkg.develop([Pkg.PackageSpec(; path="."),
                        Pkg.PackageSpec(; path="./lib/${{ matrix.subpackage }}")])
         shell: julia --color=yes {0}
-        with:
+        env:
           JULIA_PROJECT: ${{ runner.temp }}/monorepo
       - name: Run the tests
         run: |
           using Pkg
           Pkg.test("${{ matrix.subpackage }}"; coverage=true)
         shell: julia --color=yes {0}
-        with:
+        env:
           JULIA_PROJECT: ${{ runner.temp }}/monorepo
       - uses: julia-actions/julia-processcoverage@v1
         with:
