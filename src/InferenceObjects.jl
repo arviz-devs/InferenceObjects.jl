@@ -44,10 +44,15 @@ include("convert_inference_data.jl")
 include("from_namedtuple.jl")
 include("from_dict.jl")
 
+if !EXTENSIONS_SUPPORTED
+    using Requires: @require
+end
 @static if !EXTENSIONS_SUPPORTED
     function __init__()
-        Requires.@require MCMCDiagnosticTools = "be115224-59cd-429b-ad48-344e309966f0" begin
-            include("../ext/InferenceObjectsMCMCDiagnosticToolsExt.jl")
+        @require MCMCDiagnosticTools = "be115224-59cd-429b-ad48-344e309966f0" begin
+            include(
+                "../ext/InferenceObjectsMCMCDiagnosticToolsExt/InferenceObjectsMCMCDiagnosticToolsExt.jl",
+            )
         end
     end
 end
