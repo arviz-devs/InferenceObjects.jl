@@ -1,0 +1,3 @@
+module InferenceObjectsMCMCDiagnosticToolsExt
+
+end  # module
