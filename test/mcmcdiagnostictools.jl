@@ -69,26 +69,26 @@ using Test
     end
 
     @testset "rstar" begin
-        classifier = EvoTreeClassifier(; nrounds=100, eta=0.3)
+        classifier(rng) = EvoTreeClassifier(; nrounds=100, eta=0.3, rng)
         @testset for subset in (0.7, 0.8)
             rng = Random.seed!(123)
-            r1 = rstar(rng, classifier, idata1; subset)
+            r1 = rstar(rng, classifier(rng), idata1; subset)
             rng = Random.seed!(123)
-            r2 = rstar(rng, classifier, idata1.posterior; subset)
+            r2 = rstar(rng, classifier(rng), idata1.posterior; subset)
             rng = Random.seed!(123)
-            r3 = rstar(rng, classifier, idata2; subset)
+            r3 = rstar(rng, classifier(rng), idata2; subset)
             rng = Random.seed!(123)
-            r4 = rstar(rng, classifier, idata2.posterior; subset)
+            r4 = rstar(rng, classifier(rng), idata2.posterior; subset)
             rng = Random.seed!(123)
             post_mat = cat(
                 map(var -> reshape(parent(var), ndraws, nchains, :), idata1.posterior)...;
                 dims=3,
             )
-            r5 = rstar(rng, classifier, post_mat; subset)
+            r5 = rstar(rng, classifier(rng), post_mat; subset)
             Random.seed!(123)
-            r6 = rstar(classifier, idata1; subset)
+            r6 = rstar(classifier(rng), idata1; subset)
             Random.seed!(123)
-            r7 = rstar(classifier, idata1; subset)
+            r7 = rstar(classifier(rng), idata1; subset)
             @test r1 == r2 == r3 == r4 == r5 == r6 == r7
         end
     end
