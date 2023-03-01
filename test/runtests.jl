@@ -10,4 +10,6 @@ using InferenceObjects, Test
     include("convert_inference_data.jl")
     include("from_namedtuple.jl")
     include("from_dict.jl")
+
+    include("mcmcdiagnostictools.jl")
 end

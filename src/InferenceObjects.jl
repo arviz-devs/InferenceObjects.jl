@@ -5,6 +5,8 @@ using Dates: Dates
 using DimensionalData: DimensionalData, Dimensions, LookupArrays
 using Tables: Tables
 
+const EXTENSIONS_SUPPORTED = isdefined(Base, :get_extension)
+
 # groups that are officially listed in the schema
 const SCHEMA_GROUPS = (
     :posterior,
@@ -41,5 +43,18 @@ include("convert_dataset.jl")
 include("convert_inference_data.jl")
 include("from_namedtuple.jl")
 include("from_dict.jl")
+
+if !EXTENSIONS_SUPPORTED
+    using Requires: @require
+end
+@static if !EXTENSIONS_SUPPORTED
+    function __init__()
+        @require MCMCDiagnosticTools = "be115224-59cd-429b-ad48-344e309966f0" begin
+            include(
+                "../ext/InferenceObjectsMCMCDiagnosticToolsExt/InferenceObjectsMCMCDiagnosticToolsExt.jl",
+            )
+        end
+    end
+end
 
 end # module
