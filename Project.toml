@@ -20,17 +20,21 @@ InferenceObjectsMCMCDiagnosticToolsExt = ["MCMCDiagnosticTools", "Random"]
 [compat]
 Compat = "3.46.0, 4.2.0"
 DimensionalData = "0.24"
+EvoTrees = "0.14"
 MCMCDiagnosticTools = "0.3"
+MLJBase = "0.21"
 OffsetArrays = "1"
 OrderedCollections = "1"
 Tables = "1"
 julia = "1.6"
 
 [extras]
+EvoTrees = "f6006082-12f8-11e9-0c9c-0d5d367ab1e5"
 MCMCDiagnosticTools = "be115224-59cd-429b-ad48-344e309966f0"
+MLJBase = "a7f614a8-145f-11e9-1d2a-a57a1082229d"
 OffsetArrays = "6fe1bfb0-de20-5000-8ca7-80f57d26f881"
 OrderedCollections = "bac558e1-5e72-5ebc-8fee-abe8a469f55d"
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 
 [targets]
-test = ["Test", "MCMCDiagnosticTools", "OffsetArrays", "OrderedCollections"]
+test = ["EvoTrees", "MCMCDiagnosticTools", "MLJBase", "OffsetArrays", "OrderedCollections", "Test"]
