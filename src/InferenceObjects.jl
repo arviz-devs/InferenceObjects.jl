@@ -50,9 +50,11 @@ end
 @static if !EXTENSIONS_SUPPORTED
     function __init__()
         @require MCMCDiagnosticTools = "be115224-59cd-429b-ad48-344e309966f0" begin
-            include(
-                "../ext/InferenceObjectsMCMCDiagnosticToolsExt/InferenceObjectsMCMCDiagnosticToolsExt.jl",
-            )
+            @require Random = "9a3f8284-a2c9-5f02-9a11-845980a1fd5c" begin
+                include(
+                    "../ext/InferenceObjectsMCMCDiagnosticToolsExt/InferenceObjectsMCMCDiagnosticToolsExt.jl",
+                )
+            end
         end
     end
 end
