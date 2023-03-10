@@ -1,12 +1,15 @@
 module InferenceObjectsMCMCDiagnosticToolsExt
 
-using DimensionalData: DimensionalData, Dimensions, LookupArrays
-using InferenceObjects: InferenceObjects, EXTENSIONS_SUPPORTED
-using Random
-if EXTENSIONS_SUPPORTED
+if isdefined(Base, :get_extension)
+    using DimensionalData: DimensionalData, Dimensions, LookupArrays
+    using InferenceObjects: InferenceObjects
     using MCMCDiagnosticTools: MCMCDiagnosticTools
+    using Random: Random
 else  # using Requires
+    using ..DimensionalData: DimensionalData, Dimensions, LookupArrays
+    using ..InferenceObjects: InferenceObjects
     using ..MCMCDiagnosticTools: MCMCDiagnosticTools
+    using ..Random: Random
 end
 
 include("utils.jl")
