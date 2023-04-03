@@ -303,13 +303,13 @@ julia> idata_cat1.posterior
 Dataset with dimensions:
   Dim{:draw},
   Dim{:chain},
-  Dim{:a_dim} Categorical{String} String[x, y, z] ForwardOrdered
+  Dim{:a_dim} Categorical{String} String["x", "y", "z"] ForwardOrdered
 and 2 layers:
   :a Float64 dims: Dim{:draw}, Dim{:chain}, Dim{:a_dim} (100×8×3)
   :b Float64 dims: Dim{:draw}, Dim{:chain} (100×8)
 
 with metadata Dict{String, Any} with 1 entry:
-  "created_at" => "2023-02-17T18:47:29.679"
+  "created_at" => "2023-04-03T18:41:35.779"
 ```
 
 Alternatively, we can concatenate along a new `run` dimension, which will be created.
@@ -323,14 +323,14 @@ julia> idata_cat2.posterior
 Dataset with dimensions:
   Dim{:draw},
   Dim{:chain},
-  Dim{:a_dim} Categorical{String} String[x, y, z] ForwardOrdered,
+  Dim{:a_dim} Categorical{String} String["x", "y", "z"] ForwardOrdered,
   Dim{:run}
 and 2 layers:
   :a Float64 dims: Dim{:draw}, Dim{:chain}, Dim{:a_dim}, Dim{:run} (100×4×3×2)
   :b Float64 dims: Dim{:draw}, Dim{:chain}, Dim{:run} (100×4×2)
 
 with metadata Dict{String, Any} with 1 entry:
-  "created_at" => "2023-02-17T18:47:29.679"
+  "created_at" => "2023-04-03T18:41:35.779"
 ```
 
 We can also concatenate only a subset of groups and merge the rest, which is useful when
@@ -354,14 +354,14 @@ julia> idata_cat3.posterior
 Dataset with dimensions:
   Dim{:draw},
   Dim{:chain},
-  Dim{:a_dim} Categorical{String} String[x, y, z] ForwardOrdered,
+  Dim{:a_dim} Categorical{String} String["x", "y", "z"] ForwardOrdered,
   Dim{:run}
 and 2 layers:
   :a Float64 dims: Dim{:draw}, Dim{:chain}, Dim{:a_dim}, Dim{:run} (100×4×3×2)
   :b Float64 dims: Dim{:draw}, Dim{:chain}, Dim{:run} (100×4×2)
 
 with metadata Dict{String, Any} with 1 entry:
-  "created_at" => "2023-02-17T18:47:29.679"
+  "created_at" => "2023-04-03T18:41:35.779"
 
 julia> idata_cat3.observed_data
 Dataset with dimensions: Dim{:y_dim_1}
