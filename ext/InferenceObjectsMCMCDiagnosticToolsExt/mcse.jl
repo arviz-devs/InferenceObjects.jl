@@ -9,7 +9,7 @@ function MCMCDiagnosticTools.mcse(data::InferenceObjects.InferenceData; kwargs..
 end
 function MCMCDiagnosticTools.mcse(data::InferenceObjects.Dataset; kwargs...)
     ds = map(data) do var
-        return _from_marginals(var, MCMCDiagnosticTools.mcse(_as_marginals(var); kwargs...))
+        return _as_dimarray(MCMCDiagnosticTools.mcse(_params_array(var); kwargs...), var)
     end
     return DimensionalData.rebuild(ds; metadata=DimensionalData.NoMetadata())
 end

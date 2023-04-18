@@ -16,7 +16,7 @@ end
 function MCMCDiagnosticTools.rstar(
     rng::Random.AbstractRNG, clf, data::InferenceObjects.Dataset; kwargs...
 )
-    data_array = cat(map(_as_marginals, data)...; dims=3)
+    data_array = cat(map(_params_array, data)...; dims=3)
     return MCMCDiagnosticTools.rstar(rng, clf, data_array; kwargs...)
 end
 function MCMCDiagnosticTools.rstar(
