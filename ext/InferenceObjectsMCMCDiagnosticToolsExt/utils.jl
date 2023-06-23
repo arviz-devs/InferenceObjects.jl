@@ -7,6 +7,11 @@ function _params_array(data)
     return PermutedDimsArray(data, dims_combined)
 end
 
+function _as_3d_array(x::AbstractArray)
+    ndims(x) == 3 && return x
+    return reshape(x, size(x, 1), size(x, 2), :)
+end
+
 _as_dimarray(x::DimensionalData.AbstractDimArray, ::DimensionalData.AbstractDimArray) = x
 function _as_dimarray(x::Union{Real,Missing}, arr::DimensionalData.AbstractDimArray)
     return Dimensions.rebuild(arr, fill(x), ())
