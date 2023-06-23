@@ -31,11 +31,11 @@ using Test
             # infer that the return type is a `Dataset`
             @test_broken @inferred f(idata1; kind)
             metric = @inferred Dataset f(idata1; kind)
+            metric2 = f(idata2; kind)
             @test issetequal(keys(metric), keys(idata1.posterior))
-            @test metric ==
-                f(idata1.posterior; kind) ==
-                f(idata2; kind) ==
-                f(idata2.posterior; kind)
+            @test metric == f(idata1.posterior; kind)
+            @test metric2 == f(idata2.posterior; kind)
+            @test all(map(≈, metric2, metric))
             for k in keys(sizes)
                 @test all(
                     hasdim(

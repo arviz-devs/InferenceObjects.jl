@@ -22,9 +22,7 @@ for f in (:ess, :rhat)
     @eval begin
         function MCMCDiagnosticTools.$f(data::InferenceObjects.Dataset; kwargs...)
             ds = map(data) do var
-                return _from_marginals(
-                    var, MCMCDiagnosticTools.$f(_as_marginals(var); kwargs...)
-                )
+                return _as_dimarray(MCMCDiagnosticTools.$f(_params_array(var); kwargs...), var)
             end
             return DimensionalData.rebuild(ds; metadata=DimensionalData.NoMetadata())
         end
@@ -44,11 +42,8 @@ end
 function MCMCDiagnosticTools.ess_rhat(data::InferenceObjects.Dataset; kwargs...)
     dim_diag = Dimensions.Dim{:_metric}([:ess, :rhat])
     ds = map(DimensionalData.layers(data)) do var
-        ess, rhat = map(
-            Base.Fix1(_from_marginals, var),
-            MCMCDiagnosticTools.ess_rhat(_as_marginals(var); kwargs...),
-        )
-        return cat(ess, rhat; dims=dim_diag)
+        ess, rhat = MCMCDiagnosticTools.ess_rhat(_params_array(var); kwargs...)
+        cat(_as_dimarray(ess, var), _as_dimarray(rhat, var); dims=dim_diag)
     end
     return InferenceObjects.Dataset(ds)
 end
