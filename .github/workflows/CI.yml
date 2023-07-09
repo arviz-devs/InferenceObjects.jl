@@ -46,6 +46,16 @@ jobs:
           arch: ${{ matrix.arch }}
       - uses: julia-actions/cache@v1
       - uses: julia-actions/julia-buildpkg@v1
+      - name: set LD_PRELOAD path
+        run: |
+          # https://github.com/JuliaPy/PyCall.jl/issues/999
+          PYCALL_LIBSTD_PATH=$(julia -e '
+            using Pkg
+            Pkg.activate(; temp=true)
+            Pkg.add("PyCall")
+            using PyCall
+            joinpath(dirname(PyCall.libpython), "libstdc++.so.6")')
+          echo "LD_PRELOAD=${PYCALL_LIBSTD_PATH}" >> $GITHUB_ENV
       - uses: julia-actions/julia-runtest@v1
       - uses: julia-actions/julia-processcoverage@v1
       - uses: codecov/codecov-action@v2
@@ -62,11 +72,6 @@ jobs:
         with:
           version: '1'
       - uses: julia-actions/julia-buildpkg@v1
-      - name: set LD_PRELOAD path
-        run: |
-          # https://github.com/JuliaPy/PyCall.jl/issues/999
-          PYCALL_LIBSTD_PATH=$(julia -e 'using PyCall; joinpath(dirname(PyCall.libpython), "libstdc++.so.6")')
-          echo "LD_PRELOAD=${PYCALL_LIBSTD_PATH}" >> $GITHUB_ENV
       - name: Install dependencies
         run: |
           using Pkg
