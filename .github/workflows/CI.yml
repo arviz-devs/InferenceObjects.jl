@@ -62,6 +62,11 @@ jobs:
         with:
           version: '1'
       - uses: julia-actions/julia-buildpkg@v1
+      - name: set LD_PRELOAD path
+        run: |
+          # https://github.com/JuliaPy/PyCall.jl/issues/999
+          PYCALL_LIBSTD_PATH=$(julia -e 'using PyCall; joinpath(dirname(PyCall.libpython), "libstdc++.so.6")')
+          echo "LD_PRELOAD=${PYCALL_LIBSTD_PATH}" >> $GITHUB_ENV
       - name: Install dependencies
         run: |
           using Pkg
