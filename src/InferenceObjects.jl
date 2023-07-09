@@ -56,6 +56,9 @@ end
                 )
             end
         end
+        @require PyCall = "438e738f-606a-5dbb-bf0a-cddfbfd45ab0" begin
+            include("../ext/InferenceObjectsPyCallExt/InferenceObjectsPyCallExt.jl")
+        end
     end
 end
 
