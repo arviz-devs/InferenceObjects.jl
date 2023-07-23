@@ -69,14 +69,14 @@ function __init__()
                 argtypes[1] <: AbstractString
                 println(
                     io,
-                    "\n\nTo load an InferenceData from a NetCDF file, you must first load NCDatasets.",
+                    "\n\nTo load an InferenceData from a NetCDF file, you must first load NCDatasets.jl.",
                 )
             elseif exc.f === to_netcdf &&
                 length(argtypes) == 2 &&
                 argtypes[2] <: AbstractString
                 println(
                     io,
-                    "\n\nTo save an InferenceData to a NetCDF file, you must first load NCDatasets.",
+                    "\n\nTo save an InferenceData to a NetCDF file, you must first load NCDatasets.jl.",
                 )
             end
         end
