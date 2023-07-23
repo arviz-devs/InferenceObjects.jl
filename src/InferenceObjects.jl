@@ -34,6 +34,7 @@ const DEFAULT_CHAIN_DIM = 2
 export Dataset, InferenceData
 export convert_to_dataset,
     convert_to_inference_data, from_dict, from_namedtuple, namedtuple_to_dataset
+export from_netcdf, to_netcdf
 
 include("utils.jl")
 include("dimensions.jl")

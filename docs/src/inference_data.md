@@ -43,3 +43,14 @@ from_namedtuple
 cat
 merge
 ```
+
+## I/O extensions
+
+The following types of storage are provided via extensions.
+
+### NetCDF I/O using NCDatasets.jl
+
+```@docs
+from_netcdf
+to_netcdf
+```
