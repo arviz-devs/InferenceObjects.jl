@@ -58,6 +58,9 @@ end
                 )
             end
         end
+        @require NCDatasets = "85f8d34a-cbdd-5861-8df4-14fed0d494ab" begin
+            include("../ext/InferenceObjectsNCDatasetsExt/InferenceObjectsNCDatasetsExt.jl")
+        end
     end
 end
 
