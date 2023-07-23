@@ -49,8 +49,8 @@ include("io.jl")
 if !EXTENSIONS_SUPPORTED
     using Requires: @require
 end
-@static if !EXTENSIONS_SUPPORTED
-    function __init__()
+function __init__()
+    @static if !EXTENSIONS_SUPPORTED
         @require MCMCDiagnosticTools = "be115224-59cd-429b-ad48-344e309966f0" begin
             @require Random = "9a3f8284-a2c9-5f02-9a11-845980a1fd5c" begin
                 include(
@@ -60,6 +60,25 @@ end
         end
         @require NCDatasets = "85f8d34a-cbdd-5861-8df4-14fed0d494ab" begin
             include("../ext/InferenceObjectsNCDatasetsExt/InferenceObjectsNCDatasetsExt.jl")
+        end
+    end
+    if isdefined(Base.Experimental, :register_error_hint)
+        Base.Experimental.register_error_hint(MethodError) do io, exc, argtypes, kwargs
+            if exc.f === from_netcdf &&
+                length(argtypes) == 1 &&
+                argtypes[1] <: AbstractString
+                println(
+                    io,
+                    "\n\nTo load an InferenceData from a NetCDF file, you must first load NCDatasets.",
+                )
+            elseif exc.f === to_netcdf &&
+                length(argtypes) == 2 &&
+                argtypes[2] <: AbstractString
+                println(
+                    io,
+                    "\n\nTo save an InferenceData to a NetCDF file, you must first load NCDatasets.",
+                )
+            end
         end
     end
 end
