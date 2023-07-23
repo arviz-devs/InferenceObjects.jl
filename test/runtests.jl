@@ -12,4 +12,5 @@ using InferenceObjects, Test
     include("from_dict.jl")
 
     include("mcmcdiagnostictools.jl")
+    include("ncdatasets.jl")
 end
