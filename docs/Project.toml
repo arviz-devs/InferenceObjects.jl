@@ -1,4 +1,4 @@
 [deps]
 Documenter = "e30172f5-a6a5-5a46-863b-614d45cd2de4"
 InferenceObjects = "b5cf5a8d-e756-4ee3-b014-01d49d192c00"
-InferenceObjectsNetCDF = "7cb6d088-77df-42c3-8f05-5ca8d42599d1"
+NCDatasets = "85f8d34a-cbdd-5861-8df4-14fed0d494ab"
