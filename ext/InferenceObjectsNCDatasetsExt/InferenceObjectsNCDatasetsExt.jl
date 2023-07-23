@@ -79,11 +79,15 @@ function InferenceObjects.convert_to_inference_data(ds::NCDatasets.NCDataset; kw
     return from_netcdf(ds)
 end
 
-function InferenceObjects.to_netcdf(data, path::AbstractString; group::Symbol=:posterior, kwargs...)
+function InferenceObjects.to_netcdf(
+    data, path::AbstractString; group::Symbol=:posterior, kwargs...
+)
     NCDatasets.NCDataset(ds -> to_netcdf(data, ds; group), path, "c"; kwargs...)
     return path
 end
-function InferenceObjects.to_netcdf(data, ds::NCDatasets.NCDataset; group::Symbol=:posterior)
+function InferenceObjects.to_netcdf(
+    data, ds::NCDatasets.NCDataset; group::Symbol=:posterior
+)
     idata = convert_to_inference_data(data; group)
     for (group_name, group_data) in pairs(idata)
         group_attrib = collect(InferenceObjects.attributes(group_data))
