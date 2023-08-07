@@ -23,6 +23,7 @@ InferenceObjectsNCDatasetsExt = "NCDatasets"
 InferenceObjectsPosteriorStatsExt = ["PosteriorStats"]
 
 [compat]
+ArviZExampleData = "0.1"
 Compat = "3.46.0, 4.2.0"
 DimensionalData = "0.24"
 EvoTrees = "0.14"
@@ -37,6 +38,7 @@ Tables = "1"
 julia = "1.6"
 
 [extras]
+ArviZExampleData = "2f96bb34-afd9-46ae-bcd0-9b2d4372fe3c"
 EvoTrees = "f6006082-12f8-11e9-0c9c-0d5d367ab1e5"
 MCMCDiagnosticTools = "be115224-59cd-429b-ad48-344e309966f0"
 MLJBase = "a7f614a8-145f-11e9-1d2a-a57a1082229d"
@@ -49,4 +51,4 @@ Statistics = "10745b16-79ce-11e8-11f9-7d13ad32a3b2"
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 
 [targets]
-test = ["EvoTrees", "MCMCDiagnosticTools", "MLJBase", "NCDatasets", "OffsetArrays", "OrderedCollections", "Random", "Statistics", "Test"]
+test = ["ArviZExampleData", "EvoTrees", "MCMCDiagnosticTools", "MLJBase", "NCDatasets", "OffsetArrays", "OrderedCollections", "PosteriorStats", "Random", "Statistics", "Test"]
