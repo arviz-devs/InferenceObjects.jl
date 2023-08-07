@@ -12,4 +12,11 @@ else  # using Requires
     using ..PosteriorStats: PosteriorStats
 end
 
+include("utils.jl")
+include("hdi.jl")
+include("loo.jl")
+include("waic.jl")
+include("loo_pit.jl")
+include("r2_score.jl")
+
 end  # module
