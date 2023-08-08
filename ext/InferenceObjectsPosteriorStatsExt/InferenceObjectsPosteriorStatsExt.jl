@@ -18,5 +18,6 @@ include("loo.jl")
 include("waic.jl")
 include("loo_pit.jl")
 include("r2_score.jl")
+include("summarize.jl")
 
 end  # module

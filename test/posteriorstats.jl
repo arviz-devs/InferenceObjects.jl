@@ -238,5 +238,50 @@ using Test
     end
 
     @testset "summarize" begin
+        data = Dataset(
+            random_dim_stack(
+                (:x, :y, :z),
+                (y=[:a], z=[:b, :c]),
+                (chain=1:4, draw=1:100, a=0:2, b=["val 1", "val 2"], c=[:q, :r]),
+                Dict(),
+                (;),
+            ),
+        )
+        slices = [
+            data.x,
+            data.y[a=1],
+            data.y[a=2],
+            data.y[a=3],
+            data.z[b=1, c=1],
+            data.z[b=2, c=1],
+            data.z[b=1, c=2],
+            data.z[b=2, c=2],
+        ]
+        var_names = [
+            "x",
+            "y[0]",
+            "y[1]",
+            "y[2]",
+            "z[val 1,q]",
+            "z[val 2,q]",
+            "z[val 1,r]",
+            "z[val 2,r]",
+        ]
+        arr = cat(map(DimensionalData.data, slices)...; dims=3)
+
+        stats = @inferred SummaryStats summarize(data, mean, std; name="Stats")
+        @test stats.name == "Stats"
+        @test stats[:parameter] == var_names
+        @test stats[:mean] ≈ map(mean, slices)
+        @test stats[:std] ≈ map(std, slices)
+        @test summarize(data) == summarize(arr; var_names)
+
+        stats2 = summarize(InferenceData(; posterior=data); name="Posterior Stats")
+        @test stats2.name == "Posterior Stats"
+        @test stats2 == stats
+
+        stats3 = summarize(InferenceData(; prior=data); group=:prior, name="Prior Stats")
+        @test stats3.name == "Prior Stats"
+        @test stats3 == stats
     end
 end
