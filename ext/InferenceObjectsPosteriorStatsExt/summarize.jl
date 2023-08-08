@@ -1,4 +1,17 @@
 """
+    summarystats(data::InferenceData; group=:posterior, kwargs...) -> SummaryStats
+    summarystats(data::Dataset; kwargs...) -> SummaryStats
+
+Compute default summary statistics for the data using [`summarize`](@ref)
+"""
+function StatsBase.summarystats(data::InferenceObjects.InferenceData; kwargs...)
+    return PosteriorStats.summarize(data; kwargs...)
+end
+function StatsBase.summarystats(data::InferenceObjects.Dataset; kwargs...)
+    return PosteriorStats.summarize(data; kwargs...)
+end
+
+"""
     summarize(data::InferenceData, group=:posterior, stats_funs...; kwargs...)
     summarize(data::Dataset, stats_funs...; kwargs...)
 
