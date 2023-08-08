@@ -44,7 +44,7 @@ function PosteriorStats.loo_pit(
 )
     (_y_name, y), (_, _y_pred) = observations_and_predictions(idata, y_name, y_pred_name)
     y_pred = _draw_chains_params_array(_y_pred)
-    pitvals = loo_pit(y, y_pred, log_weights; kwargs...)
+    pitvals = PosteriorStats.loo_pit(y, y_pred, log_weights; kwargs...)
     return DimensionalData.rebuild(pitvals; name=Symbol("loo_pit_$(_y_name)"))
 end
 
