@@ -2,7 +2,7 @@
     summarystats(data::InferenceData; group=:posterior, kwargs...) -> SummaryStats
     summarystats(data::Dataset; kwargs...) -> SummaryStats
 
-Compute default summary statistics for the data using [`summarize`](@ref)
+Compute default summary statistics for the data using `summarize`.
 """
 function StatsBase.summarystats(data::InferenceObjects.InferenceData; kwargs...)
     return PosteriorStats.summarize(data; kwargs...)
@@ -18,7 +18,7 @@ end
 Compute summary statistics for the data using the provided functions.
 
 For verbose variable labels, provide `compat_labels=false`. For details on `stats_funs` and
-`kwargs`, see the main [`summarize`](@ref) method.
+`kwargs`, see the main `summarize` method.
 
 # Examples
 

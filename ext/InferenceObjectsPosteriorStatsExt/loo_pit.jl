@@ -9,7 +9,7 @@ Compute LOO-PIT values using existing normalized log LOO importance weights.
     the only observed data variable is used.
   - `y_pred_name`: Name of posterior predictive variable in `idata.posterior_predictive`.
     If not provided, then `y_name` is used.
-  - `kwargs`: Remaining keywords are forwarded to [`loo_pit`](@ref).
+  - `kwargs`: Remaining keywords are forwarded to the base method of `loo_pit`.
 
 # Examples
 
@@ -53,8 +53,6 @@ end
 
 Compute LOO-PIT from groups in `idata` using PSIS-LOO.
 
-See also: [`loo`](@ref), `PSIS.psis`
-
 # Keywords
 
   - `y_name`: Name of observed data variable in `idata.observed_data`. If not provided, then
@@ -67,8 +65,8 @@ See also: [`loo`](@ref), `PSIS.psis`
   - `reff::Union{Real,AbstractArray{<:Real}}`: The relative effective sample size(s) of the
     _likelihood_ values. If an array, it must have the same data dimensions as the
     corresponding log-likelihood variable. If not provided, then this is estimated using
-    `MCMCDiagnosticTools.ess`.
-  - `kwargs`: Remaining keywords are forwarded to [`loo_pit`](@ref).
+    `ess`.
+  - `kwargs`: Remaining keywords are forwarded to the base method of `loo_pit`.
 
 # Examples
 
