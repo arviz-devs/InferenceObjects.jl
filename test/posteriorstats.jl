@@ -3,6 +3,7 @@ using DimensionalData
 using InferenceObjects
 using PosteriorStats
 using Statistics
+using StatsBase
 using Test
 
 @testset "PosteriorStats integration" begin
@@ -237,7 +238,7 @@ using Test
         end
     end
 
-    @testset "summarize" begin
+    @testset "summarize/summarystats" begin
         data = Dataset(
             random_dim_stack(
                 (:x, :y, :z),
@@ -274,14 +275,24 @@ using Test
         @test stats[:parameter] == var_names
         @test stats[:mean] ≈ map(mean, slices)
         @test stats[:std] ≈ map(std, slices)
-        @test summarize(data) == summarize(arr; var_names)
+
+        stats_def = summarize(arr; var_names)
+        @test summarize(data) == stats_def
 
         stats2 = summarize(InferenceData(; posterior=data); name="Posterior Stats")
         @test stats2.name == "Posterior Stats"
-        @test stats2 == stats
+        @test stats2 == stats_def
 
         stats3 = summarize(InferenceData(; prior=data); group=:prior, name="Prior Stats")
         @test stats3.name == "Prior Stats"
-        @test stats3 == stats
+        @test stats3 == stats_def
+
+        stats4 = summarystats(data; name="Stats")
+        @test stats4.name == "Stats"
+        @test stats4 == stats_def
+
+        stats5 = summarystats(InferenceData(; prior=data); group=:prior, name="Prior Stats")
+        @test stats5.name == "Prior Stats"
+        @test stats5 == stats_def
     end
 end
