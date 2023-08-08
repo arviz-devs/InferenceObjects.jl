@@ -1,5 +1,6 @@
 module InferenceObjectsPosteriorStatsExt
 
+using Base: @doc
 if isdefined(Base, :get_extension)
     using DimensionalData: DimensionalData, Dimensions, LookupArrays
     using InferenceObjects: InferenceObjects

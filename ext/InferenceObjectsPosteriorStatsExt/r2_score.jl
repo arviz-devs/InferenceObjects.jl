@@ -1,4 +1,4 @@
-"""
+@doc """
     r2_score(idata::InferenceData; y_name, y_pred_name) -> (; r2, r2_std)
 
 Compute ``R²`` from `idata`, automatically formatting the predictions to the correct shape.

@@ -1,5 +1,6 @@
 module InferenceObjectsMCMCDiagnosticToolsExt
 
+using Base: @doc
 if isdefined(Base, :get_extension)
     using DimensionalData: DimensionalData, Dimensions, LookupArrays
     using InferenceObjects: InferenceObjects

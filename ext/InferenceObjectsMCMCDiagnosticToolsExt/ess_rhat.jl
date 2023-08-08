@@ -1,4 +1,4 @@
-"""
+@doc """
     ess(data::InferenceData; kwargs...) -> Dataset
     ess(data::Dataset; kwargs...) -> Dataset
 
@@ -8,7 +8,7 @@ function MCMCDiagnosticTools.ess(data::InferenceObjects.InferenceData; kwargs...
     return MCMCDiagnosticTools.ess(data.posterior; kwargs...)
 end
 
-"""
+@doc """
     rhat(data::InferenceData; kwargs...) -> Dataset
     rhat(data::Dataset; kwargs...) -> Dataset
 
@@ -29,7 +29,7 @@ for f in (:ess, :rhat)
     end
 end
 
-"""
+@doc """
     ess_rhat(data::InferenceData; kwargs...) -> Dataset
     ess_rhat(data::Dataset; kwargs...) -> Dataset
 

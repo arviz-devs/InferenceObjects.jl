@@ -1,4 +1,4 @@
-"""
+@doc """
     loo(data::Dataset; [var_name::Symbol,] kwargs...) -> PSISLOOResult{<:NamedTuple,<:Dataset}
     loo(data::InferenceData; [var_name::Symbol,] kwargs...) -> PSISLOOResult{<:NamedTuple,<:Dataset}
 

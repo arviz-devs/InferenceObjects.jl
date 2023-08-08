@@ -1,4 +1,4 @@
-"""
+@doc """
     mcse(data::InferenceData; kwargs...) -> Dataset
     mcse(data::Dataset; kwargs...) -> Dataset
 

@@ -1,4 +1,4 @@
-"""
+@doc """
     waic(data::Dataset; [var_name::Symbol]) -> WAICResult{<:NamedTuple,<:Dataset}
     waic(data::InferenceData; [var_name::Symbol]) -> WAICResult{<:NamedTuple,<:Dataset}
 

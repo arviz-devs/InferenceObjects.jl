@@ -1,4 +1,4 @@
-"""
+@doc """
     loo_pit(idata::InferenceData, log_weights; kwargs...) -> DimArray
 
 Compute LOO-PIT values using existing normalized log LOO importance weights.
@@ -48,7 +48,7 @@ function PosteriorStats.loo_pit(
     return DimensionalData.rebuild(pitvals; name=Symbol("loo_pit_$(_y_name)"))
 end
 
-"""
+@doc """
     loo_pit(idata::InferenceData; kwargs...) -> DimArray
 
 Compute LOO-PIT from groups in `idata` using PSIS-LOO.

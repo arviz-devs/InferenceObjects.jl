@@ -1,4 +1,4 @@
-"""
+@doc """
     rstar(
         rng::Random.AbstractRNG=Random.default_rng(),
         classifier,

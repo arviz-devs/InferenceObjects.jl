@@ -1,4 +1,4 @@
-"""
+@doc """
     summarystats(data::InferenceData; group=:posterior, kwargs...) -> SummaryStats
     summarystats(data::Dataset; kwargs...) -> SummaryStats
 
@@ -11,7 +11,7 @@ function StatsBase.summarystats(data::InferenceObjects.Dataset; kwargs...)
     return PosteriorStats.summarize(data; kwargs...)
 end
 
-"""
+@doc """
     summarize(data::InferenceData, group=:posterior, stats_funs...; kwargs...)
     summarize(data::Dataset, stats_funs...; kwargs...)
 

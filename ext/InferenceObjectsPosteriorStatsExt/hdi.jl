@@ -3,7 +3,7 @@ const HDI_BOUND_DIM = Dimensions.format(
     Dimensions.Dim{:hdi_bound}([:lower, :upper]), Base.OneTo(2)
 )
 
-"""
+@doc """
     hdi(data::InferenceData; kwargs...) -> Dataset
     hdi(data::Dataset; kwargs...) -> Dataset
 

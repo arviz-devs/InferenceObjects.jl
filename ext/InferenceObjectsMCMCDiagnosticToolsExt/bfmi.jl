@@ -1,4 +1,4 @@
-"""
+@doc """
     bfmi(data::InferenceData) -> DimArray
     bfmi(sample_stats::Dataset) -> DimArray
 
