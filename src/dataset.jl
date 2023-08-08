@@ -4,7 +4,7 @@
 Container of dimensional arrays sharing some dimensions.
 
 This type is an
-[`DimensionalData.AbstractDimStack`](https://rafaqz.github.io/DimensionalData.jl/stable/api/#DimensionalData.AbstractDimStack)
+[`DimensionalData.AbstractDimStack`](https://rafaqz.github.io/DimensionalData.jl/stable/reference/#DimensionalData.AbstractDimStack)
 that implements the same interface as `DimensionalData.DimStack` and has identical usage.
 
 When a `Dataset` is passed to Python, it is converted to an `xarray.Dataset` without copying

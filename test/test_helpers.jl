@@ -1,4 +1,6 @@
-using InferenceObjects, DimensionalData
+using DimensionalData
+using InferenceObjects
+using Test
 
 function random_dim_array(var_name, dims, coords, T, default_dims=())
     _dims = (default_dims..., dims...)

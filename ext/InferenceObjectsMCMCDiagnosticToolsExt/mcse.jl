@@ -1,6 +1,6 @@
-"""
-    ess(data::InferenceData; kwargs...) -> Dataset
-    ess(data::Dataset; kwargs...) -> Dataset
+@doc """
+    mcse(data::InferenceData; kwargs...) -> Dataset
+    mcse(data::Dataset; kwargs...) -> Dataset
 
 Calculate the Monte Carlo standard error (MCSE) for each parameter in the data.
 """

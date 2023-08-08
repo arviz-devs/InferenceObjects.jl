@@ -13,4 +13,5 @@ using InferenceObjects, Test
 
     include("mcmcdiagnostictools.jl")
     include("ncdatasets.jl")
+    include("posteriorstats.jl")
 end

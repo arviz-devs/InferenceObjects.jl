@@ -30,4 +30,23 @@ makedocs(;
     strict=Documenter.except(:missing_docs),
 )
 
+# run doctests on extensions
+function get_extension(mod::Module, name::Symbol)
+    if isdefined(Base, :get_extension)
+        return Base.get_extension(mod, name)
+    else
+        return getproperty(mod, name)
+    end
+end
+
+using MCMCDiagnosticTools: MCMCDiagnosticTools
+using PosteriorStats: PosteriorStats
+for extended_pkg in (MCMCDiagnosticTools, PosteriorStats)
+    extension_name = Symbol("InferenceObjects", extended_pkg, "Ext")
+    @info "Running doctests for extension $(extension_name)"
+    mod = get_extension(InferenceObjects, extension_name)
+    DocMeta.setdocmeta!(mod, :DocTestSetup, :(using $(Symbol(extended_pkg))))
+    doctest(mod; manual=false)
+end
+
 deploydocs(; repo="github.com/arviz-devs/InferenceObjects.jl", devbranch="main")

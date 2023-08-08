@@ -61,6 +61,13 @@ function __init__()
         @require NCDatasets = "85f8d34a-cbdd-5861-8df4-14fed0d494ab" begin
             include("../ext/InferenceObjectsNCDatasetsExt/InferenceObjectsNCDatasetsExt.jl")
         end
+        @require PosteriorStats = "7f36be82-ad55-44ba-a5c0-b8b5480d7aa5" begin
+            @require StatsBase = "2913bbd2-ae8a-5f71-8c99-4fb6c76f3a91" begin
+                include(
+                    "../ext/InferenceObjectsPosteriorStatsExt/InferenceObjectsPosteriorStatsExt.jl",
+                )
+            end
+        end
     end
     if isdefined(Base.Experimental, :register_error_hint)
         Base.Experimental.register_error_hint(MethodError) do io, exc, argtypes, kwargs
