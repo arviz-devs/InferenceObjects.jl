@@ -13,7 +13,7 @@ doctestfilters = [
 makedocs(;
     modules=[InferenceObjects],
     authors="Seth Axen <seth.axen@gmail.com> and contributors",
-    repo="https://github.com/arviz-devs/InferenceObjects.jl/blob/{commit}{path}#{line}",
+    repo=Remotes.GitHub("arviz-devs", "InferenceObjects.jl"),
     sitename="InferenceObjects.jl",
     format=Documenter.HTML(;
         prettyurls=get(ENV, "CI", "false") == "true",
@@ -27,7 +27,7 @@ makedocs(;
         "InferenceData" => "inference_data.md",
     ],
     doctestfilters=doctestfilters,
-    strict=Documenter.except(:missing_docs),
+    warnonly=:missing_docs,
 )
 
 # run doctests on extensions

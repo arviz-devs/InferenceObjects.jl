@@ -6,3 +6,6 @@ MCMCDiagnosticTools = "be115224-59cd-429b-ad48-344e309966f0"
 NCDatasets = "85f8d34a-cbdd-5861-8df4-14fed0d494ab"
 PosteriorStats = "7f36be82-ad55-44ba-a5c0-b8b5480d7aa5"
 StatsBase = "2913bbd2-ae8a-5f71-8c99-4fb6c76f3a91"
+
+[compat]
+Documenter = "1"
