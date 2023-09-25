@@ -27,7 +27,7 @@ makedocs(;
         "InferenceData" => "inference_data.md",
     ],
     doctestfilters=doctestfilters,
-    strict=Documenter.except(:missing_docs),
+    warnonly=:missing_docs,
 )
 
 # run doctests on extensions
