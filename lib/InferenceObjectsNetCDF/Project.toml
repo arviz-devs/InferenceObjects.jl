@@ -10,7 +10,7 @@ NCDatasets = "85f8d34a-cbdd-5861-8df4-14fed0d494ab"
 Reexport = "189a3867-3050-52da-a836-e630ba90ab69"
 
 [compat]
-DimensionalData = "0.23.1, 0.24"
+DimensionalData = "0.23.1, 0.24, 0.25"
 InferenceObjects = "0.3.10"
 NCDatasets = "0.12"
 Reexport = "1"
