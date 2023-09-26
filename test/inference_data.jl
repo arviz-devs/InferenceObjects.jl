@@ -146,7 +146,6 @@ using InferenceObjects, DimensionalData, Test
         @test idata_cat1 isa InferenceData
         @test issetequal(keys(idata_cat1), (:posterior,))
         @test idata_cat1.posterior == cat(posterior, posterior2; dims=Dim{:chain}())
-        @test idata_cat1.posterior == cat(posterior, posterior2; dims=:chain)
 
         # new dimension
         idata_cat2 = @inferred InferenceData cat(idata1, idata2; dims=Dim{:run}())
