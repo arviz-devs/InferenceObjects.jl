@@ -26,7 +26,7 @@ InferenceObjectsPosteriorStatsExt = ["PosteriorStats", "StatsBase"]
 [compat]
 ArviZExampleData = "0.1"
 Compat = "3.46.0, 4.2.0"
-DimensionalData = "0.24"
+DimensionalData = "0.24, 0.25"
 EvoTrees = "0.14"
 MCMCDiagnosticTools = "0.3.4"
 MLJBase = "0.21"
