@@ -14,8 +14,7 @@ jobs:
         shell: julia {0}
         run: |
           using CompatHelper
-          subdirs = [""; readdir("lib/"; join=true)]
-          CompatHelper.main(; subdirs)
+          CompatHelper.main()
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           COMPATHELPER_PRIV: ${{ secrets.DOCUMENTER_KEY }}
