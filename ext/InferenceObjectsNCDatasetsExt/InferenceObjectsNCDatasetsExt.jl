@@ -20,7 +20,7 @@ function InferenceObjects.from_netcdf(ds::NCDatasets.NCDataset; load_mode::Symbo
 end
 
 function _from_netcdf(ds, load_mode)
-    groups = map(ds.group) do (group_name, group)
+    groups_iter = Iterators.map(ds.group) do (group_name, group)
         layerdims = (;
             map(NCDatasets.dimnames(group)) do dim_name
                 index = collect(group[dim_name])
@@ -54,7 +54,7 @@ function _from_netcdf(ds, load_mode)
         end
         return Symbol(group_name) => Dataset(data; metadata=group_metadata)
     end
-    return InferenceData(; groups...)
+    return InferenceData(; groups_iter...)
 end
 
 _var_to_array(var, load_mode) = var
