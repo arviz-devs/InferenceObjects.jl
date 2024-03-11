@@ -19,9 +19,9 @@ function PosteriorStats.hdi(data::InferenceObjects.Dataset; kwargs...)
         lower, upper = map(Base.Fix2(_as_dimarray, x), r)
         return cat(lower, upper; dims=HDI_BOUND_DIM)
     end
-    dims = Dimensions.combinedims(
-        Dimensions.otherdims(data, InferenceObjects.DEFAULT_SAMPLE_DIMS), HDI_BOUND_DIM
-    )
+    dims = Dimensions.combinedims((
+        Dimensions.otherdims(data, InferenceObjects.DEFAULT_SAMPLE_DIMS)..., HDI_BOUND_DIM
+    ))
     return DimensionalData.rebuild(
         data;
         data=map(parent, results),
