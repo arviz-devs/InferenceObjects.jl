@@ -1,7 +1,9 @@
 # this pattern ensures that the type is completely specified at compile time
-const HDI_BOUND_DIM = Dimensions.format(
-    Dimensions.Dim{:hdi_bound}([:lower, :upper]), Base.OneTo(2)
-)
+const HDI_BOUND_DIM = let
+    dims = Dimensions.format(Dimensions.Dim{:hdi_bound}([:lower, :upper]), Base.OneTo(2))
+    # some versions of DimensionalData return a tuple here, others return a Dim
+    dims isa Tuple ? only(dims) : dims
+end
 
 @doc """
     hdi(data::InferenceData; kwargs...) -> Dataset
