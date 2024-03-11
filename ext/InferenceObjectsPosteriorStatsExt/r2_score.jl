@@ -29,5 +29,9 @@ function PosteriorStats.r2_score(
     y_pred_name::Union{Symbol,Nothing}=nothing,
 )
     (_, y), (_, y_pred) = observations_and_predictions(idata, y_name, y_pred_name)
-    return PosteriorStats.r2_score(y, _draw_chains_params_array(y_pred))
+    y_data = y isa DimensionalData.AbstractDimArray ? parent(y) : y
+    y_data, y_pred_data = map((y, _draw_chains_params_array(y_pred))) do arr
+        return arr isa DimensionalData.AbstractDimArray ? parent(arr) : arr
+    end
+    return PosteriorStats.r2_score(y_data, y_pred_data)
 end
