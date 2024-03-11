@@ -300,16 +300,18 @@ InferenceData with groups:
   > posterior
 
 julia> idata_cat1.posterior
-Dataset with dimensions:
-  Dim{:draw},
-  Dim{:chain},
-  Dim{:a_dim} Categorical{String} String["x", "y", "z"] ForwardOrdered
-and 2 layers:
-  :a Float64 dims: Dim{:draw}, Dim{:chain}, Dim{:a_dim} (100×8×3)
-  :b Float64 dims: Dim{:draw}, Dim{:chain} (100×8)
-
-with metadata Dict{String, Any} with 1 entry:
-  "created_at" => "2023-04-03T18:41:35.779"
+╭─────────────────╮
+│ 100×8×3 Dataset │
+├─────────────────┴──────────────────────────────────── dims ┐
+  ↓ draw ,
+  → chain,
+  ↗ a_dim Categorical{String} ["x", "y", "z"] ForwardOrdered
+├──────────────────────────────────────────────────── layers ┤
+  :a eltype: Float64 dims: draw, chain, a_dim size: 100×8×3
+  :b eltype: Float64 dims: draw, chain size: 100×8
+├────────────────────────────────────────────────── metadata ┤
+  Dict{String, Any} with 1 entry:
+  "created_at" => "2024-03-11T14:10:48.434"
 ```
 
 Alternatively, we can concatenate along a new `run` dimension, which will be created.
@@ -320,17 +322,19 @@ InferenceData with groups:
   > posterior
 
 julia> idata_cat2.posterior
-Dataset with dimensions:
-  Dim{:draw},
-  Dim{:chain},
-  Dim{:a_dim} Categorical{String} String["x", "y", "z"] ForwardOrdered,
-  Dim{:run}
-and 2 layers:
-  :a Float64 dims: Dim{:draw}, Dim{:chain}, Dim{:a_dim}, Dim{:run} (100×4×3×2)
-  :b Float64 dims: Dim{:draw}, Dim{:chain}, Dim{:run} (100×4×2)
-
-with metadata Dict{String, Any} with 1 entry:
-  "created_at" => "2023-04-03T18:41:35.779"
+╭───────────────────╮
+│ 100×4×3×2 Dataset │
+├───────────────────┴─────────────────────────────────── dims ┐
+  ↓ draw ,
+  → chain,
+  ↗ a_dim Categorical{String} ["x", "y", "z"] ForwardOrdered,
+  ⬔ run
+├─────────────────────────────────────────────────────────────┴ layers ┐
+  :a eltype: Float64 dims: draw, chain, a_dim, run size: 100×4×3×2
+  :b eltype: Float64 dims: draw, chain, run size: 100×4×2
+├──────────────────────────────────────────────────────────── metadata ┤
+  Dict{String, Any} with 1 entry:
+  "created_at" => "2024-03-11T14:10:48.434"
 ```
 
 We can also concatenate only a subset of groups and merge the rest, which is useful when
@@ -351,25 +355,30 @@ InferenceData with groups:
   > observed_data
 
 julia> idata_cat3.posterior
-Dataset with dimensions:
-  Dim{:draw},
-  Dim{:chain},
-  Dim{:a_dim} Categorical{String} String["x", "y", "z"] ForwardOrdered,
-  Dim{:run}
-and 2 layers:
-  :a Float64 dims: Dim{:draw}, Dim{:chain}, Dim{:a_dim}, Dim{:run} (100×4×3×2)
-  :b Float64 dims: Dim{:draw}, Dim{:chain}, Dim{:run} (100×4×2)
-
-with metadata Dict{String, Any} with 1 entry:
-  "created_at" => "2023-04-03T18:41:35.779"
+╭───────────────────╮
+│ 100×4×3×2 Dataset │
+├───────────────────┴─────────────────────────────────── dims ┐
+  ↓ draw ,
+  → chain,
+  ↗ a_dim Categorical{String} ["x", "y", "z"] ForwardOrdered,
+  ⬔ run
+├─────────────────────────────────────────────────────────────┴ layers ┐
+  :a eltype: Float64 dims: draw, chain, a_dim, run size: 100×4×3×2
+  :b eltype: Float64 dims: draw, chain, run size: 100×4×2
+├──────────────────────────────────────────────────────────── metadata ┤
+  Dict{String, Any} with 1 entry:
+  "created_at" => "2024-03-11T14:10:48.434"
 
 julia> idata_cat3.observed_data
-Dataset with dimensions: Dim{:y_dim_1}
-and 1 layer:
-  :y Float64 dims: Dim{:y_dim_1} (10)
-
-with metadata Dict{String, Any} with 1 entry:
-  "created_at" => "2023-02-17T15:11:00.59"
+╭────────────────────╮
+│ 10-element Dataset │
+├────────────── dims ┤
+  ↓ y_dim_1
+├────────────────────┴─────────────── layers ┐
+  :y eltype: Float64 dims: y_dim_1 size: 10
+├────────────────────────────────────────────┴ metadata ┐
+  Dict{String, Any} with 1 entry:
+  "created_at" => "2024-03-11T14:10:53.539"
 ```
 """
 function Base.cat(data::InferenceData, others::InferenceData...; groups=keys(data), dims)

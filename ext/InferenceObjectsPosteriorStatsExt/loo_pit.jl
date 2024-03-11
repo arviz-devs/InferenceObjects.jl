@@ -23,8 +23,11 @@ julia> idata = load_example_data("centered_eight");
 julia> loo_result = loo(idata; var_name=:obs);
 
 julia> loo_pit(idata, loo_result.psis_result.log_weights; y_name=:obs)
-8-element DimArray{Float64,1} loo_pit_obs with dimensions:
-  Dim{:school} Categorical{String} String[Choate, Deerfield, …, St. Paul's, Mt. Hermon] Unordered
+╭───────────────────────────────────────────╮
+│ 8-element DimArray{Float64,1} loo_pit_obs │
+├───────────────────────────────────────────┴──────────────────────────── dims ┐
+  ↓ school Categorical{String} [Choate, Deerfield, …, St. Paul's, Mt. Hermon] Unordered
+└──────────────────────────────────────────────────────────────────────────────┘
  "Choate"            0.943511
  "Deerfield"         0.63797
  "Phillips Andover"  0.316697
@@ -78,8 +81,11 @@ julia> using ArviZExampleData, PosteriorStats
 julia> idata = load_example_data("centered_eight");
 
 julia> loo_pit(idata; y_name=:obs)
-8-element DimArray{Float64,1} loo_pit_obs with dimensions:
-  Dim{:school} Categorical{String} String[Choate, Deerfield, …, St. Paul's, Mt. Hermon] Unordered
+╭───────────────────────────────────────────╮
+│ 8-element DimArray{Float64,1} loo_pit_obs │
+├───────────────────────────────────────────┴──────────────────────────── dims ┐
+  ↓ school Categorical{String} [Choate, Deerfield, …, St. Paul's, Mt. Hermon] Unordered
+└──────────────────────────────────────────────────────────────────────────────┘
  "Choate"            0.943511
  "Deerfield"         0.63797
  "Phillips Andover"  0.316697
