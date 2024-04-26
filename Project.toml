@@ -23,7 +23,7 @@ InferenceObjectsNCDatasetsExt = "NCDatasets"
 InferenceObjectsPosteriorStatsExt = ["PosteriorStats", "StatsBase"]
 
 [compat]
-ArviZExampleData = "0.1.5"
+ArviZExampleData = "0.1.10"
 Dates = "1.9"
 DimensionalData = "0.27"
 EvoTrees = "0.16"
