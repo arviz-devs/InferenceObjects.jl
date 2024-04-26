@@ -1,5 +1,5 @@
 """
-    Dataset{L} <: DimensionalData.AbstractDimStack{L}
+    Dataset{K,T,N,L} <: DimensionalData.AbstractDimStack{K,T,N,L}
 
 Container of dimensional arrays sharing some dimensions.
 
@@ -25,8 +25,8 @@ if an `xarray.Dataset` is passed to Julia, its data must be copied.
 In most cases, use [`convert_to_dataset`](@ref) to create a `Dataset` instead of directly
 using a constructor.
 """
-struct Dataset{L,D<:DimensionalData.AbstractDimStack{L}} <:
-       DimensionalData.AbstractDimStack{L}
+struct Dataset{K,T,N,L,D<:DimensionalData.AbstractDimStack{K,T,N,L}} <:
+       DimensionalData.AbstractDimStack{K,T,N,L}
     data::D
 end
 
