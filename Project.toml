@@ -1,10 +1,9 @@
 name = "InferenceObjects"
 uuid = "b5cf5a8d-e756-4ee3-b014-01d49d192c00"
 authors = ["Seth Axen <seth.axen@gmail.com> and contributors"]
-version = "0.3.16"
+version = "0.4.0"
 
 [deps]
-Compat = "34da2185-b29b-5c13-b0c7-acf172513d20"
 Dates = "ade2ca70-3891-5945-98fb-dc099432e06a"
 DimensionalData = "0703355e-b756-11e9-17c0-8b28908087d0"
 Random = "9a3f8284-a2c9-5f02-9a11-845980a1fd5c"
@@ -24,22 +23,21 @@ InferenceObjectsNCDatasetsExt = "NCDatasets"
 InferenceObjectsPosteriorStatsExt = ["PosteriorStats", "StatsBase"]
 
 [compat]
-ArviZExampleData = "0.1"
-Compat = "3.46.0, 4.2.0"
-Dates = "1.6"
-DimensionalData = "0.24, 0.25, 0.26"
+ArviZExampleData = "0.1.5"
+Dates = "1.9"
+DimensionalData = "0.27"
 EvoTrees = "0.16"
 MCMCDiagnosticTools = "0.3.4"
 MLJBase = "1"
-NCDatasets = "0.12, 0.13, 0.14"
+NCDatasets = "0.12.6, 0.13, 0.14"
 OffsetArrays = "1"
-OrderedCollections = "1"
+OrderedCollections = "1.6"
 PosteriorStats = "0.1.1, 0.2"
-Random = "1.6"
-Requires = "0.5, 1"
-StatsBase = "0.32, 0.33, 0.34"
-Tables = "1"
-julia = "1.6"
+Random = "1.9"
+Requires = "1.1.0"
+StatsBase = "0.33.3, 0.34"
+Tables = "1.10.0"
+julia = "1.9"
 
 [extras]
 ArviZExampleData = "2f96bb34-afd9-46ae-bcd0-9b2d4372fe3c"
