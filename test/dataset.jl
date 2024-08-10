@@ -109,6 +109,20 @@ using InferenceObjects, DimensionalData, Test
             @test_deprecated InferenceObjects.setattribute!(dscopy, :prop3, "val4")
             @test InferenceObjects.attributes(dscopy)["prop3"] == "val4"
         end
+
+        @testset "DimensionalData.rebuild" begin
+            ds2 = DimensionalData.rebuild(ds; data=(; x=zero(x), y))
+            @test ds2 isa Dataset
+            @test iszero(ds2.x)
+            @test ds2.y == y
+        end
+
+        @testset "DimensionalData.set" begin
+            ds2 = DimensionalData.set(ds; ydim1=LookupArrays.Sampled([-2, 2]))
+            @test ds2 isa Dataset
+            @test DimensionalData.lookup(ds2, :ydim1) == [-2, 2]
+            @test DimensionalData.data(ds2) == DimensionalData.data(ds)
+        end
     end
 
     @testset "namedtuple_to_dataset" begin
