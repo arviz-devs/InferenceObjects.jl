@@ -26,7 +26,7 @@ const SCHEMA_GROUPS = (
     :warmup_log_likelihood,
 )
 const SCHEMA_GROUPS_DICT = Dict(n => i for (i, n) in enumerate(SCHEMA_GROUPS))
-const DEFAULT_SAMPLE_DIMS = Dimensions.key2dim((:draw, :chain))
+const DEFAULT_SAMPLE_DIMS = Dimensions.name2dim((:draw, :chain))
 const DEFAULT_DRAW_DIM = 1
 const DEFAULT_CHAIN_DIM = 2
 
