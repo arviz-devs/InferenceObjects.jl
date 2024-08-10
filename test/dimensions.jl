@@ -26,14 +26,14 @@ Dimensions.@dim foo "foo"
         ))
     end
 
-    @testset "_key2dim" begin
+    @testset "_name2dim" begin
         @testset for k in (:chain, :draw, :foo)
-            @test InferenceObjects._key2dim(k) === Dim{k}(NoLookup())
-            @test @inferred(InferenceObjects._key2dim(Dim{k})) === Dim{k}
-            @test @inferred(InferenceObjects._key2dim(Dim{k}())) === Dim{k}()
-            @test @inferred(InferenceObjects._key2dim(Dim{k}(1:4))) == Dim{k}(1:4)
+            @test InferenceObjects._name2dim(k) === Dim{k}(NoLookup())
+            @test @inferred(InferenceObjects._name2dim(Dim{k})) === Dim{k}
+            @test @inferred(InferenceObjects._name2dim(Dim{k}())) === Dim{k}()
+            @test @inferred(InferenceObjects._name2dim(Dim{k}(1:4))) == Dim{k}(1:4)
         end
-        @test InferenceObjects._key2dim((:chain, :draw, :foo)) ===
+        @test InferenceObjects._name2dim((:chain, :draw, :foo)) ===
             (Dim{:chain}(NoLookup()), Dim{:draw}(NoLookup()), Dim{:foo}(NoLookup()))
     end
 

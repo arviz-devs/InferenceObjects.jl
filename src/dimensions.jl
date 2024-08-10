@@ -1,10 +1,10 @@
 has_all_sample_dims(dims) = all(Dimensions.hasdim(dims, DEFAULT_SAMPLE_DIMS))
 
-# Like Dimensions.key2dim but doesn't allow users to inject their own dimensions using
+# Like Dimensions.name2dim but doesn't allow users to inject their own dimensions using
 # Dimensions.@dim. See https://github.com/arviz-devs/InferenceObjects.jl/issues/37
-_key2dim(d::Symbol) = Dimensions.Dim{d}(LookupArrays.NoLookup())
-_key2dim(d::Tuple) = map(_key2dim, d)
-_key2dim(d) = d
+_name2dim(d::Symbol) = Dimensions.Dim{d}(LookupArrays.NoLookup())
+_name2dim(d::Tuple) = map(_name2dim, d)
+_name2dim(d) = d
 
 # make sure dim has a lookup value accessible with `val`
 _valdim(d) = d
@@ -30,7 +30,7 @@ Convert `dim`, `coords`, and `axis` to a `Dimension` object.
   - `axis`: A default axis to be used if `coords` and `dim` indices are not provided.
 """
 function as_dimension(dim, coords, axis)
-    cdim = _valdim(_key2dim(dim))
+    cdim = _valdim(_name2dim(dim))
     val = LookupArrays.val(cdim)
     inds = val isa Union{Colon,LookupArrays.NoLookup} ? axis : val
     coords_inds = get(coords, Dimensions.name(cdim), inds)
@@ -64,7 +64,7 @@ Generate `DimensionsionalData.Dimension` objects for each dimension of `array`.
 function generate_dims(array, name; dims=(), coords=(;), default_dims=())
     num_default_dims = length(default_dims)
     if length(dims) + num_default_dims > ndims(array)
-        dim_names = Dimensions.name(_key2dim((default_dims..., dims...)))
+        dim_names = Dimensions.name(_name2dim((default_dims..., dims...)))
         throw(
             DimensionMismatch(
                 "Provided dimensions $dim_names more than dimensions of array: $(ndims(array))",
