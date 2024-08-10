@@ -30,6 +30,14 @@ struct Dataset{K,T,N,L,D<:DimensionalData.AbstractDimStack{K,T,N,L}} <:
     data::D
 end
 
+function Dataset{K,T,N}(
+    data::L, dims, refdims, layerdims, metadata, layermetadata
+) where {K,T,N,L}
+    data = DimensionalData.DimStack{K,T,N}(
+        data, dims, refdims, layerdims, metadata, layermetadata
+    )
+    return Dataset{K,T,N,L,typeof(data)}(data)
+end
 Dataset(args...; kwargs...) = Dataset(DimensionalData.DimStack(args...; kwargs...))
 Dataset(data::Dataset) = data
 
