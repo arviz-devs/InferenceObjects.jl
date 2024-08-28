@@ -24,7 +24,7 @@ jobs:
         version:
           - '1.9'
           - '1'
-          - 'nightly'
+          - 'pre'
         os:
           - ubuntu-latest
         arch:
