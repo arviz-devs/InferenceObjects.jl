@@ -85,7 +85,9 @@ end
             r4 = rstar(rng, classifier(rng), idata2.posterior; subset)
             rng = Random.seed!(123)
             post_mat = cat(
-                maplayers(var -> reshape(parent(var), ndraws, nchains, :), idata1.posterior)...;
+                maplayers(
+                    var -> reshape(parent(var), ndraws, nchains, :), idata1.posterior
+                )...;
                 dims=3,
             )
             r5 = rstar(rng, classifier(rng), post_mat; subset)
