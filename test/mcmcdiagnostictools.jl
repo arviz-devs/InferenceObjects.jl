@@ -7,6 +7,10 @@ using Random
 using Statistics
 using Test
 
+if !isdefined(DimensionalData, :maplayers)
+    maplayers = map
+end
+
 @testset "MCMCDiagnosticTools integration" begin
     nchains, ndraws = 4, 10
     sizes = (x=(), y=(2,), z=(3, 5))
@@ -16,12 +20,12 @@ using Test
     dict1 = Dict(Symbol(k) => randn(ndraws, nchains, sz...) for (k, sz) in pairs(sizes))
     idata1 = from_dict(dict1; dims, coords, sample_stats=Dict(:energy => energy))
     # permute dimensions to test that diagnostics are invariant to dimension order
-    post2 = map(idata1.posterior) do var
+    post2 = maplayers(idata1.posterior) do var
         n = ndims(var)
         permdims = ((3:n)..., 2, 1)
         return permutedims(var, permdims)
     end
-    sample_stats2 = map(permutedims, idata1.sample_stats)
+    sample_stats2 = maplayers(permutedims, idata1.sample_stats)
     idata2 = InferenceData(; posterior=post2, sample_stats=sample_stats2)
 
     @testset for f in (ess, rhat, ess_rhat, mcse)
@@ -35,7 +39,7 @@ using Test
             @test issetequal(keys(metric), keys(idata1.posterior))
             @test metric == f(idata1.posterior; kind)
             @test metric2 == f(idata2.posterior; kind)
-            @test all(map(≈, metric2, metric))
+            @test all(maplayers(≈, metric2, metric))
             for k in keys(sizes)
                 @test all(
                     hasdim(
@@ -81,7 +85,7 @@ using Test
             r4 = rstar(rng, classifier(rng), idata2.posterior; subset)
             rng = Random.seed!(123)
             post_mat = cat(
-                map(var -> reshape(parent(var), ndraws, nchains, :), idata1.posterior)...;
+                maplayers(var -> reshape(parent(var), ndraws, nchains, :), idata1.posterior)...;
                 dims=3,
             )
             r5 = rstar(rng, classifier(rng), post_mat; subset)

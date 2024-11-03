@@ -13,6 +13,8 @@ else  # using Requires
     using ..Random: Random
 end
 
+maplayers = isdefined(DimensionalData, :maplayers) ? DimensionalData.maplayers : map
+
 include("utils.jl")
 include("bfmi.jl")
 include("ess_rhat.jl")
