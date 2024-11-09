@@ -2,6 +2,7 @@ module InferenceObjects
 
 using Dates: Dates
 using DimensionalData: DimensionalData, Dimensions, LookupArrays
+using Random: Random
 using Tables: Tables
 
 const EXTENSIONS_SUPPORTED = isdefined(Base, :get_extension)
