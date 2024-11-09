@@ -1,7 +1,7 @@
 name = "InferenceObjects"
 uuid = "b5cf5a8d-e756-4ee3-b014-01d49d192c00"
 authors = ["Seth Axen <seth.axen@gmail.com> and contributors"]
-version = "0.4.5"
+version = "0.4.6"
 
 [deps]
 Dates = "ade2ca70-3891-5945-98fb-dc099432e06a"
@@ -23,7 +23,7 @@ InferenceObjectsPosteriorStatsExt = ["PosteriorStats", "StatsBase"]
 [compat]
 ArviZExampleData = "0.1.10"
 Dates = "1.9"
-DimensionalData = "0.27"
+DimensionalData = "0.27, 0.28"
 EvoTrees = "0.16"
 MCMCDiagnosticTools = "0.3.4"
 MLJBase = "1"
