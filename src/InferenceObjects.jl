@@ -2,9 +2,8 @@ module InferenceObjects
 
 using Dates: Dates
 using DimensionalData: DimensionalData, Dimensions, LookupArrays
+using Random: Random
 using Tables: Tables
-
-const EXTENSIONS_SUPPORTED = isdefined(Base, :get_extension)
 
 # groups that are officially listed in the schema
 const SCHEMA_GROUPS = (
@@ -45,29 +44,7 @@ include("from_namedtuple.jl")
 include("from_dict.jl")
 include("io.jl")
 
-if !EXTENSIONS_SUPPORTED
-    using Requires: @require
-end
 function __init__()
-    @static if !EXTENSIONS_SUPPORTED
-        @require MCMCDiagnosticTools = "be115224-59cd-429b-ad48-344e309966f0" begin
-            @require Random = "9a3f8284-a2c9-5f02-9a11-845980a1fd5c" begin
-                include(
-                    "../ext/InferenceObjectsMCMCDiagnosticToolsExt/InferenceObjectsMCMCDiagnosticToolsExt.jl",
-                )
-            end
-        end
-        @require NCDatasets = "85f8d34a-cbdd-5861-8df4-14fed0d494ab" begin
-            include("../ext/InferenceObjectsNCDatasetsExt/InferenceObjectsNCDatasetsExt.jl")
-        end
-        @require PosteriorStats = "7f36be82-ad55-44ba-a5c0-b8b5480d7aa5" begin
-            @require StatsBase = "2913bbd2-ae8a-5f71-8c99-4fb6c76f3a91" begin
-                include(
-                    "../ext/InferenceObjectsPosteriorStatsExt/InferenceObjectsPosteriorStatsExt.jl",
-                )
-            end
-        end
-    end
     if isdefined(Base.Experimental, :register_error_hint)
         Base.Experimental.register_error_hint(MethodError) do io, exc, argtypes, kwargs
             if exc.f === from_netcdf &&
