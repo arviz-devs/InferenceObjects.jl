@@ -2,9 +2,8 @@ module InferenceObjectsMCMCDiagnosticToolsExt
 
 using Base: @doc
 using DimensionalData: DimensionalData, Dimensions, LookupArrays
-using InferenceObjects: InferenceObjects
+using InferenceObjects: InferenceObjects, Random
 using MCMCDiagnosticTools: MCMCDiagnosticTools
-using Random: Random
 
 include("utils.jl")
 include("bfmi.jl")

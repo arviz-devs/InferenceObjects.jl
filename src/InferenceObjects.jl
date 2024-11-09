@@ -2,6 +2,7 @@ module InferenceObjects
 
 using Dates: Dates
 using DimensionalData: DimensionalData, Dimensions, LookupArrays
+using Random: Random
 using Tables: Tables
 
 # groups that are officially listed in the schema
