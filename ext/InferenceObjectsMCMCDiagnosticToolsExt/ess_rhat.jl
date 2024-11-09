@@ -21,7 +21,7 @@ end
 for f in (:ess, :rhat)
     @eval begin
         function MCMCDiagnosticTools.$f(data::InferenceObjects.Dataset; kwargs...)
-            ds = map(data) do var
+            ds = maplayers(data) do var
                 return _as_dimarray(MCMCDiagnosticTools.$f(_params_array(var); kwargs...), var)
             end
             return DimensionalData.rebuild(ds; metadata=DimensionalData.NoMetadata())

@@ -126,6 +126,8 @@ for f in [:data, :dims, :refdims, :metadata, :layerdims, :layermetadata]
     end
 end
 
+DimensionalData.modify(f, s::Dataset) = Dataset(DimensionalData.modify(f, parent(s)))
+
 # Warning: this is not an API function and probably should be implemented abstractly upstream
 DimensionalData.show_after(io, mime, ::Dataset) = nothing
 
