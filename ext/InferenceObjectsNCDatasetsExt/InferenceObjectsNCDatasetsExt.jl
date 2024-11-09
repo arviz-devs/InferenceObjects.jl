@@ -1,14 +1,8 @@
 module InferenceObjectsNCDatasetsExt
 
-if isdefined(Base, :get_extension)
-    using DimensionalData: DimensionalData, Dimensions, LookupArrays
-    using NCDatasets: NCDatasets
-    using InferenceObjects
-else
-    using ..DimensionalData: DimensionalData, Dimensions, LookupArrays
-    using ..NCDatasets: NCDatasets
-    using ..InferenceObjects
-end
+using DimensionalData: DimensionalData, Dimensions, LookupArrays
+using NCDatasets: NCDatasets
+using InferenceObjects
 
 function InferenceObjects.from_netcdf(path::AbstractString; kwargs...)
     return NCDatasets.NCDataset(path, "r"; kwargs...) do ds
