@@ -5,6 +5,10 @@ using DimensionalData: DimensionalData, Dimensions, LookupArrays
 using InferenceObjects: InferenceObjects, Random
 using MCMCDiagnosticTools: MCMCDiagnosticTools
 
+import MCMCDiagnosticTools: bfmi, ess_rhat, mcse, rstar
+
+export bfmi, ess_rhat, mcse, rstar
+
 maplayers = isdefined(DimensionalData, :maplayers) ? DimensionalData.maplayers : map
 
 include("utils.jl")
