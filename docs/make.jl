@@ -1,7 +1,10 @@
 using InferenceObjects
 using Documenter
 using DocumenterInterLinks
+using MCMCDiagnosticTools: MCMCDiagnosticTools  # load extension
 using NCDatasets: NCDatasets  # load extension
+using PosteriorStats: PosteriorStats  # load extension
+using StatsBase: StatsBase  # load extension
 
 DocMeta.setdocmeta!(
     InferenceObjects, :DocTestSetup, :(using InferenceObjects); recursive=true
@@ -18,7 +21,11 @@ doctestfilters = [
 ]
 
 makedocs(;
-    modules=[InferenceObjects],
+    modules=[
+        InferenceObjects,
+        Base.get_extension(InferenceObjects, :InferenceObjectsMCMCDiagnosticToolsExt),
+        Base.get_extension(InferenceObjects, :InferenceObjectsPosteriorStatsExt),
+    ],
     authors="Seth Axen <seth.axen@gmail.com> and contributors",
     repo=Remotes.GitHub("arviz-devs", "InferenceObjects.jl"),
     sitename="InferenceObjects.jl",
@@ -32,6 +39,10 @@ makedocs(;
         "Home" => "index.md",
         "Dataset" => "dataset.md",
         "InferenceData" => "inference_data.md",
+        "Extensions" => [
+            "MCMCDiagnosticTools" => "extensions/mcmcdiagnostictools.md",
+            "PosteriorStats" => "extensions/posteriorstats.md",
+        ],
     ],
     doctestfilters=doctestfilters,
     warnonly=:missing_docs,
