@@ -68,4 +68,6 @@ for extended_pkg in (MCMCDiagnosticTools, PosteriorStats)
     doctest(mod; manual=false)
 end
 
-deploydocs(; repo="github.com/arviz-devs/InferenceObjects.jl", devbranch="main")
+deploydocs(;
+    repo="github.com/arviz-devs/InferenceObjects.jl", devbranch="main", push_preview=true
+)
