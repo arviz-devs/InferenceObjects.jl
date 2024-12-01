@@ -1,7 +1,7 @@
 """
     convert(::Type{InferenceData}, obj)
 
-Convert `obj` to an `InferenceData`.
+Convert `obj` to an [`InferenceData`](@ref).
 
 `obj` can be any type for which [`convert_to_inference_data`](@ref) is defined.
 """
@@ -23,7 +23,7 @@ See [`convert_to_dataset`](@ref)
 # Arguments
 
   - `obj` can be many objects. Basic supported types are:
-    
+
       + [`InferenceData`](@ref): return unchanged
       + [`Dataset`](@ref)/`DimensionalData.AbstractDimStack`: add to `InferenceData` as the only
         group
@@ -40,7 +40,7 @@ More specific types may be documented separately.
 
   - `dims`: a collection mapping variable names to collections of objects containing
     dimension names. Acceptable such objects are:
-    
+
       + `Symbol`: dimension name
       + `Type{<:DimensionsionalData.Dimension}`: dimension type
       + `DimensionsionalData.Dimension`: dimension, potentially with indices

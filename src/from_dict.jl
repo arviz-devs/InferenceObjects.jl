@@ -1,7 +1,7 @@
 """
     from_dict(posterior::AbstractDict; kwargs...) -> InferenceData
 
-Convert a `Dict` to an `InferenceData`.
+Convert a dictionary to an [`InferenceData`](@ref).
 
 # Arguments
 
@@ -62,8 +62,9 @@ end
 """
     convert_to_inference_data(obj::AbstractDict; kwargs...) -> InferenceData
 
-Convert `obj` to an [`InferenceData`](@ref). See [`from_namedtuple`](@ref) for a description
-of `obj` possibilities and `kwargs`.
+Convert a dictionary to an [`InferenceData`](@ref).
+
+See [`from_dict`](@ref) for a description of `obj` possibilities and `kwargs`.
 """
 function convert_to_inference_data(data::AbstractDict; group=:posterior, kwargs...)
     group = Symbol(group)
