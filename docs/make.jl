@@ -1,9 +1,16 @@
 using InferenceObjects
 using Documenter
+using DocumenterInterLinks
 using NCDatasets: NCDatasets  # load extension
 
 DocMeta.setdocmeta!(
     InferenceObjects, :DocTestSetup, :(using InferenceObjects); recursive=true
+)
+
+links = InterLinks(
+    "NCDatasets" => "https://alexander-barth.github.io/NCDatasets.jl/stable/",
+    "PosteriorStats" => "https://julia.arviz.org/PosteriorStats/stable/",
+    "MCMCDiagnosticTools" => "https://julia.arviz.org/MCMCDiagnosticTools/stable/",
 )
 
 doctestfilters = [
@@ -28,6 +35,7 @@ makedocs(;
     ],
     doctestfilters=doctestfilters,
     warnonly=:missing_docs,
+    plugins=[links],
 )
 
 # run doctests on extensions
