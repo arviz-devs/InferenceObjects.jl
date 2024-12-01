@@ -3,6 +3,8 @@
     bfmi(sample_stats::Dataset) -> DimArray
 
 Calculate the chainwise estimated Bayesian fraction of missing information (BFMI).
+
+See [`MCMCDiagnosticTools.bfmi`](@extref) for more details.
 """
 function MCMCDiagnosticTools.bfmi(data::InferenceObjects.InferenceData)
     return MCMCDiagnosticTools.bfmi(data.sample_stats)

@@ -3,6 +3,9 @@
     ess(data::Dataset; kwargs...) -> Dataset
 
 Calculate the effective sample size (ESS) for each parameter in the data.
+
+For more details and a description of the `kwargs`, see
+[`MCMCDiagnosticTools.ess`](@extref).
 """
 function MCMCDiagnosticTools.ess(data::InferenceObjects.InferenceData; kwargs...)
     return MCMCDiagnosticTools.ess(data.posterior; kwargs...)
@@ -13,6 +16,9 @@ end
     rhat(data::Dataset; kwargs...) -> Dataset
 
 Calculate the ``\\widehat{R}`` diagnostic for each parameter in the data.
+
+For more details and a description of the `kwargs`, see
+[`MCMCDiagnosticTools.rhat`](@extref).
 """
 function MCMCDiagnosticTools.rhat(data::InferenceObjects.InferenceData; kwargs...)
     return MCMCDiagnosticTools.rhat(data.posterior; kwargs...)
@@ -35,6 +41,9 @@ end
 
 Calculate the effective sample size (ESS) and ``\\widehat{R}`` diagnostic for each parameter
 in the data.
+
+For more details and a description of the `kwargs`, see
+[`MCMCDiagnosticTools.ess_rhat`](@extref).
 """
 function MCMCDiagnosticTools.ess_rhat(data::InferenceObjects.InferenceData; kwargs...)
     return MCMCDiagnosticTools.ess_rhat(data.posterior; kwargs...)

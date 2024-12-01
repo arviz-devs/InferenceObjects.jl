@@ -9,7 +9,10 @@ Compute LOO-PIT values using existing normalized log LOO importance weights.
     the only observed data variable is used.
   - `y_pred_name`: Name of posterior predictive variable in `idata.posterior_predictive`.
     If not provided, then `y_name` is used.
-  - `kwargs`: Remaining keywords are forwarded to the base method of `loo_pit`.
+  - `kwargs`: Remaining keywords are forwarded to the base method
+    [`PosteriorStats.loo_pit`](@extref).
+
+See [`PosteriorStats.loo_pit`](@extref) for more details.
 
 # Examples
 
@@ -23,9 +26,9 @@ julia> idata = load_example_data("centered_eight");
 julia> loo_result = loo(idata; var_name=:obs);
 
 julia> loo_pit(idata, loo_result.psis_result.log_weights; y_name=:obs)
-╭───────────────────────────────────────────╮
-│ 8-element DimArray{Float64,1} loo_pit_obs │
-├───────────────────────────────────────────┴──────────────────────────── dims ┐
+╭────────────────────────────────────────────╮
+│ 8-element DimArray{Float64, 1} loo_pit_obs │
+├────────────────────────────────────────────┴─────────────────────────── dims ┐
   ↓ school Categorical{String} [Choate, Deerfield, …, St. Paul's, Mt. Hermon] Unordered
 └──────────────────────────────────────────────────────────────────────────────┘
  "Choate"            0.943511
@@ -69,7 +72,9 @@ Compute LOO-PIT from groups in `idata` using PSIS-LOO.
     _likelihood_ values. If an array, it must have the same data dimensions as the
     corresponding log-likelihood variable. If not provided, then this is estimated using
     `ess`.
-  - `kwargs`: Remaining keywords are forwarded to the base method of `loo_pit`.
+  - `kwargs`: Remaining keywords are forwarded to [`PosteriorStats.loo_pit`](@extref).
+
+See [`PosteriorStats.loo_pit`](@extref) for more details.
 
 # Examples
 
@@ -81,9 +86,9 @@ julia> using ArviZExampleData, PosteriorStats
 julia> idata = load_example_data("centered_eight");
 
 julia> loo_pit(idata; y_name=:obs)
-╭───────────────────────────────────────────╮
-│ 8-element DimArray{Float64,1} loo_pit_obs │
-├───────────────────────────────────────────┴──────────────────────────── dims ┐
+╭────────────────────────────────────────────╮
+│ 8-element DimArray{Float64, 1} loo_pit_obs │
+├────────────────────────────────────────────┴─────────────────────────── dims ┐
   ↓ school Categorical{String} [Choate, Deerfield, …, St. Paul's, Mt. Hermon] Unordered
 └──────────────────────────────────────────────────────────────────────────────┘
  "Choate"            0.943511

@@ -6,6 +6,11 @@ using InferenceObjects: InferenceObjects
 using PosteriorStats: PosteriorStats
 using StatsBase: StatsBase
 
+import PosteriorStats: hdi, loo, loo_pit, r2_score, summarize, waic
+import StatsBase: summarystats
+
+export hdi, loo, loo_pit, r2_score, summarize, waic, summarystats
+
 include("utils.jl")
 include("hdi.jl")
 include("loo.jl")

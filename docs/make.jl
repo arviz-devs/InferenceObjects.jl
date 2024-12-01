@@ -1,9 +1,19 @@
 using InferenceObjects
 using Documenter
+using DocumenterInterLinks
+using MCMCDiagnosticTools: MCMCDiagnosticTools  # load extension
 using NCDatasets: NCDatasets  # load extension
+using PosteriorStats: PosteriorStats  # load extension
+using StatsBase: StatsBase  # load extension
 
 DocMeta.setdocmeta!(
     InferenceObjects, :DocTestSetup, :(using InferenceObjects); recursive=true
+)
+
+links = InterLinks(
+    "NCDatasets" => "https://alexander-barth.github.io/NCDatasets.jl/stable/",
+    "PosteriorStats" => "https://julia.arviz.org/PosteriorStats/stable/",
+    "MCMCDiagnosticTools" => "https://julia.arviz.org/MCMCDiagnosticTools/stable/",
 )
 
 doctestfilters = [
@@ -11,7 +21,11 @@ doctestfilters = [
 ]
 
 makedocs(;
-    modules=[InferenceObjects],
+    modules=[
+        InferenceObjects,
+        Base.get_extension(InferenceObjects, :InferenceObjectsMCMCDiagnosticToolsExt),
+        Base.get_extension(InferenceObjects, :InferenceObjectsPosteriorStatsExt),
+    ],
     authors="Seth Axen <seth.axen@gmail.com> and contributors",
     repo=Remotes.GitHub("arviz-devs", "InferenceObjects.jl"),
     sitename="InferenceObjects.jl",
@@ -25,9 +39,14 @@ makedocs(;
         "Home" => "index.md",
         "Dataset" => "dataset.md",
         "InferenceData" => "inference_data.md",
+        "Extensions" => [
+            "MCMCDiagnosticTools" => "extensions/mcmcdiagnostictools.md",
+            "PosteriorStats" => "extensions/posteriorstats.md",
+        ],
     ],
     doctestfilters=doctestfilters,
     warnonly=:missing_docs,
+    plugins=[links],
 )
 
 # run doctests on extensions
@@ -49,4 +68,6 @@ for extended_pkg in (MCMCDiagnosticTools, PosteriorStats)
     doctest(mod; manual=false)
 end
 
-deploydocs(; repo="github.com/arviz-devs/InferenceObjects.jl", devbranch="main")
+deploydocs(;
+    repo="github.com/arviz-devs/InferenceObjects.jl", devbranch="main", push_preview=true
+)

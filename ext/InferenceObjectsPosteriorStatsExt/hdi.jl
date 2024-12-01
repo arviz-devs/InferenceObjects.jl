@@ -10,6 +10,8 @@ end
     hdi(data::Dataset; kwargs...) -> Dataset
 
 Calculate the highest density interval (HDI) for each parameter in the data.
+
+For more details and a description of the `kwargs`, see [`PosteriorStats.hdi`](@extref).
 """
 function PosteriorStats.hdi(data::InferenceObjects.InferenceData; kwargs...)
     return PosteriorStats.hdi(data.posterior; kwargs...)

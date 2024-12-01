@@ -1,7 +1,7 @@
 name = "InferenceObjects"
 uuid = "b5cf5a8d-e756-4ee3-b014-01d49d192c00"
 authors = ["Seth Axen <seth.axen@gmail.com> and contributors"]
-version = "0.4.7"
+version = "0.4.8"
 
 [deps]
 Dates = "ade2ca70-3891-5945-98fb-dc099432e06a"

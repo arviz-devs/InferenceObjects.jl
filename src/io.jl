@@ -3,7 +3,7 @@
 
 Load an [`InferenceData`](@ref) from an unopened NetCDF file.
 
-Remaining `kwargs` are passed to [`NCDatasets.NCDataset`](https://alexander-barth.github.io/NCDatasets.jl/stable/dataset/#NCDatasets.NCDataset).
+Remaining `kwargs` are passed to [`NCDatasets.NCDataset`](@extref).
 This method loads data eagerly. To instead load data lazily, pass an opened `NCDataset` to
 `from_netcdf`.
 
@@ -71,8 +71,7 @@ Write `data` to a NetCDF file.
 group the data represents.
 
 `dest` specifies either the path to the NetCDF file or an opened NetCDF file.
-If `dest` is a path, remaining `kwargs` are passed to
-[`NCDatasets.NCDataset`](https://alexander-barth.github.io/NCDatasets.jl/stable/dataset/#NCDatasets.NCDataset).
+If `dest` is a path, remaining `kwargs` are passed to [`NCDatasets.NCDataset`](@extref).
 
 !!! note
     This method requires that NCDatasets is loaded before it can be used.
