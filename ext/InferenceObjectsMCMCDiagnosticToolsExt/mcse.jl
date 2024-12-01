@@ -3,6 +3,9 @@
     mcse(data::Dataset; kwargs...) -> Dataset
 
 Calculate the Monte Carlo standard error (MCSE) for each parameter in the data.
+
+For more details and a description of the `kwargs`, see
+[`MCMCDiagnosticTools.mcse`](@extref).
 """
 function MCMCDiagnosticTools.mcse(data::InferenceObjects.InferenceData; kwargs...)
     return MCMCDiagnosticTools.mcse(data.posterior; kwargs...)
