@@ -11,6 +11,15 @@ DocMeta.setdocmeta!(
 )
 
 links = InterLinks(
+    "arviz" => "https://python.arviz.org/en/stable/",
+    "DimensionalData" => (
+        "https://rafaqz.github.io/DimensionalData.jl/stable/",
+        joinpath(@__DIR__, "inventories", "DimensionalData.toml"),
+    ),
+    "IntervalSets" => (
+        "https://juliamath.github.io/IntervalSets.jl/stable/",
+        joinpath(@__DIR__, "inventories", "IntervalSets.toml"),
+    ),
     "NCDatasets" => "https://alexander-barth.github.io/NCDatasets.jl/stable/",
     "PosteriorStats" => "https://julia.arviz.org/PosteriorStats/stable/",
     "MCMCDiagnosticTools" => "https://julia.arviz.org/MCMCDiagnosticTools/stable/",
