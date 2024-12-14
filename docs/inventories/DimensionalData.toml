@@ -1,0 +1,14 @@
+# DocInventory version 1
+project = "DimensionalData.jl"
+version = "0.29.4"
+
+# NOTE: trimmed to just the pages we link to
+[[std.doc]]
+dispname = "Selectors"
+name = "selectors"
+uri = "selectors"
+
+[[std.doc]]
+dispname = "DimStacks"
+name = "dimstacks"
+uri = "stacks"
