@@ -61,8 +61,8 @@ Return a new [`InferenceData`](@ref) containing the specified groups sliced to t
 specified `coords`.
 
 `coords` specifies a dimension name mapping to an index, a
-[`IntervalSets.AbstractInterval`](https://juliamath.github.io/IntervalSets.jl/stable/api/#IntervalSets.AbstractInterval).
 [`DimensionalData.Selector`](@extref DimensionalData selectors), or an
+[`IntervalSets.AbstractInterval`](@extref).
 
 If one or more groups lack the specified dimension, a warning is raised but can be ignored.
 All groups that contain the dimension must also contain the specified indices, or an
