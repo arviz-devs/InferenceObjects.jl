@@ -10,6 +10,8 @@ Compute ``R²`` from `idata`, automatically formatting the predictions to the co
   - `y_pred_name`: Name of posterior predictive variable in `idata.posterior_predictive`.
     If not provided, then `y_name` is used.
 
+See [`PosteriorStats.r2_score`](@extref) for more details.
+
 # Examples
 
 ```jldoctest

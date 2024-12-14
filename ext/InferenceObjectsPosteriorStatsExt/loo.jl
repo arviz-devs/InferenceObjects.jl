@@ -6,6 +6,8 @@ Compute PSIS-LOO from log-likelihood values in `data`.
 
 If more than one log-likelihood variable is present, then `var_name` must be provided.
 
+For more details and a description of the `kwargs`, see [`PosteriorStats.loo`](@extref).
+
 # Examples
 
 Calculate PSIS-LOO of a model:

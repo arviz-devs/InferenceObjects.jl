@@ -6,6 +6,8 @@ Compute WAIC from log-likelihood values in `data`.
 
 If more than one log-likelihood variable is present, then `var_name` must be provided.
 
+See [`PosteriorStats.waic`](@extref) for more details.
+
 # Examples
 
 Calculate WAIC of a model:

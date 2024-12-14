@@ -4,7 +4,7 @@ CurrentModule = InferenceObjects
 
 # InferenceObjects
 
-InferenceObjects.jl is a Julia implementation of the [InferenceData schema](https://python.arviz.org/en/latest/schema/schema.html) for storing results of Bayesian inference.
+InferenceObjects.jl is a Julia implementation of the [InferenceData schema](@extref arviz schema) for storing results of Bayesian inference.
 Its purpose is to serve the following three goals:
 1. Usefulness in the analysis of Bayesian inference results.
 2. Reproducibility of Bayesian inference analysis.

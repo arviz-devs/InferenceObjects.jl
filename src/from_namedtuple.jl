@@ -10,7 +10,7 @@
         kwargs...
     ) -> InferenceData
 
-Convert a `NamedTuple` or container of `NamedTuple`s to an `InferenceData`.
+Convert a `NamedTuple` or container of `NamedTuple`s to an [`InferenceData`](@ref).
 
 If containers are passed, they are flattened into a single `NamedTuple` with array elements
 whose first dimensions correspond to the dimensions of the containers.

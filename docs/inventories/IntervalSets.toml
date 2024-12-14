@@ -1,0 +1,8 @@
+# DocInventory version 1
+project = "IntervalSets.jl"
+version = "0.7.10"
+
+# NOTE: trimmed to just the API functions we link to
+[[jl.type]]
+name = "IntervalSets.AbstractInterval"
+uri = "api/#$"

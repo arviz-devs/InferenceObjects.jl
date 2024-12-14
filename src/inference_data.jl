@@ -3,7 +3,7 @@
 
 Container for inference data storage using DimensionalData.
 
-This object implements the [InferenceData schema](https://python.arviz.org/en/latest/schema/schema.html).
+This object implements the [InferenceData schema](@extref arviz schema).
 
 Internally, groups are stored in a `NamedTuple`, which can be accessed using
 `parent(::InferenceData)`.
@@ -17,8 +17,8 @@ Construct an inference data from either a `NamedTuple` or keyword arguments of g
 
 Groups must be [`Dataset`](@ref) objects.
 
-Instead of directly creating an `InferenceData`, use the exported `from_xyz` functions or
-[`convert_to_inference_data`](@ref).
+Instead of directly creating an [`InferenceData`](@ref), use the exported `from_xyz`
+functions or [`convert_to_inference_data`](@ref).
 """
 struct InferenceData{group_names,group_types<:Tuple{Vararg{Dataset}}}
     groups::NamedTuple{group_names,group_types}
@@ -57,10 +57,12 @@ Base.getproperty(data::InferenceData, k::Symbol) = getproperty(parent(data), k)
     Base.getindex(data::InferenceData, groups::Symbol; coords...) -> Dataset
     Base.getindex(data::InferenceData, groups; coords...) -> InferenceData
 
-Return a new `InferenceData` containing the specified groups sliced to the specified coords.
+Return a new [`InferenceData`](@ref) containing the specified groups sliced to the
+specified `coords`.
 
-`coords` specifies a dimension name mapping to an index, a `DimensionalData.Selector`, or
-an `IntervalSets.AbstractInterval`.
+`coords` specifies a dimension name mapping to an index, a
+[`DimensionalData.Selector`](@extref DimensionalData selectors), or an
+[`IntervalSets.AbstractInterval`](@extref).
 
 If one or more groups lack the specified dimension, a warning is raised but can be ignored.
 All groups that contain the dimension must also contain the specified indices, or an
@@ -116,8 +118,8 @@ with metadata Dict{String, Any} with 1 entry:
   "created_at" => "2022-08-11T11:15:21.4"
 ```
 
-Select data from just the posterior, returning a `Dataset` if the indices index more than
-one element from any of the variables:
+Select data from just the posterior, returning a [`Dataset`](@ref) if the indices index more
+than one element from any of the variables:
 
 ```@repl getindex
 julia> idata[:observed_data, id=At(["a"])]
@@ -164,7 +166,7 @@ end
 """
     Base.setindex(data::InferenceData, group::Dataset, name::Symbol) -> InferenceData
 
-Create a new `InferenceData` containing the `group` with the specified `name`.
+Create a new [`InferenceData`](@ref) containing the `group` with the specified `name`.
 
 If a group with `name` is already in `data`, it is replaced.
 """

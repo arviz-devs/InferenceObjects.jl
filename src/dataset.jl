@@ -3,13 +3,8 @@
 
 Container of dimensional arrays sharing some dimensions.
 
-This type is an
-[`DimensionalData.AbstractDimStack`](https://rafaqz.github.io/DimensionalData.jl/stable/reference/#DimensionalData.AbstractDimStack)
+This type is an [`DimensionalData.AbstractDimStack`](@extref DimensionalData dimstacks)
 that implements the same interface as `DimensionalData.DimStack` and has identical usage.
-
-When a `Dataset` is passed to Python, it is converted to an `xarray.Dataset` without copying
-the data. That is, the Python object shares the same memory as the Julia object. However,
-if an `xarray.Dataset` is passed to Julia, its data must be copied.
 
 # Constructors
 
@@ -64,8 +59,8 @@ Any non-array values will be converted to a 0-dimensional array.
     dataset, in addition to defaults. Values should be JSON serializable.
   - `library::Union{String,Module}`: library used for performing inference. Will be attached
     to the `attrs` metadata.
-  - `dims`: a collection mapping variable names to collections of objects containing dimension
-    names. Acceptable such objects are:
+  - `dims`: a collection mapping variable names to collections of objects containing
+    dimension names. Acceptable such objects are:
       + `Symbol`: dimension name
       + `Type{<:DimensionsionalData.Dimension}`: dimension type
       + `DimensionsionalData.Dimension`: dimension, potentially with indices

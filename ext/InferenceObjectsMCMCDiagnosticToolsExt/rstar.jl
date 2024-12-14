@@ -7,6 +7,9 @@
     )
 
 Calculate the ``R^*`` diagnostic for the data.
+
+For a description of the `classifier` and `kwargs`, see
+[`MCMCDiagnosticTools.rstar`](@extref).
 """
 function MCMCDiagnosticTools.rstar(
     rng::Random.AbstractRNG, clf, data::InferenceObjects.InferenceData; kwargs...
