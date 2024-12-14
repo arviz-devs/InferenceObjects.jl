@@ -3,7 +3,7 @@
 
 Container for inference data storage using DimensionalData.
 
-This object implements the [InferenceData schema](https://python.arviz.org/en/latest/schema/schema.html).
+This object implements the [InferenceData schema](@extref arviz schema).
 
 Internally, groups are stored in a `NamedTuple`, which can be accessed using
 `parent(::InferenceData)`.
@@ -61,9 +61,8 @@ Return a new [`InferenceData`](@ref) containing the specified groups sliced to t
 specified `coords`.
 
 `coords` specifies a dimension name mapping to an index, a
-[`DimensionalData.Selector`](https://rafaqz.github.io/DimensionalData.jl/stable/selectors),
-or an
 [`IntervalSets.AbstractInterval`](https://juliamath.github.io/IntervalSets.jl/stable/api/#IntervalSets.AbstractInterval).
+[`DimensionalData.Selector`](@extref DimensionalData selectors), or an
 
 If one or more groups lack the specified dimension, a warning is raised but can be ignored.
 All groups that contain the dimension must also contain the specified indices, or an

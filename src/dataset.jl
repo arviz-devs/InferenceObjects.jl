@@ -3,8 +3,7 @@
 
 Container of dimensional arrays sharing some dimensions.
 
-This type is an
-[`DimensionalData.AbstractDimStack`](https://rafaqz.github.io/DimensionalData.jl/stable/stacks)
+This type is an [`DimensionalData.AbstractDimStack`](@extref DimensionalData dimstacks)
 that implements the same interface as `DimensionalData.DimStack` and has identical usage.
 
 # Constructors
