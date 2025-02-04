@@ -302,8 +302,7 @@ InferenceData with groups:
   > posterior
 
 julia> idata_cat1.posterior
-╭─────────────────╮
-│ 100×8×3 Dataset │
+┌ 100×8×3 Dataset ┐
 ├─────────────────┴──────────────────────────────────── dims ┐
   ↓ draw ,
   → chain,
@@ -324,8 +323,7 @@ InferenceData with groups:
   > posterior
 
 julia> idata_cat2.posterior
-╭───────────────────╮
-│ 100×4×3×2 Dataset │
+┌ 100×4×3×2 Dataset ┐
 ├───────────────────┴─────────────────────────────────── dims ┐
   ↓ draw ,
   → chain,
@@ -357,8 +355,7 @@ InferenceData with groups:
   > observed_data
 
 julia> idata_cat3.posterior
-╭───────────────────╮
-│ 100×4×3×2 Dataset │
+┌ 100×4×3×2 Dataset ┐
 ├───────────────────┴─────────────────────────────────── dims ┐
   ↓ draw ,
   → chain,
@@ -372,8 +369,7 @@ julia> idata_cat3.posterior
   "created_at" => "2024-03-11T14:10:48.434"
 
 julia> idata_cat3.observed_data
-╭────────────────────╮
-│ 10-element Dataset │
+┌ 10-element Dataset ┐
 ├────────────── dims ┤
   ↓ y_dim_1
 ├────────────────────┴─────────────── layers ┐
