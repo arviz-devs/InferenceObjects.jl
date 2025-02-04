@@ -20,13 +20,13 @@ julia> idata = load_example_data("centered_eight");
 julia> loo(idata)
 PSISLOOResult with estimates
  elpd  elpd_mcse    p  p_mcse
-  -31        1.4  0.9    0.34
+  -31        1.4  0.9    0.33
 
 and PSISResult with 500 draws, 4 chains, and 8 parameters
 Pareto shape (k) diagnostic values:
                     Count      Min. ESS
- (-Inf, 0.5]  good  6 (75.0%)  135
-  (0.5, 0.7]  okay  2 (25.0%)  421
+ (-Inf, 0.5]  good  4 (50.0%)  270
+  (0.5, 0.7]  okay  4 (50.0%)  307
 ```
 """
 function PosteriorStats.loo(

@@ -34,16 +34,16 @@ julia> data = load_example_data("centered_eight");
 julia> summarize(data)
 SummaryStats
                           mean  std  hdi_3%  hdi_97%  mcse_mean  mcse_std  ess ⋯
- mu                        4.5  3.5  -1.62     10.7        0.23      0.11      ⋯
- theta[Choate]             6.5  5.9  -4.56     17.1        0.30      0.29      ⋯
- theta[Deerfield]          5.0  4.9  -4.31     14.3        0.23      0.17      ⋯
- theta[Phillips Andover]   3.9  5.7  -7.77     13.7        0.23      0.28      ⋯
- theta[Phillips Exeter]    4.9  5.0  -4.49     14.7        0.26      0.17      ⋯
- theta[Hotchkiss]          3.7  5.0  -6.47     11.7        0.25      0.16      ⋯
- theta[Lawrenceville]      4.0  5.2  -7.04     12.2        0.22      0.22      ⋯
- theta[St. Paul's]         6.6  5.1  -3.09     16.3        0.30      0.19      ⋯
- theta[Mt. Hermon]         4.8  5.7  -5.86     16.0        0.26      0.25      ⋯
- tau                       4.1  3.1   0.896     9.67       0.26      0.17      ⋯
+ mu                        4.2  3.3  -1.61     10.3        0.21     0.088      ⋯
+ theta[Choate]             6.4  5.9  -3.68     17.9        0.25     0.20       ⋯
+ theta[Deerfield]          5.0  4.9  -4.98     13.4        0.21     0.15       ⋯
+ theta[Phillips Andover]   3.4  5.4  -7.54     12.9        0.23     0.17       ⋯
+ theta[Phillips Exeter]    4.8  5.2  -5.11     14.1        0.21     0.21       ⋯
+ theta[Hotchkiss]          3.5  4.8  -6.12     12.0        0.25     0.15       ⋯
+ theta[Lawrenceville]      3.7  5.2  -6.50     12.7        0.22     0.21       ⋯
+ theta[St. Paul's]         6.5  5.2  -2.67     16.9        0.22     0.15       ⋯
+ theta[Mt. Hermon]         4.8  5.7  -5.97     15.4        0.24     0.23       ⋯
+ tau                       4.3  3.0   0.715     9.41       0.22     0.14       ⋯
                                                                3 columns omitted
 ```
 
@@ -54,14 +54,14 @@ parameters:
 julia> summarize(data.posterior[(:theta,)], (:mean, :std) => mean_and_std, median, mad)
 SummaryStats
                           mean   std  median   mad
- theta[Choate]            6.46  5.87    6.08  4.64
- theta[Deerfield]         5.03  4.88    5.01  4.96
- theta[Phillips Andover]  3.94  5.69    4.23  4.67
- theta[Phillips Exeter]   4.87  5.01    5.02  4.82
- theta[Hotchkiss]         3.67  4.96    3.89  4.70
- theta[Lawrenceville]     3.97  5.19    4.14  4.64
- theta[St. Paul's]        6.58  5.11    6.07  4.47
- theta[Mt. Hermon]        4.77  5.74    4.71  4.95
+ theta[Choate]            6.42  5.85    5.80  4.95
+ theta[Deerfield]         4.95  4.91    5.02  4.68
+ theta[Phillips Andover]  3.42  5.43    3.74  4.84
+ theta[Phillips Exeter]   4.75  5.25    4.69  4.84
+ theta[Hotchkiss]         3.45  4.78    3.62  4.55
+ theta[Lawrenceville]     3.66  5.23    3.90  4.88
+ theta[St. Paul's]        6.51  5.24    6.09  4.57
+ theta[Mt. Hermon]        4.82  5.70    4.65  4.89
 ```
 """
 function PosteriorStats.summarize(

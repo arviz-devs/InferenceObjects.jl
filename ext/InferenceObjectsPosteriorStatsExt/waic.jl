@@ -20,7 +20,7 @@ julia> idata = load_example_data("centered_eight");
 julia> waic(idata)
 WAICResult with estimates
  elpd  elpd_mcse    p  p_mcse
-  -31        1.4  0.9    0.33
+  -31        1.4  0.9    0.32
 ```
 """
 function PosteriorStats.waic(
