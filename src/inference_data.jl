@@ -302,8 +302,7 @@ InferenceData with groups:
   > posterior
 
 julia> idata_cat1.posterior
-╭─────────────────╮
-│ 100×8×3 Dataset │
+┌ 100×8×3 Dataset ┐
 ├─────────────────┴──────────────────────────────────── dims ┐
   ↓ draw ,
   → chain,
@@ -313,7 +312,7 @@ julia> idata_cat1.posterior
   :b eltype: Float64 dims: draw, chain size: 100×8
 ├────────────────────────────────────────────────── metadata ┤
   Dict{String, Any} with 1 entry:
-  "created_at" => "2024-03-11T14:10:48.434"
+  "created_at" => "2025-02-04T10:49:16.704"
 ```
 
 Alternatively, we can concatenate along a new `run` dimension, which will be created.
@@ -324,8 +323,7 @@ InferenceData with groups:
   > posterior
 
 julia> idata_cat2.posterior
-╭───────────────────╮
-│ 100×4×3×2 Dataset │
+┌ 100×4×3×2 Dataset ┐
 ├───────────────────┴─────────────────────────────────── dims ┐
   ↓ draw ,
   → chain,
@@ -336,7 +334,7 @@ julia> idata_cat2.posterior
   :b eltype: Float64 dims: draw, chain, run size: 100×4×2
 ├──────────────────────────────────────────────────────────── metadata ┤
   Dict{String, Any} with 1 entry:
-  "created_at" => "2024-03-11T14:10:48.434"
+  "created_at" => "2025-02-04T10:49:16.704"
 ```
 
 We can also concatenate only a subset of groups and merge the rest, which is useful when
@@ -357,8 +355,7 @@ InferenceData with groups:
   > observed_data
 
 julia> idata_cat3.posterior
-╭───────────────────╮
-│ 100×4×3×2 Dataset │
+┌ 100×4×3×2 Dataset ┐
 ├───────────────────┴─────────────────────────────────── dims ┐
   ↓ draw ,
   → chain,
@@ -369,18 +366,17 @@ julia> idata_cat3.posterior
   :b eltype: Float64 dims: draw, chain, run size: 100×4×2
 ├──────────────────────────────────────────────────────────── metadata ┤
   Dict{String, Any} with 1 entry:
-  "created_at" => "2024-03-11T14:10:48.434"
+  "created_at" => "2025-02-04T10:49:16.704"
 
 julia> idata_cat3.observed_data
-╭────────────────────╮
-│ 10-element Dataset │
+┌ 10-element Dataset ┐
 ├────────────── dims ┤
   ↓ y_dim_1
 ├────────────────────┴─────────────── layers ┐
   :y eltype: Float64 dims: y_dim_1 size: 10
 ├────────────────────────────────────────────┴ metadata ┐
   Dict{String, Any} with 1 entry:
-  "created_at" => "2024-03-11T14:10:53.539"
+  "created_at" => "2025-02-04T10:49:16.71"
 ```
 """
 function Base.cat(data::InferenceData, others::InferenceData...; groups=keys(data), dims)

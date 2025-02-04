@@ -26,19 +26,18 @@ julia> idata = load_example_data("centered_eight");
 julia> loo_result = loo(idata; var_name=:obs);
 
 julia> loo_pit(idata, loo_result.psis_result.log_weights; y_name=:obs)
-╭────────────────────────────────────────────╮
-│ 8-element DimArray{Float64, 1} loo_pit_obs │
+┌ 8-element DimArray{Float64, 1} loo_pit_obs ┐
 ├────────────────────────────────────────────┴─────────────────────────── dims ┐
   ↓ school Categorical{String} [Choate, Deerfield, …, St. Paul's, Mt. Hermon] Unordered
 └──────────────────────────────────────────────────────────────────────────────┘
- "Choate"            0.943511
- "Deerfield"         0.63797
- "Phillips Andover"  0.316697
- "Phillips Exeter"   0.582252
- "Hotchkiss"         0.295321
- "Lawrenceville"     0.403318
- "St. Paul's"        0.902508
- "Mt. Hermon"        0.655275
+ "Choate"            0.942759
+ "Deerfield"         0.641057
+ "Phillips Andover"  0.32729
+ "Phillips Exeter"   0.581451
+ "Hotchkiss"         0.288523
+ "Lawrenceville"     0.393741
+ "St. Paul's"        0.886175
+ "Mt. Hermon"        0.638821
 ```
 """
 function PosteriorStats.loo_pit(
@@ -86,19 +85,18 @@ julia> using ArviZExampleData, PosteriorStats
 julia> idata = load_example_data("centered_eight");
 
 julia> loo_pit(idata; y_name=:obs)
-╭────────────────────────────────────────────╮
-│ 8-element DimArray{Float64, 1} loo_pit_obs │
+┌ 8-element DimArray{Float64, 1} loo_pit_obs ┐
 ├────────────────────────────────────────────┴─────────────────────────── dims ┐
   ↓ school Categorical{String} [Choate, Deerfield, …, St. Paul's, Mt. Hermon] Unordered
 └──────────────────────────────────────────────────────────────────────────────┘
- "Choate"            0.943511
- "Deerfield"         0.63797
- "Phillips Andover"  0.316697
- "Phillips Exeter"   0.582252
- "Hotchkiss"         0.295321
- "Lawrenceville"     0.403318
- "St. Paul's"        0.902508
- "Mt. Hermon"        0.655275
+ "Choate"            0.942759
+ "Deerfield"         0.641057
+ "Phillips Andover"  0.32729
+ "Phillips Exeter"   0.581451
+ "Hotchkiss"         0.288523
+ "Lawrenceville"     0.393741
+ "St. Paul's"        0.886175
+ "Mt. Hermon"        0.638821
 ```
 """
 function PosteriorStats.loo_pit(
