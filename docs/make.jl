@@ -20,7 +20,7 @@ links = InterLinks(
         "https://juliamath.github.io/IntervalSets.jl/stable/",
         joinpath(@__DIR__, "inventories", "IntervalSets.toml"),
     ),
-    "NCDatasets" => "https://alexander-barth.github.io/NCDatasets.jl/stable/",
+    "NCDatasets" => "https://juliageo.org/NCDatasets.jl/stable/",
     "PosteriorStats" => "https://julia.arviz.org/PosteriorStats/stable/",
     "MCMCDiagnosticTools" => "https://julia.arviz.org/MCMCDiagnosticTools/stable/",
 )
