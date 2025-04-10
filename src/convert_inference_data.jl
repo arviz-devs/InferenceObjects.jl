@@ -8,7 +8,7 @@ Convert `obj` to an [`InferenceData`](@ref).
 Base.convert(::Type{InferenceData}, obj) = convert_to_inference_data(obj)
 Base.convert(::Type{InferenceData}, obj::InferenceData) = obj
 Base.convert(::Type{NamedTuple}, data::InferenceData) = NamedTuple(data)
-NamedTuple(data::InferenceData) = parent(data)
+Base.NamedTuple(data::InferenceData) = parent(data)
 
 """
     convert_to_inference_data(obj; group, kwargs...) -> InferenceData
