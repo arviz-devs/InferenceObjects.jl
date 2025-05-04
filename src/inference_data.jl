@@ -193,13 +193,20 @@ function Base.show(io::IO, ::MIME"text/plain", data::InferenceData)
 end
 function Base.show(io::IO, mime::MIME"text/html", data::InferenceData)
     show(io, mime, HTML("<div>InferenceData"))
+    io_ansicolor = IOBuffer()
+    ctx = IOContext(io_ansicolor, :compact => true, :color => true)
     for (name, group) in pairs(groups(data))
+        show(ctx, MIME"text/plain"(), group)
+        printer = ANSIColoredPrinters.HTMLPrinter(io_ansicolor)
         show(io, mime, HTML("""
         <details>
         <summary>$name</summary>
-        <pre><code>$(sprint(show, "text/plain", group))</code></pre>
+        """))
+        show(io, mime, printer)
+        show(io, mime, HTML("""
         </details>
         """))
+        take!(io_ansicolor)  # reset the buffer
     end
     return show(io, mime, HTML("</div>"))
 end

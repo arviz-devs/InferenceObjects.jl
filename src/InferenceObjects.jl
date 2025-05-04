@@ -1,5 +1,6 @@
 module InferenceObjects
 
+using ANSIColoredPrinters: ANSIColoredPrinters
 using Dates: Dates
 using DimensionalData: DimensionalData, Dimensions, LookupArrays
 using Random: Random
