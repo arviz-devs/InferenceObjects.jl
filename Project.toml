@@ -4,6 +4,7 @@ authors = ["Seth Axen <seth.axen@gmail.com> and contributors"]
 version = "0.4.10"
 
 [deps]
+ANSIColoredPrinters = "a4c015fc-c6ff-483c-b24f-f7ea428134e9"
 Dates = "ade2ca70-3891-5945-98fb-dc099432e06a"
 DimensionalData = "0703355e-b756-11e9-17c0-8b28908087d0"
 Random = "9a3f8284-a2c9-5f02-9a11-845980a1fd5c"
@@ -21,6 +22,7 @@ InferenceObjectsNCDatasetsExt = "NCDatasets"
 InferenceObjectsPosteriorStatsExt = ["PosteriorStats", "StatsBase"]
 
 [compat]
+ANSIColoredPrinters = "0.0.1"
 ArviZExampleData = "0.1.10"
 Dates = "1.9"
 DimensionalData = "0.27, 0.28, 0.29"
