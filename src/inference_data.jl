@@ -311,15 +311,15 @@ InferenceData with groups:
 julia> idata_cat1.posterior
 ┌ 100×8×3 Dataset ┐
 ├─────────────────┴──────────────────────────────────── dims ┐
-  ↓ draw ,
+  ↓ draw,
   → chain,
-  ↗ a_dim Categorical{String} ["x", "y", "z"] ForwardOrdered
+  ↗ a_dim Categorical{String} ["x", …, "z"] ForwardOrdered
 ├──────────────────────────────────────────────────── layers ┤
   :a eltype: Float64 dims: draw, chain, a_dim size: 100×8×3
   :b eltype: Float64 dims: draw, chain size: 100×8
 ├────────────────────────────────────────────────── metadata ┤
   Dict{String, Any} with 1 entry:
-  "created_at" => "2025-02-04T10:49:16.704"
+  "created_at" => "2025-07-25T10:11:18.92"
 ```
 
 Alternatively, we can concatenate along a new `run` dimension, which will be created.
@@ -331,17 +331,17 @@ InferenceData with groups:
 
 julia> idata_cat2.posterior
 ┌ 100×4×3×2 Dataset ┐
-├───────────────────┴─────────────────────────────────── dims ┐
-  ↓ draw ,
+├───────────────────┴───────────────────────────────────────── dims ┐
+  ↓ draw,
   → chain,
-  ↗ a_dim Categorical{String} ["x", "y", "z"] ForwardOrdered,
+  ↗ a_dim Categorical{String} ["x", …, "z"] ForwardOrdered,
   ⬔ run
-├─────────────────────────────────────────────────────────────┴ layers ┐
+├─────────────────────────────────────────────────────────── layers ┤
   :a eltype: Float64 dims: draw, chain, a_dim, run size: 100×4×3×2
   :b eltype: Float64 dims: draw, chain, run size: 100×4×2
-├──────────────────────────────────────────────────────────── metadata ┤
+├───────────────────────────────────────────────────────── metadata ┤
   Dict{String, Any} with 1 entry:
-  "created_at" => "2025-02-04T10:49:16.704"
+  "created_at" => "2025-07-25T10:11:18.92"
 ```
 
 We can also concatenate only a subset of groups and merge the rest, which is useful when
@@ -363,27 +363,27 @@ InferenceData with groups:
 
 julia> idata_cat3.posterior
 ┌ 100×4×3×2 Dataset ┐
-├───────────────────┴─────────────────────────────────── dims ┐
-  ↓ draw ,
+├───────────────────┴───────────────────────────────────────── dims ┐
+  ↓ draw,
   → chain,
-  ↗ a_dim Categorical{String} ["x", "y", "z"] ForwardOrdered,
+  ↗ a_dim Categorical{String} ["x", …, "z"] ForwardOrdered,
   ⬔ run
-├─────────────────────────────────────────────────────────────┴ layers ┐
+├─────────────────────────────────────────────────────────── layers ┤
   :a eltype: Float64 dims: draw, chain, a_dim, run size: 100×4×3×2
   :b eltype: Float64 dims: draw, chain, run size: 100×4×2
-├──────────────────────────────────────────────────────────── metadata ┤
+├───────────────────────────────────────────────────────── metadata ┤
   Dict{String, Any} with 1 entry:
-  "created_at" => "2025-02-04T10:49:16.704"
+  "created_at" => "2025-07-25T10:11:18.92"
 
 julia> idata_cat3.observed_data
 ┌ 10-element Dataset ┐
-├────────────── dims ┤
+├────────────────────┴───────────────── dims ┐
   ↓ y_dim_1
-├────────────────────┴─────────────── layers ┐
+├──────────────────────────────────── layers ┤
   :y eltype: Float64 dims: y_dim_1 size: 10
 ├────────────────────────────────────────────┴ metadata ┐
   Dict{String, Any} with 1 entry:
-  "created_at" => "2025-02-04T10:49:16.71"
+  "created_at" => "2025-07-25T10:11:18.951"
 ```
 """
 function Base.cat(data::InferenceData, others::InferenceData...; groups=keys(data), dims)
