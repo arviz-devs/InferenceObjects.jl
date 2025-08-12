@@ -22,7 +22,7 @@ jobs:
       fail-fast: false
       matrix:
         version:
-          - '1.9'
+          - 'min'
           - '1'
           - 'pre'
         os:
@@ -39,7 +39,7 @@ jobs:
             os: macOS-latest
             arch: x64
             downgrade: false
-          - version: '1.9'
+          - version: 'min'
             os: ubuntu-latest
             arch: x64
             downgrade: true
