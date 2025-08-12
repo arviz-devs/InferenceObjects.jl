@@ -47,12 +47,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: julia-actions/setup-julia@v2
+        id: setup-julia
         with:
           version: ${{ matrix.version }}
           arch: ${{ matrix.arch }}
       - uses: julia-actions/cache@v2
       - uses: julia-actions/julia-downgrade-compat@v2
         with:
+          julia_version: ${{ steps.setup-julia.outputs.julia-version }}
           skip: Dates,Random
         if: ${{ matrix.downgrade }}
         name: Downgrade dependencies to oldest supported versions
