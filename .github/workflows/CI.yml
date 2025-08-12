@@ -16,13 +16,14 @@ concurrency:
 
 jobs:
   test:
-    name: ${{ matrix.downgrade && 'Downgrade / ' || '' }}Julia ${{ matrix.version }} - ${{ matrix.os }} - ${{ matrix.arch }} - ${{ github.event_name }}
+    name: ${{ matrix.downgrade && 'Downgrade / ' || '' }}Julia ${{ matrix.version }} - ${{ matrix.os }} - ${{ matrix.arch }}
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
         version:
-          - '1.9'
+          - 'min'
+          - 'lts'
           - '1'
           - 'pre'
         os:
@@ -39,19 +40,21 @@ jobs:
             os: macOS-latest
             arch: x64
             downgrade: false
-          - version: '1.9'
+          - version: 'min'
             os: ubuntu-latest
             arch: x64
             downgrade: true
     steps:
       - uses: actions/checkout@v4
       - uses: julia-actions/setup-julia@v2
+        id: setup-julia
         with:
           version: ${{ matrix.version }}
           arch: ${{ matrix.arch }}
       - uses: julia-actions/cache@v2
       - uses: julia-actions/julia-downgrade-compat@v2
         with:
+          julia_version: ${{ steps.setup-julia.outputs.julia-version }}
           skip: Dates,Random
         if: ${{ matrix.downgrade }}
         name: Downgrade dependencies to oldest supported versions
