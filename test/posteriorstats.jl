@@ -53,11 +53,11 @@ _as_array(x::AbstractArray) = x
             if length(sz) == 2
                 @test issetequal(
                     keys(loo_result1.pointwise),
-                    (:elpd, :elpd_mcse, :p, :reff, :pareto_shape),
+                    (:elpd, :se_elpd, :p, :reff, :pareto_shape),
                 )
             else
                 @test loo_result1.pointwise.elpd == loo_result.pointwise.elpd
-                @test loo_result1.pointwise.elpd_mcse == loo_result.pointwise.elpd_mcse
+                @test loo_result1.pointwise.se_elpd == loo_result.pointwise.se_elpd
                 @test loo_result1.pointwise.p == loo_result.pointwise.p
                 @test loo_result1.pointwise.reff == loo_result.pointwise.reff
                 @test loo_result1.pointwise.pareto_shape ==
@@ -71,21 +71,21 @@ _as_array(x::AbstractArray) = x
             loo_result2 = loo(idata2)
             @test loo_result2.estimates.elpd ≈ loo_result1.estimates.elpd atol = atol_perm
             @test isapprox(
-                loo_result2.estimates.elpd_mcse,
-                loo_result1.estimates.elpd_mcse;
+                loo_result2.estimates.se_elpd,
+                loo_result1.estimates.se_elpd;
                 nans=true,
                 atol=atol_perm,
             )
             @test loo_result2.estimates.p ≈ loo_result1.estimates.p atol = atol_perm
             @test isapprox(
-                loo_result2.estimates.p_mcse,
-                loo_result1.estimates.p_mcse;
+                loo_result2.estimates.se_p,
+                loo_result1.estimates.se_p;
                 nans=true,
                 atol=atol_perm,
             )
             @test isapprox(
-                loo_result2.pointwise.elpd_mcse,
-                loo_result1.pointwise.elpd_mcse;
+                loo_result2.pointwise.se_elpd,
+                loo_result1.pointwise.se_elpd;
                 nans=true,
                 atol=atol_perm,
             )
@@ -205,15 +205,15 @@ _as_array(x::AbstractArray) = x
             waic_result2 = waic(idata2)
             @test waic_result2.estimates.elpd ≈ waic_result1.estimates.elpd atol = atol_perm
             @test isapprox(
-                waic_result2.estimates.elpd_mcse,
-                waic_result1.estimates.elpd_mcse;
+                waic_result2.estimates.se_elpd,
+                waic_result1.estimates.se_elpd;
                 nans=true,
                 atol=atol_perm,
             )
             @test waic_result2.estimates.p ≈ waic_result1.estimates.p atol = atol_perm
             @test isapprox(
-                waic_result2.estimates.p_mcse,
-                waic_result1.estimates.p_mcse;
+                waic_result2.estimates.se_p,
+                waic_result1.estimates.se_p;
                 nans=true,
                 atol=atol_perm,
             )
@@ -228,7 +228,7 @@ _as_array(x::AbstractArray) = x
         )
         result1 = compare(eight_schools_data)
         result2 = compare(map(loo, eight_schools_data))
-        @testset for k in (:name, :rank, :elpd_diff, :elpd_diff_mcse, :weight)
+        @testset for k in (:name, :rank, :elpd_diff, :se_elpd_diff, :weight)
             @test getproperty(result1, k) == getproperty(result2, k)
         end
     end
@@ -267,7 +267,7 @@ _as_array(x::AbstractArray) = x
 
         stats = @inferred SummaryStats summarize(data, mean, std; name="Stats")
         @test stats.name == "Stats"
-        @test stats[:parameter] == var_names
+        @test stats[:label] == var_names
         @test stats[:mean] ≈ map(mean, slices)
         @test stats[:std] ≈ map(std, slices)
 
