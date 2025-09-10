@@ -13,12 +13,12 @@ function StatsBase.summarystats(data::InferenceObjects.Dataset; kwargs...)
 end
 
 @doc """
-    summarize(data::InferenceData, group=:posterior, stats_funs...; kwargs...)
+    summarize(data::InferenceData, stats_funs...; group=:posterior, kwargs...)
     summarize(data::Dataset, stats_funs...; kwargs...)
 
 Compute summary statistics for the data using the provided functions.
 
-For verbose variable labels, provide `compat_labels=false`. For details on `stats_funs` and
+For verbose variable labels, provide `compact_labels=false`. For details on `stats_funs` and
 `kwargs`, see [`PosteriorStats.summarize`](@extref).
 
 # Examples
