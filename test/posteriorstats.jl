@@ -6,8 +6,11 @@ using Statistics
 using StatsBase
 using Test
 
+_as_array(x) = fill(x)
+_as_array(x::AbstractArray) = x
+
 @testset "PosteriorStats integration" begin
-    @testset "hdi" begin
+    @testset for ci_fun in (eti, hdi)
         nt = (x=randn(1000, 3), y=randn(1000, 3, 4), z=randn(1000, 3, 4, 2))
         posterior = convert_to_dataset(nt)
         posterior_perm = convert_to_dataset((
@@ -17,23 +20,17 @@ using Test
         ))
         idata = InferenceData(; posterior)
         @testset for prob in (0.76, 0.93)
-            if VERSION ≥ v"1.9"
-                @test_broken @inferred hdi(posterior; prob)
-            end
-            r1 = hdi(posterior; prob)
-            r1_perm = hdi(posterior_perm; prob)
+            @test_broken @inferred ci_fun(posterior; prob)
+            r1 = ci_fun(posterior; prob)
+            r1_perm = ci_fun(posterior_perm; prob)
             for k in (:x, :y, :z)
-                rk = hdi(posterior[k]; prob)
-                @test r1[k][hdi_bound=At(:lower)] == rk.lower
-                @test r1[k][hdi_bound=At(:upper)] == rk.upper
+                rk = ci_fun(posterior[k]; prob)
+                @test r1[k] == _as_array(rk)
                 # equality check is safe because these are always data values
-                @test r1_perm[k][hdi_bound=At(:lower)] == rk.lower
-                @test r1_perm[k][hdi_bound=At(:upper)] == rk.upper
+                @test r1_perm[k] == _as_array(rk)
             end
-            if VERSION ≥ v"1.9"
-                @test_broken @inferred hdi(idata; prob)
-            end
-            r2 = hdi(idata; prob)
+            @test_broken @inferred ci_fun(idata; prob)
+            r2 = ci_fun(idata; prob)
             @test r1 == r2
         end
     end
