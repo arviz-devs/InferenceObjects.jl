@@ -4,6 +4,7 @@ using InferenceObjects
 using PosteriorStats
 using Statistics
 using StatsBase
+using Tables
 using Test
 
 _as_array(x) = fill(x)
@@ -262,9 +263,10 @@ _as_array(x::AbstractArray) = x
 
         stats = @inferred SummaryStats summarize(data, mean, std; name="Stats")
         @test stats.name == "Stats"
-        @test stats[:label] == var_names
-        @test stats[:mean] ≈ map(mean, slices)
-        @test stats[:std] ≈ map(std, slices)
+        stats_nt = Tables.columntable(stats)
+        @test stats_nt.label == var_names
+        @test stats_nt.mean ≈ map(mean, slices)
+        @test stats_nt.std ≈ map(std, slices)
 
         stats_def = summarize(arr; var_names)
         @test summarize(data) == stats_def
