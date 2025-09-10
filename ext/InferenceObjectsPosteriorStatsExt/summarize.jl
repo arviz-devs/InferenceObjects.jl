@@ -33,18 +33,17 @@ julia> data = load_example_data("centered_eight");
 
 julia> summarize(data)
 SummaryStats
-                          mean  std  eti94          ess_tail  ess_bulk  rhat   ⋯
- mu                        4.2  3.3  -2.11 .. 9.90       622       241  1.03   ⋯
- theta[Choate]             6.4  5.9  -3.05 .. 19.1       937       572  1.01   ⋯
- theta[Deerfield]          5.0  4.9  -4.49 .. 14.2      1214       532  1.01   ⋯
- theta[Phillips Andover]   3.4  5.4  -8.17 .. 12.7      1017       511  1.01   ⋯
- theta[Phillips Exeter]    4.8  5.2  -4.84 .. 14.5       911       572  1.01   ⋯
- theta[Hotchkiss]          3.5  4.8  -6.11 .. 12.0       789       347  1.02   ⋯
- theta[Lawrenceville]      3.7  5.2  -6.62 .. 12.6       957       506  1.01   ⋯
- theta[St. Paul's]         6.5  5.2  -2.38 .. 18.3      1031       528  1.01   ⋯
- theta[Mt. Hermon]         4.8  5.7  -5.52 .. 16.0      1045       538  1.01   ⋯
- tau                       4.3  3.0   1.06 .. 11.5       214       128  1.03   ⋯
-                                                               2 columns omitted
+                          mean  std  eti94          ess_tail  ess_bulk  rhat  mcse_mean  mcse_std
+ mu                        4.2  3.3  -2.11 .. 9.90       622       241  1.03       0.21     0.088
+ theta[Choate]             6.4  5.9  -3.05 .. 19.1       937       572  1.01       0.25     0.20
+ theta[Deerfield]          5.0  4.9  -4.49 .. 14.2      1214       532  1.01       0.21     0.15
+ theta[Phillips Andover]   3.4  5.4  -8.17 .. 12.7      1017       511  1.01       0.23     0.17
+ theta[Phillips Exeter]    4.8  5.2  -4.84 .. 14.5       911       572  1.01       0.21     0.21
+ theta[Hotchkiss]          3.5  4.8  -6.11 .. 12.0       789       347  1.02       0.25     0.15
+ theta[Lawrenceville]      3.7  5.2  -6.62 .. 12.6       957       506  1.01       0.22     0.21
+ theta[St. Paul's]         6.5  5.2  -2.38 .. 18.3      1031       528  1.01       0.22     0.15
+ theta[Mt. Hermon]         4.8  5.7  -5.52 .. 16.0      1045       538  1.01       0.24     0.23
+ tau                       4.3  3.0   1.06 .. 11.5       214       128  1.03       0.22     0.14
 ```
 
 Compute the mean, standard deviation, median, and median absolute deviation of the `theta`
