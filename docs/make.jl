@@ -29,34 +29,37 @@ doctestfilters = [
     r"\s+\"created_at\" => .*",  # ignore timestamps in doctests
 ]
 
-makedocs(;
-    modules=[
-        InferenceObjects,
-        Base.get_extension(InferenceObjects, :InferenceObjectsMCMCDiagnosticToolsExt),
-        Base.get_extension(InferenceObjects, :InferenceObjectsPosteriorStatsExt),
-    ],
-    authors="Seth Axen <seth.axen@gmail.com> and contributors",
-    repo=Remotes.GitHub("arviz-devs", "InferenceObjects.jl"),
-    sitename="InferenceObjects.jl",
-    format=Documenter.HTML(;
-        prettyurls=get(ENV, "CI", "false") == "true",
-        canonical="https://arviz-devs.github.io/InferenceObjects.jl",
-        edit_link="main",
-        assets=String[],
-    ),
-    pages=[
-        "Home" => "index.md",
-        "Dataset" => "dataset.md",
-        "InferenceData" => "inference_data.md",
-        "Extensions" => [
-            "MCMCDiagnosticTools" => "extensions/mcmcdiagnostictools.md",
-            "PosteriorStats" => "extensions/posteriorstats.md",
+# Increase the terminal width from 80 to 100 chars to avoid column truncation
+withenv("COLUMNS" => 100) do
+    makedocs(;
+        modules=[
+            InferenceObjects,
+            Base.get_extension(InferenceObjects, :InferenceObjectsMCMCDiagnosticToolsExt),
+            Base.get_extension(InferenceObjects, :InferenceObjectsPosteriorStatsExt),
         ],
-    ],
-    doctestfilters=doctestfilters,
-    warnonly=:missing_docs,
-    plugins=[links],
-)
+        authors="Seth Axen <seth.axen@gmail.com> and contributors",
+        repo=Remotes.GitHub("arviz-devs", "InferenceObjects.jl"),
+        sitename="InferenceObjects.jl",
+        format=Documenter.HTML(;
+            prettyurls=get(ENV, "CI", "false") == "true",
+            canonical="https://arviz-devs.github.io/InferenceObjects.jl",
+            edit_link="main",
+            assets=String[],
+        ),
+        pages=[
+            "Home" => "index.md",
+            "Dataset" => "dataset.md",
+            "InferenceData" => "inference_data.md",
+            "Extensions" => [
+                "MCMCDiagnosticTools" => "extensions/mcmcdiagnostictools.md",
+                "PosteriorStats" => "extensions/posteriorstats.md",
+            ],
+        ],
+        doctestfilters=doctestfilters,
+        warnonly=:missing_docs,
+        plugins=[links],
+    )
+end
 
 # run doctests on extensions
 function get_extension(mod::Module, name::Symbol)
@@ -74,10 +77,7 @@ for extended_pkg in (MCMCDiagnosticTools, PosteriorStats)
     @info "Running doctests for extension $(extension_name)"
     mod = get_extension(InferenceObjects, extension_name)
     DocMeta.setdocmeta!(mod, :DocTestSetup, :(using $(Symbol(extended_pkg))))
-    # Increase the terminal width from 80 to 100 chars to avoid column truncation
-    withenv("COLUMNS" => 100) do
-        doctest(mod; manual=false)
-    end
+    doctest(mod; manual=false)
 end
 
 deploydocs(;
