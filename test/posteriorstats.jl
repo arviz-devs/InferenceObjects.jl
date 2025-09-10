@@ -140,7 +140,7 @@ _as_array(x::AbstractArray) = x
             sample_stats=Dataset((; log_likelihood=log_like)),
         )
         @test @inferred(loo_pit(idata3)) == pit_vals
-\
+
         all_dims_perm = (param_dims..., reverse(sample_dims)...)
         idata4 = InferenceData(;
             observed_data=Dataset((; y)),
