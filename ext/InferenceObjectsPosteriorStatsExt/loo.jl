@@ -19,8 +19,8 @@ julia> idata = load_example_data("centered_eight");
 
 julia> loo(idata)
 PSISLOOResult with estimates
- elpd  elpd_mcse    p  p_mcse
-  -31        1.4  0.9    0.33
+ elpd  se_elpd    p  se_p
+  -31      1.4  0.9  0.33
 
 and PSISResult with 500 draws, 4 chains, and 8 parameters
 Pareto shape (k) diagnostic values:
