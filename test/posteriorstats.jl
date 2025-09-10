@@ -116,8 +116,7 @@ _as_array(x::AbstractArray) = x
         @test_throws Exception loo_pit(idata1; y_name=:z)
         @test_throws Exception loo_pit(idata1; y_pred_name=:z)
         @test_throws Exception loo_pit(idata1; log_likelihood_name=:z)
-        @test loo_pit(idata1) == pit_vals
-        VERSION ≥ v"1.7" && @inferred loo_pit(idata1)
+        @test @inferred(loo_pit(idata1)) == pit_vals
         @test loo_pit(idata1; y_name=:y) == pit_vals
         @test loo_pit(idata1; y_name=:y, y_pred_name=:y, log_likelihood_name=:y) == pit_vals
 
@@ -140,17 +139,15 @@ _as_array(x::AbstractArray) = x
             posterior_predictive=Dataset((; y=y_pred)),
             sample_stats=Dataset((; log_likelihood=log_like)),
         )
-        @test loo_pit(idata3) == pit_vals
-        VERSION ≥ v"1.7" && @inferred loo_pit(idata3)
-
+        @test @inferred(loo_pit(idata3)) == pit_vals
+\
         all_dims_perm = (param_dims..., reverse(sample_dims)...)
         idata4 = InferenceData(;
             observed_data=Dataset((; y)),
             posterior_predictive=Dataset((; y=permutedims(y_pred, all_dims_perm))),
             log_likelihood=Dataset((; y=permutedims(log_like, all_dims_perm))),
         )
-        @test loo_pit(idata4) ≈ pit_vals
-        VERSION ≥ v"1.7" && @inferred loo_pit(idata4)
+        @test @inferred(loo_pit(idata4)) ≈ pit_vals
 
         idata5 = InferenceData(;
             observed_data=Dataset((; y)), posterior_predictive=Dataset((; y=y_pred))
@@ -161,8 +158,7 @@ _as_array(x::AbstractArray) = x
     @testset "r2_score" begin
         @testset for name in ("regression1d", "regression10d")
             idata = load_example_data(name)
-            VERSION ≥ v"1.9" && @inferred r2_score(idata)
-            r2_val = r2_score(idata)
+            r2_val = @inferred(r2_score(idata))
             @test r2_val == r2_score(
                 idata.observed_data.y,
                 PermutedDimsArray(idata.posterior_predictive.y, (:draw, :chain, :y_dim_0)),
