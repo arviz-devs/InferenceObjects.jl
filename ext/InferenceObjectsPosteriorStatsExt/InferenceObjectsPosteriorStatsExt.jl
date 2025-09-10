@@ -6,13 +6,15 @@ using InferenceObjects: InferenceObjects
 using PosteriorStats: PosteriorStats
 using StatsBase: StatsBase
 
-import PosteriorStats: hdi, loo, loo_pit, r2_score, summarize, waic
+import PosteriorStats: eti, hdi, loo, loo_pit, r2_score, summarize, waic
 import StatsBase: summarystats
 
-export hdi, loo, loo_pit, r2_score, summarize, waic, summarystats
+export eti, hdi, loo, loo_pit, r2_score, summarize, waic, summarystats
+
+maplayers = isdefined(DimensionalData, :maplayers) ? DimensionalData.maplayers : map
 
 include("utils.jl")
-include("hdi.jl")
+include("ci.jl")
 include("loo.jl")
 include("waic.jl")
 include("loo_pit.jl")

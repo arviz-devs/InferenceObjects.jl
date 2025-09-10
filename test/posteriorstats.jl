@@ -4,10 +4,14 @@ using InferenceObjects
 using PosteriorStats
 using Statistics
 using StatsBase
+using Tables
 using Test
 
+_as_array(x) = fill(x)
+_as_array(x::AbstractArray) = x
+
 @testset "PosteriorStats integration" begin
-    @testset "hdi" begin
+    @testset for ci_fun in (eti, hdi)
         nt = (x=randn(1000, 3), y=randn(1000, 3, 4), z=randn(1000, 3, 4, 2))
         posterior = convert_to_dataset(nt)
         posterior_perm = convert_to_dataset((
@@ -17,23 +21,17 @@ using Test
         ))
         idata = InferenceData(; posterior)
         @testset for prob in (0.76, 0.93)
-            if VERSION ≥ v"1.9"
-                @test_broken @inferred hdi(posterior; prob)
-            end
-            r1 = hdi(posterior; prob)
-            r1_perm = hdi(posterior_perm; prob)
+            @test_broken @inferred ci_fun(posterior; prob)
+            r1 = ci_fun(posterior; prob)
+            r1_perm = ci_fun(posterior_perm; prob)
             for k in (:x, :y, :z)
-                rk = hdi(posterior[k]; prob)
-                @test r1[k][hdi_bound=At(:lower)] == rk.lower
-                @test r1[k][hdi_bound=At(:upper)] == rk.upper
+                rk = ci_fun(posterior[k]; prob)
+                @test r1[k] == _as_array(rk)
                 # equality check is safe because these are always data values
-                @test r1_perm[k][hdi_bound=At(:lower)] == rk.lower
-                @test r1_perm[k][hdi_bound=At(:upper)] == rk.upper
+                @test r1_perm[k] == _as_array(rk)
             end
-            if VERSION ≥ v"1.9"
-                @test_broken @inferred hdi(idata; prob)
-            end
-            r2 = hdi(idata; prob)
+            @test_broken @inferred ci_fun(idata; prob)
+            r2 = ci_fun(idata; prob)
             @test r1 == r2
         end
     end
@@ -55,12 +53,11 @@ using Test
             @test loo_result1.pointwise isa Dataset
             if length(sz) == 2
                 @test issetequal(
-                    keys(loo_result1.pointwise),
-                    (:elpd, :elpd_mcse, :p, :reff, :pareto_shape),
+                    keys(loo_result1.pointwise), (:elpd, :se_elpd, :p, :reff, :pareto_shape)
                 )
             else
                 @test loo_result1.pointwise.elpd == loo_result.pointwise.elpd
-                @test loo_result1.pointwise.elpd_mcse == loo_result.pointwise.elpd_mcse
+                @test loo_result1.pointwise.se_elpd == loo_result.pointwise.se_elpd
                 @test loo_result1.pointwise.p == loo_result.pointwise.p
                 @test loo_result1.pointwise.reff == loo_result.pointwise.reff
                 @test loo_result1.pointwise.pareto_shape ==
@@ -74,21 +71,21 @@ using Test
             loo_result2 = loo(idata2)
             @test loo_result2.estimates.elpd ≈ loo_result1.estimates.elpd atol = atol_perm
             @test isapprox(
-                loo_result2.estimates.elpd_mcse,
-                loo_result1.estimates.elpd_mcse;
+                loo_result2.estimates.se_elpd,
+                loo_result1.estimates.se_elpd;
                 nans=true,
                 atol=atol_perm,
             )
             @test loo_result2.estimates.p ≈ loo_result1.estimates.p atol = atol_perm
             @test isapprox(
-                loo_result2.estimates.p_mcse,
-                loo_result1.estimates.p_mcse;
+                loo_result2.estimates.se_p,
+                loo_result1.estimates.se_p;
                 nans=true,
                 atol=atol_perm,
             )
             @test isapprox(
-                loo_result2.pointwise.elpd_mcse,
-                loo_result1.pointwise.elpd_mcse;
+                loo_result2.pointwise.se_elpd,
+                loo_result1.pointwise.se_elpd;
                 nans=true,
                 atol=atol_perm,
             )
@@ -120,8 +117,7 @@ using Test
         @test_throws Exception loo_pit(idata1; y_name=:z)
         @test_throws Exception loo_pit(idata1; y_pred_name=:z)
         @test_throws Exception loo_pit(idata1; log_likelihood_name=:z)
-        @test loo_pit(idata1) == pit_vals
-        VERSION ≥ v"1.7" && @inferred loo_pit(idata1)
+        @test @inferred(loo_pit(idata1)) == pit_vals
         @test loo_pit(idata1; y_name=:y) == pit_vals
         @test loo_pit(idata1; y_name=:y, y_pred_name=:y, log_likelihood_name=:y) == pit_vals
 
@@ -144,8 +140,7 @@ using Test
             posterior_predictive=Dataset((; y=y_pred)),
             sample_stats=Dataset((; log_likelihood=log_like)),
         )
-        @test loo_pit(idata3) == pit_vals
-        VERSION ≥ v"1.7" && @inferred loo_pit(idata3)
+        @test @inferred(loo_pit(idata3)) == pit_vals
 
         all_dims_perm = (param_dims..., reverse(sample_dims)...)
         idata4 = InferenceData(;
@@ -153,8 +148,7 @@ using Test
             posterior_predictive=Dataset((; y=permutedims(y_pred, all_dims_perm))),
             log_likelihood=Dataset((; y=permutedims(log_like, all_dims_perm))),
         )
-        @test loo_pit(idata4) ≈ pit_vals
-        VERSION ≥ v"1.7" && @inferred loo_pit(idata4)
+        @test @inferred(loo_pit(idata4)) ≈ pit_vals
 
         idata5 = InferenceData(;
             observed_data=Dataset((; y)), posterior_predictive=Dataset((; y=y_pred))
@@ -165,8 +159,7 @@ using Test
     @testset "r2_score" begin
         @testset for name in ("regression1d", "regression10d")
             idata = load_example_data(name)
-            VERSION ≥ v"1.9" && @inferred r2_score(idata)
-            r2_val = r2_score(idata)
+            r2_val = @inferred(r2_score(idata))
             @test r2_val == r2_score(
                 idata.observed_data.y,
                 PermutedDimsArray(idata.posterior_predictive.y, (:draw, :chain, :y_dim_0)),
@@ -208,15 +201,15 @@ using Test
             waic_result2 = waic(idata2)
             @test waic_result2.estimates.elpd ≈ waic_result1.estimates.elpd atol = atol_perm
             @test isapprox(
-                waic_result2.estimates.elpd_mcse,
-                waic_result1.estimates.elpd_mcse;
+                waic_result2.estimates.se_elpd,
+                waic_result1.estimates.se_elpd;
                 nans=true,
                 atol=atol_perm,
             )
             @test waic_result2.estimates.p ≈ waic_result1.estimates.p atol = atol_perm
             @test isapprox(
-                waic_result2.estimates.p_mcse,
-                waic_result1.estimates.p_mcse;
+                waic_result2.estimates.se_p,
+                waic_result1.estimates.se_p;
                 nans=true,
                 atol=atol_perm,
             )
@@ -231,7 +224,7 @@ using Test
         )
         result1 = compare(eight_schools_data)
         result2 = compare(map(loo, eight_schools_data))
-        @testset for k in (:name, :rank, :elpd_diff, :elpd_diff_mcse, :weight)
+        @testset for k in (:name, :rank, :elpd_diff, :se_elpd_diff, :weight)
             @test getproperty(result1, k) == getproperty(result2, k)
         end
     end
@@ -248,13 +241,13 @@ using Test
         )
         slices = [
             data.x,
-            data.y[a=1],
-            data.y[a=2],
-            data.y[a=3],
-            data.z[b=1, c=1],
-            data.z[b=2, c=1],
-            data.z[b=1, c=2],
-            data.z[b=2, c=2],
+            data.y[a = 1],
+            data.y[a = 2],
+            data.y[a = 3],
+            data.z[b = 1, c = 1],
+            data.z[b = 2, c = 1],
+            data.z[b = 1, c = 2],
+            data.z[b = 2, c = 2],
         ]
         var_names = [
             "x",
@@ -270,9 +263,10 @@ using Test
 
         stats = @inferred SummaryStats summarize(data, mean, std; name="Stats")
         @test stats.name == "Stats"
-        @test stats[:parameter] == var_names
-        @test stats[:mean] ≈ map(mean, slices)
-        @test stats[:std] ≈ map(std, slices)
+        stats_nt = Tables.columntable(stats)
+        @test stats_nt.label == var_names
+        @test stats_nt.mean ≈ map(mean, slices)
+        @test stats_nt.std ≈ map(std, slices)
 
         stats_def = summarize(arr; var_names)
         @test summarize(data) == stats_def
