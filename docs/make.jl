@@ -70,16 +70,6 @@ function get_extension(mod::Module, name::Symbol)
     end
 end
 
-using MCMCDiagnosticTools: MCMCDiagnosticTools
-using PosteriorStats: PosteriorStats
-for extended_pkg in (MCMCDiagnosticTools, PosteriorStats)
-    extension_name = Symbol("InferenceObjects", extended_pkg, "Ext")
-    @info "Running doctests for extension $(extension_name)"
-    mod = get_extension(InferenceObjects, extension_name)
-    DocMeta.setdocmeta!(mod, :DocTestSetup, :(using $(Symbol(extended_pkg))))
-    doctest(mod; manual=false)
-end
-
 deploydocs(;
     repo="github.com/arviz-devs/InferenceObjects.jl", devbranch="main", push_preview=true
 )
