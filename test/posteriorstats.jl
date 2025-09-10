@@ -52,8 +52,7 @@ _as_array(x::AbstractArray) = x
             @test loo_result1.pointwise isa Dataset
             if length(sz) == 2
                 @test issetequal(
-                    keys(loo_result1.pointwise),
-                    (:elpd, :se_elpd, :p, :reff, :pareto_shape),
+                    keys(loo_result1.pointwise), (:elpd, :se_elpd, :p, :reff, :pareto_shape)
                 )
             else
                 @test loo_result1.pointwise.elpd == loo_result.pointwise.elpd
@@ -245,13 +244,13 @@ _as_array(x::AbstractArray) = x
         )
         slices = [
             data.x,
-            data.y[a=1],
-            data.y[a=2],
-            data.y[a=3],
-            data.z[b=1, c=1],
-            data.z[b=2, c=1],
-            data.z[b=1, c=2],
-            data.z[b=2, c=2],
+            data.y[a = 1],
+            data.y[a = 2],
+            data.y[a = 3],
+            data.z[b = 1, c = 1],
+            data.z[b = 2, c = 1],
+            data.z[b = 1, c = 2],
+            data.z[b = 2, c = 2],
         ]
         var_names = [
             "x",
