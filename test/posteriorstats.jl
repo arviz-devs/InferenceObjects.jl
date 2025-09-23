@@ -172,7 +172,7 @@ _as_array(x::AbstractArray) = x
         end
     end
 
-    @testset "waic" begin
+    isdefined(PosteriorStats, :waic) && @testset "waic" begin
         @testset for sz in ((1000, 4), (1000, 4, 2), (100, 4, 2, 3))
             atol_perm = cbrt(eps())
 
