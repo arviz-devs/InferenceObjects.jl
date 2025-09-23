@@ -1,5 +1,5 @@
 @doc """
-    r2_score(idata::InferenceData; y_name, y_pred_name) -> (; r2, r2_std)
+    r2_score(idata::InferenceData; y_name, y_pred_name, kwargs...) -> (; r2, <ci>)
 
 Compute ``R²`` from `idata`, automatically formatting the predictions to the correct shape.
 
@@ -9,8 +9,8 @@ Compute ``R²`` from `idata`, automatically formatting the predictions to the co
     the only observed data variable is used.
   - `y_pred_name`: Name of posterior predictive variable in `idata.posterior_predictive`.
     If not provided, then `y_name` is used.
-
-See [`PosteriorStats.r2_score`](@extref) for more details.
+  - `kwargs...`: Additional keyword arguments to pass to
+    [`PosteriorStats.r2_score`](@extref).
 
 # Examples
 
@@ -19,10 +19,8 @@ julia> using ArviZExampleData, PosteriorStats
 
 julia> idata = load_example_data("regression10d");
 
-julia> r2_score(idata) |> pairs
-pairs(::NamedTuple) with 2 entries:
-  :r2     => 0.998385
-  :r2_std => 0.000100621
+julia> r2_score(idata)
+(r2 = 0.998384805658226, eti = 0.9982167674001565 .. 0.9985401916739318)
 ```
 """
 function PosteriorStats.r2_score(
