@@ -6,10 +6,7 @@ using InferenceObjects: InferenceObjects
 using PosteriorStats: PosteriorStats
 using StatsBase: StatsBase
 
-import PosteriorStats: eti, hdi, loo, loo_pit, r2_score, summarize, waic
 import StatsBase: summarystats
-
-export eti, hdi, loo, loo_pit, r2_score, summarize, waic, summarystats
 
 maplayers = isdefined(DimensionalData, :maplayers) ? DimensionalData.maplayers : map
 
