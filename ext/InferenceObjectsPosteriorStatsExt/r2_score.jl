@@ -17,10 +17,10 @@ Compute ``R²`` from `idata`, automatically formatting the predictions to the co
 ```jldoctest
 julia> using ArviZExampleData, PosteriorStats
 
-julia> idata = load_example_data("regression10d");
+julia> idata = load_example_data("anes");
 
 julia> r2_score(idata)
-(r2 = 0.998384805658226, eti = 0.9982167674001565 .. 0.9985401916739318)
+(r2 = 0.4944850210319484, eti = 0.46184359652436546 .. 0.528018251711097)
 ```
 """
 function PosteriorStats.r2_score(
