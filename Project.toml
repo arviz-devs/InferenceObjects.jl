@@ -23,7 +23,7 @@ InferenceObjectsPosteriorStatsExt = ["PosteriorStats", "StatsBase"]
 
 [compat]
 ANSIColoredPrinters = "0.0.1"
-ArviZExampleData = "0.1.10, 0.3"
+ArviZExampleData = "0.3"
 Dates = "1"
 DimensionalData = "0.27, 0.28, 0.29"
 EvoTrees = "0.16"
