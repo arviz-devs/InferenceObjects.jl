@@ -161,11 +161,11 @@ _as_array(x::AbstractArray) = x
         r2_val = @inferred(r2_score(idata))
         @test r2_val == r2_score(
             idata.observed_data.vote,
-            PermutedDimsArray(idata.posterior_predictive.y, (:draw, :chain, :__obs__)),
+            PermutedDimsArray(idata.posterior_predictive.vote, (:draw, :chain, :__obs__)),
         )
         @test r2_val == r2_score(idata; y_name=:vote)
         @test r2_val == r2_score(idata; y_pred_name=:vote)
-        @test r2_val == r2_score(idata; y_name=:y, y_pred_name=:vote)
+        @test r2_val == r2_score(idata; y_name=:vote, y_pred_name=:vote)
         @test_throws Exception r2_score(idata; y_name=:z)
         @test_throws Exception r2_score(idata; y_pred_name=:z)
     end
