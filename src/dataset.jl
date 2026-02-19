@@ -130,9 +130,6 @@ end
 
 DimensionalData.modify(f, s::Dataset) = Dataset(DimensionalData.modify(f, parent(s)))
 
-# Warning: this is not an API function and probably should be implemented abstractly upstream
-DimensionalData.show_after(io, mime, ::Dataset) = nothing
-
 attributes(data::DimensionalData.AbstractDimStack) = DimensionalData.metadata(data)
 
 Base.convert(T::Type{<:DimensionalData.DimStack}, data::Dataset) = convert(T, parent(data))
