@@ -23,12 +23,12 @@ using a constructor.
 Dataset
 @static if pkgversion(DimensionalData) ≥ v"0.30.0"
     struct Dataset{K,T,N,L,D,Data<:DimensionalData.AbstractDimStack{K,T,N,L,D}} <:
-        DimensionalData.AbstractDimStack{K,T,N,L,D}
+           DimensionalData.AbstractDimStack{K,T,N,L,D}
         data::Data
     end
 else # DimensionalData < 0.30
     struct Dataset{K,T,N,L,Data<:DimensionalData.AbstractDimStack{K,T,N,L}} <:
-        DimensionalData.AbstractDimStack{K,T,N,L}
+           DimensionalData.AbstractDimStack{K,T,N,L}
         data::Data
     end
 

@@ -72,7 +72,8 @@ using InferenceObjects, DimensionalData, Test
             @test parent(Dimensions.lookup(idata_sel.posterior, :dima)) == coords.dima
             @test parent(Dimensions.lookup(idata_sel.posterior, :dimb)) == coords.dimb[[1]]
             @test parent(Dimensions.lookup(idata_sel.posterior, :shared)) == ["s1"]
-            @test parent(Dimensions.lookup(idata_sel.observed_data, :dimy)) == coords.dimy[[1]]
+            @test parent(Dimensions.lookup(idata_sel.observed_data, :dimy)) ==
+                coords.dimy[[1]]
             @test parent(Dimensions.lookup(idata_sel.observed_data, :shared)) == ["s1"]
         end
 
