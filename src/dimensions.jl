@@ -2,13 +2,13 @@ has_all_sample_dims(dims) = all(Dimensions.hasdim(dims, DEFAULT_SAMPLE_DIMS))
 
 # Like Dimensions.name2dim but doesn't allow users to inject their own dimensions using
 # Dimensions.@dim. See https://github.com/arviz-devs/InferenceObjects.jl/issues/37
-_name2dim(d::Symbol) = Dimensions.Dim{d}(LookupArrays.NoLookup())
+_name2dim(d::Symbol) = Dimensions.Dim{d}(Lookups.NoLookup())
 _name2dim(d::Tuple) = map(_name2dim, d)
 _name2dim(d) = d
 
 # make sure dim has a lookup value accessible with `val`
 _valdim(d) = d
-_valdim(d::Type{<:Dimensions.Dimension}) = d(LookupArrays.NoLookup())
+_valdim(d::Type{<:Dimensions.Dimension}) = d(Lookups.NoLookup())
 
 """
     as_dimension(dim, coords, axis) -> DimensionsionalData.Dimension
@@ -31,8 +31,8 @@ Convert `dim`, `coords`, and `axis` to a `Dimension` object.
 """
 function as_dimension(dim, coords, axis)
     cdim = _valdim(_name2dim(dim))
-    val = LookupArrays.val(cdim)
-    inds = val isa Union{Colon,LookupArrays.NoLookup} ? axis : val
+    val = Lookups.val(cdim)
+    inds = val isa Union{Colon,Lookups.NoLookup} ? axis : val
     coords_inds = get(coords, Dimensions.name(cdim), inds)
     return Dimensions.rebuild(cdim, coords_inds)
 end
@@ -79,7 +79,7 @@ function generate_dims(array, name; dims=(), coords=(;), default_dims=())
     end
     dims_all = (default_dims..., dims_named...)
     # default to the axes if no coords are provided
-    axes_all = map(_ -> LookupArrays.NoLookup(), dims_all)
+    axes_all = map(_ -> Lookups.NoLookup(), dims_all)
     T = NTuple{ndims(array),Dimensions.Dimension}
     dims_with_coords = as_dimension.(dims_all, Ref(coords), axes_all)::T
     return Dimensions.format(dims_with_coords, array)::T
@@ -107,7 +107,7 @@ function array_to_dimarray(array::DimensionalData.AbstractDimArray, name; kwargs
 end
 
 """
-    AsSlice{T<:LookupArrays.Selector} <: LookupArrays.Selector{T}
+    AsSlice{T<:Lookups.Selector} <: Lookups.Selector{T}
 
     AsSlice(selector)
 
@@ -115,12 +115,12 @@ Selector that ensures selected indices are arrays so that slicing occurs.
 
 This is useful to ensure that selecting a single index still returns an array.
 """
-struct AsSlice{T<:LookupArrays.Selector} <: LookupArrays.Selector{T}
+struct AsSlice{T<:Lookups.Selector} <: Lookups.Selector{T}
     val::T
 end
 
-function LookupArrays.selectindices(l::LookupArrays.LookupArray, sel::AsSlice; kw...)
-    i = LookupArrays.selectindices(l, LookupArrays.val(sel); kw...)
+function Lookups.selectindices(l::Lookups.LookupArray, sel::AsSlice; kw...)
+    i = Lookups.selectindices(l, Lookups.val(sel); kw...)
     inds = i isa AbstractVector ? i : [i]
     return inds
 end
@@ -132,4 +132,4 @@ Convert `index` to a collection of indices or a selector representing such a col
 """
 index_to_indices(i) = i
 index_to_indices(i::Int) = [i]
-index_to_indices(sel::LookupArrays.Selector) = AsSlice(sel)
+index_to_indices(sel::Lookups.Selector) = AsSlice(sel)

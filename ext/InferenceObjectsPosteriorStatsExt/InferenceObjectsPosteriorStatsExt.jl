@@ -1,7 +1,7 @@
 module InferenceObjectsPosteriorStatsExt
 
 using Base: @doc
-using DimensionalData: DimensionalData, Dimensions, LookupArrays
+using DimensionalData: DimensionalData, Dimensions
 using InferenceObjects: InferenceObjects
 using PosteriorStats: PosteriorStats
 using StatsBase: StatsBase

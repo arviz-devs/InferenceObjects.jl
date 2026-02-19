@@ -1,7 +1,7 @@
 name = "InferenceObjects"
 uuid = "b5cf5a8d-e756-4ee3-b014-01d49d192c00"
 authors = ["Seth Axen <seth.axen@gmail.com> and contributors"]
-version = "0.4.15"
+version = "0.4.16"
 
 [deps]
 ANSIColoredPrinters = "a4c015fc-c6ff-483c-b24f-f7ea428134e9"
@@ -25,7 +25,7 @@ InferenceObjectsPosteriorStatsExt = ["PosteriorStats", "StatsBase"]
 ANSIColoredPrinters = "0.0.1"
 ArviZExampleData = "0.3"
 Dates = "1"
-DimensionalData = "0.27, 0.28, 0.29"
+DimensionalData = "0.27, 0.28, 0.29, 0.30"
 EvoTrees = "0.16"
 MCMCDiagnosticTools = "0.3.4"
 MLJBase = "1"
