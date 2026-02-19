@@ -81,7 +81,7 @@ function test_idata_approx_equal(
             dims1 = DimensionalData.dims(da1)
             dims2 = DimensionalData.dims(da2)
             @test DimensionalData.name(dims1) == DimensionalData.name(dims2)
-            @test DimensionalData.index(dims1) == DimensionalData.index(dims2)
+            @test parent.(Dimensions.lookup(dims1)) == parent.(Dimensions.lookup(dims2))
         end
         if check_metadata
             metadata1 = DimensionalData.metadata(ds1)
@@ -119,7 +119,7 @@ function test_idata_group_correct(
         for dim in _dims
             dim_name = DimensionalData.name(dim)
             if dim_name ∈ keys(coords)
-                @test coords[dim_name] == DimensionalData.index(dim)
+                @test coords[dim_name] == parent(dim)
             end
         end
     end

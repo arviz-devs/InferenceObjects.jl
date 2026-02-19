@@ -1,5 +1,5 @@
 using InferenceObjects, DimensionalData, OffsetArrays, Test
-using DimensionalData.LookupArrays
+using DimensionalData.Lookups
 
 Dimensions.@dim foo "foo"
 
@@ -69,24 +69,27 @@ Dimensions.@dim foo "foo"
         )
         @test gdims isa NTuple{4,Dim}
         @test Dimensions.name(gdims) === (:x_dim_1, :x_dim_2, :x_dim_3, :x_dim_4)
-        @test Dimensions.index(gdims) == (11:20, 0:3, -1:0, 2:4)
-        @test Dimensions.val.(Dimensions.dims(gdims)) isa NTuple{4,LookupArrays.NoLookup}
+        glooks = Dimensions.lookup(gdims)
+        @test glooks isa NTuple{4,NoLookup}
+        @test parent.(glooks) == (11:20, 0:3, -1:0, 2:4)
 
         gdims = @inferred NTuple{4,Dimensions.Dimension} InferenceObjects.generate_dims(
             x, :y; dims=(:a, :b)
         )
         @test gdims isa NTuple{4,Dim}
         @test Dimensions.name(gdims) === (:a, :b, :y_dim_3, :y_dim_4)
-        @test Dimensions.index(gdims) == (11:20, 0:3, -1:0, 2:4)
-        @test Dimensions.val.(Dimensions.dims(gdims)) isa NTuple{4,LookupArrays.NoLookup}
+        glooks = Dimensions.lookup(gdims)
+        @test glooks isa NTuple{4,NoLookup}
+        @test parent.(glooks) == (11:20, 0:3, -1:0, 2:4)
 
         gdims = @inferred NTuple{4,Dimensions.Dimension} InferenceObjects.generate_dims(
             x, :z; dims=(:c, :d), default_dims=(:draw, :chain)
         )
         @test gdims isa NTuple{4,Dim}
         @test Dimensions.name(gdims) === (:draw, :chain, :c, :d)
-        @test Dimensions.index(gdims) == (11:20, 0:3, -1:0, 2:4)
-        @test Dimensions.val.(Dimensions.dims(gdims)) isa NTuple{4,LookupArrays.NoLookup}
+        glooks = Dimensions.lookup(gdims)
+        @test glooks isa NTuple{4,NoLookup}
+        @test parent.(glooks) == (11:20, 0:3, -1:0, 2:4)
 
         x = randn(2, 3)
         InferenceObjects.generate_dims(x, :x; dims=(:a, :b))
@@ -109,7 +112,7 @@ Dimensions.@dim foo "foo"
         gdims = Dimensions.dims(da)
         @test gdims isa NTuple{4,Dim}
         @test Dimensions.name(gdims) === (:x_dim_1, :x_dim_2, :x_dim_3, :x_dim_4)
-        @test Dimensions.index(gdims) == (11:20, 0:3, -1:0, 2:4)
+        @test parent.(Dimensions.lookup(gdims)) == (11:20, 0:3, -1:0, 2:4)
 
         da = @inferred DimArray InferenceObjects.array_to_dimarray(x, :y; dims=(:a, :b))
         @test da == x
@@ -117,7 +120,7 @@ Dimensions.@dim foo "foo"
         gdims = Dimensions.dims(da)
         @test gdims isa NTuple{4,Dim}
         @test Dimensions.name(gdims) === (:a, :b, :y_dim_3, :y_dim_4)
-        @test Dimensions.index(gdims) == (11:20, 0:3, -1:0, 2:4)
+        @test parent.(Dimensions.lookup(gdims)) == (11:20, 0:3, -1:0, 2:4)
 
         da = @inferred DimArray InferenceObjects.array_to_dimarray(
             x, :z; dims=(:c, :d), default_dims=(:draw, :chain)
@@ -127,7 +130,7 @@ Dimensions.@dim foo "foo"
         gdims = Dimensions.dims(da)
         @test gdims isa NTuple{4,Dim}
         @test Dimensions.name(gdims) === (:draw, :chain, :c, :d)
-        @test Dimensions.index(gdims) == (11:20, 0:3, -1:0, 2:4)
+        @test parent.(Dimensions.lookup(gdims)) == (11:20, 0:3, -1:0, 2:4)
 
         v = randn(1_000)
         da = @inferred DimArray InferenceObjects.array_to_dimarray(
@@ -138,7 +141,7 @@ Dimensions.@dim foo "foo"
         gdims = Dimensions.dims(da)
         @test gdims isa NTuple{2,Dim}
         @test Dimensions.name(gdims) === (:draw, :chain)
-        @test Dimensions.index(gdims) == (1:1000, 1:1)
+        @test parent.(Dimensions.lookup(gdims)) == (1:1000, 1:1)
 
         s = fill(1) # 0-dimensional array
         da = @inferred DimArray InferenceObjects.array_to_dimarray(
@@ -149,7 +152,7 @@ Dimensions.@dim foo "foo"
         gdims = Dimensions.dims(da)
         @test gdims isa NTuple{2,Dim}
         @test Dimensions.name(gdims) === (:draw, :chain)
-        @test Dimensions.index(gdims) == (1:1, 1:1)
+        @test parent.(Dimensions.lookup(gdims)) == (1:1, 1:1)
     end
 
     @testset "AsSlice" begin

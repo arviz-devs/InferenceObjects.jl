@@ -2,7 +2,7 @@ module InferenceObjects
 
 using ANSIColoredPrinters: ANSIColoredPrinters
 using Dates: Dates
-using DimensionalData: DimensionalData, Dimensions, LookupArrays
+using DimensionalData: DimensionalData, Dimensions, Lookups
 using Random: Random
 using Tables: Tables
 

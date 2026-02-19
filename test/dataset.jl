@@ -1,4 +1,5 @@
 using InferenceObjects, DimensionalData, Test
+using DimensionalData: Lookups
 
 @testset "dataset" begin
     @testset "Dataset" begin
@@ -118,9 +119,9 @@ using InferenceObjects, DimensionalData, Test
         end
 
         @testset "DimensionalData.set" begin
-            ds2 = DimensionalData.set(ds; ydim1=LookupArrays.Sampled([-2, 2]))
+            ds2 = DimensionalData.set(ds, :ydim1 => Lookups.Sampled([-2, 2]))
             @test ds2 isa Dataset
-            @test DimensionalData.lookup(ds2, :ydim1) == [-2, 2]
+            @test parent(DimensionalData.lookup(ds2, :ydim1)) == [-2, 2]
             @test DimensionalData.data(ds2) == DimensionalData.data(ds)
         end
     end

@@ -60,20 +60,20 @@ using InferenceObjects, DimensionalData, Test
         idata_sel = idata[dima=At(2:3), dimb=At(6)]
         @test idata_sel isa InferenceData
         @test InferenceObjects.groupnames(idata_sel) === InferenceObjects.groupnames(idata)
-        @test Dimensions.index(idata_sel.posterior, :dima) == 2:3
-        @test Dimensions.index(idata_sel.prior, :dima) == 2:3
-        @test Dimensions.index(idata_sel.posterior, :dimb) == [6]
-        @test Dimensions.index(idata_sel.prior, :dimb) == [6]
+        @test parent(Dimensions.lookup(idata_sel.posterior, :dima)) == 2:3
+        @test parent(Dimensions.lookup(idata_sel.prior, :dima)) == 2:3
+        @test parent(Dimensions.lookup(idata_sel.posterior, :dimb)) == [6]
+        @test parent(Dimensions.lookup(idata_sel.prior, :dimb)) == [6]
 
         if VERSION ≥ v"1.7"
             idata_sel = idata[(:posterior, :observed_data), dimy=1, dimb=1, shared=At("s1")]
             @test idata_sel isa InferenceData
             @test InferenceObjects.groupnames(idata_sel) === (:posterior, :observed_data)
-            @test Dimensions.index(idata_sel.posterior, :dima) == coords.dima
-            @test Dimensions.index(idata_sel.posterior, :dimb) == coords.dimb[[1]]
-            @test Dimensions.index(idata_sel.posterior, :shared) == ["s1"]
-            @test Dimensions.index(idata_sel.observed_data, :dimy) == coords.dimy[[1]]
-            @test Dimensions.index(idata_sel.observed_data, :shared) == ["s1"]
+            @test parent(Dimensions.lookup(idata_sel.posterior, :dima)) == coords.dima
+            @test parent(Dimensions.lookup(idata_sel.posterior, :dimb)) == coords.dimb[[1]]
+            @test parent(Dimensions.lookup(idata_sel.posterior, :shared)) == ["s1"]
+            @test parent(Dimensions.lookup(idata_sel.observed_data, :dimy)) == coords.dimy[[1]]
+            @test parent(Dimensions.lookup(idata_sel.observed_data, :shared)) == ["s1"]
         end
 
         ds_sel = idata[:posterior, chain=1]

@@ -1,7 +1,7 @@
 module InferenceObjectsMCMCDiagnosticToolsExt
 
 using Base: @doc
-using DimensionalData: DimensionalData, Dimensions, LookupArrays
+using DimensionalData: DimensionalData, Dimensions
 using InferenceObjects: InferenceObjects, Random
 using MCMCDiagnosticTools: MCMCDiagnosticTools
 
