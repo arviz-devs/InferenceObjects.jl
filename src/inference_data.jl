@@ -320,6 +320,7 @@ julia> idata_cat1.posterior
 ├────────────────────────────────────────────────── metadata ┤
   Dict{String, Any} with 1 entry:
   "created_at" => "2025-07-25T10:11:18.92"
+└────────────────────────────────────────────────────────────┘
 ```
 
 Alternatively, we can concatenate along a new `run` dimension, which will be created.
@@ -342,6 +343,7 @@ julia> idata_cat2.posterior
 ├───────────────────────────────────────────────────────── metadata ┤
   Dict{String, Any} with 1 entry:
   "created_at" => "2025-07-25T10:11:18.92"
+└───────────────────────────────────────────────────────────────────┘
 ```
 
 We can also concatenate only a subset of groups and merge the rest, which is useful when
@@ -374,6 +376,7 @@ julia> idata_cat3.posterior
 ├───────────────────────────────────────────────────────── metadata ┤
   Dict{String, Any} with 1 entry:
   "created_at" => "2025-07-25T10:11:18.92"
+└───────────────────────────────────────────────────────────────────┘
 
 julia> idata_cat3.observed_data
 ┌ 10-element Dataset ┐
@@ -384,6 +387,7 @@ julia> idata_cat3.observed_data
 ├────────────────────────────────────────────┴ metadata ┐
   Dict{String, Any} with 1 entry:
   "created_at" => "2025-07-25T10:11:18.951"
+└───────────────────────────────────────────────────────┘
 ```
 """
 function Base.cat(data::InferenceData, others::InferenceData...; groups=keys(data), dims)
