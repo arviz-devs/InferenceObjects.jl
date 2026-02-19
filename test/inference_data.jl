@@ -57,7 +57,7 @@ using InferenceObjects, DimensionalData, Test
         @test idata[1] === posterior
         @test idata[2] === prior
 
-        idata_sel = idata[dima=At(2:3), dimb=At(6)]
+        idata_sel = idata[dima = At(2:3), dimb = At(6)]
         @test idata_sel isa InferenceData
         @test InferenceObjects.groupnames(idata_sel) === InferenceObjects.groupnames(idata)
         @test parent(Dimensions.lookup(idata_sel.posterior, :dima)) == 2:3
@@ -66,7 +66,9 @@ using InferenceObjects, DimensionalData, Test
         @test parent(Dimensions.lookup(idata_sel.prior, :dimb)) == [6]
 
         if VERSION ≥ v"1.7"
-            idata_sel = idata[(:posterior, :observed_data), dimy=1, dimb=1, shared=At("s1")]
+            idata_sel = idata[
+                (:posterior, :observed_data), dimy = 1, dimb = 1, shared = At("s1")
+            ]
             @test idata_sel isa InferenceData
             @test InferenceObjects.groupnames(idata_sel) === (:posterior, :observed_data)
             @test parent(Dimensions.lookup(idata_sel.posterior, :dima)) == coords.dima
@@ -77,7 +79,7 @@ using InferenceObjects, DimensionalData, Test
             @test parent(Dimensions.lookup(idata_sel.observed_data, :shared)) == ["s1"]
         end
 
-        ds_sel = idata[:posterior, chain=1]
+        ds_sel = idata[:posterior, chain = 1]
         @test ds_sel isa Dataset
         @test !hasdim(ds_sel, :chain)
 

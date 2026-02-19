@@ -157,13 +157,13 @@ Dimensions.@dim foo "foo"
 
     @testset "AsSlice" begin
         da = DimArray(randn(2), Dim{:a}(["foo", "bar"]))
-        @test da[a=At("foo")] == da[1]
-        da_sel = @inferred da[a=InferenceObjects.AsSlice(At("foo"))]
+        @test da[a = At("foo")] == da[1]
+        da_sel = @inferred da[a = InferenceObjects.AsSlice(At("foo"))]
         @test da_sel isa DimArray
         @test Dimensions.dims(da_sel) == (Dim{:a}(["foo"]),)
-        @test da_sel == da[a=At(["foo"])]
+        @test da_sel == da[a = At(["foo"])]
 
-        da_sel = @inferred da[a=At(["foo", "bar"])]
+        da_sel = @inferred da[a = At(["foo", "bar"])]
         @test da_sel isa DimArray
         @test Dimensions.dims(da_sel) == Dimensions.dims(da)
         @test da_sel == da
