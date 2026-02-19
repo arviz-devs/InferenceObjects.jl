@@ -20,6 +20,7 @@ that implements the same interface as `DimensionalData.DimStack` and has identic
 In most cases, use [`convert_to_dataset`](@ref) to create a `Dataset` instead of directly
 using a constructor.
 """
+Dataset
 @static if pkgversion(DimensionalData) ≥ v"0.30.0"
     struct Dataset{K,T,N,L,D,Data<:DimensionalData.AbstractDimStack{K,T,N,L,D}} <:
         DimensionalData.AbstractDimStack{K,T,N,L,D}
