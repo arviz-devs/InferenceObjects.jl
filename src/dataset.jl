@@ -3,7 +3,7 @@
 
 Container of dimensional arrays sharing some dimensions.
 
-This type is an [`DimensionalData.AbstractDimStack`](@extref DimensionalData dimstacks)
+This type is an [`DimensionalData.AbstractDimStack`](@extref DimensionalData stacks)
 that implements the same interface as `DimensionalData.DimStack` and has identical usage.
 
 # Constructors
