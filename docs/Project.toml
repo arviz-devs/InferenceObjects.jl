@@ -15,3 +15,8 @@ InferenceObjects = {path = ".."}
 ArviZExampleData = "0.3"
 Documenter = "1"
 DocumenterInterLinks = "1"
+InferenceObjects = "0.4.17"
+MCMCDiagnosticTools = "0.3.19"
+NCDatasets = "0.14.15"
+PosteriorStats = "0.4.11"
+StatsBase = "0.34.12"
