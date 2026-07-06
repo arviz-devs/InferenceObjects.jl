@@ -157,19 +157,17 @@ _as_array(x::AbstractArray) = x
     end
 
     @testset "r2_score" begin
-        @testset for name in ("regression1d", "regression10d")
-            idata = load_example_data(name)
-            r2_val = @inferred(r2_score(idata))
-            @test r2_val == r2_score(
-                idata.observed_data.y,
-                PermutedDimsArray(idata.posterior_predictive.y, (:draw, :chain, :y_dim_0)),
-            )
-            @test r2_val == r2_score(idata; y_name=:y)
-            @test r2_val == r2_score(idata; y_pred_name=:y)
-            @test r2_val == r2_score(idata; y_name=:y, y_pred_name=:y)
-            @test_throws Exception r2_score(idata; y_name=:z)
-            @test_throws Exception r2_score(idata; y_pred_name=:z)
-        end
+        idata = load_example_data("anes")
+        r2_val = @inferred(r2_score(idata))
+        @test r2_val == r2_score(
+            idata.observed_data.vote,
+            PermutedDimsArray(idata.posterior_predictive.vote, (:draw, :chain, :__obs__)),
+        )
+        @test r2_val == r2_score(idata; y_name=:vote)
+        @test r2_val == r2_score(idata; y_pred_name=:vote)
+        @test r2_val == r2_score(idata; y_name=:vote, y_pred_name=:vote)
+        @test_throws Exception r2_score(idata; y_name=:z)
+        @test_throws Exception r2_score(idata; y_pred_name=:z)
     end
 
     isdefined(PosteriorStats, :waic) && @testset "waic" begin
@@ -199,7 +197,8 @@ _as_array(x::AbstractArray) = x
             )
             idata2 = InferenceData(; log_likelihood=Dataset((; y=ll_perm)))
             waic_result2 = waic(idata2)
-            @test waic_result2.estimates.elpd ≈ waic_result1.estimates.elpd atol = atol_perm
+            @test waic_result2.estimates.elpd ≈ waic_result1.estimates.elpd atol =
+                atol_perm
             @test isapprox(
                 waic_result2.estimates.se_elpd,
                 waic_result1.estimates.se_elpd;

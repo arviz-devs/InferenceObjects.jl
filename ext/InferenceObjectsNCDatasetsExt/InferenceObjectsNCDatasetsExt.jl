@@ -1,6 +1,6 @@
 module InferenceObjectsNCDatasetsExt
 
-using DimensionalData: DimensionalData, Dimensions, LookupArrays
+using DimensionalData: DimensionalData, Dimensions, Lookups
 using NCDatasets: NCDatasets
 using InferenceObjects
 
@@ -20,7 +20,7 @@ function _from_netcdf(ds, load_mode)
                 index = collect(group[dim_name])
                 if index == eachindex(index)
                     # discard the index if it is just the default
-                    index = LookupArrays.NoLookup()
+                    index = Lookups.NoLookup()
                 end
                 return Symbol(dim_name) => Dimensions.Dim{Symbol(dim_name)}(index)
             end...
@@ -36,7 +36,7 @@ function _from_netcdf(ds, load_mode)
                 else
                     var.attrib
                 end
-                metadata = isempty(attrib) ? LookupArrays.NoMetadata() : attrib
+                metadata = isempty(attrib) ? Lookups.NoMetadata() : attrib
                 da = DimensionalData.DimArray(vals, dims; name, metadata)
                 return name => da
             end...
@@ -89,7 +89,7 @@ function InferenceObjects.to_netcdf(
         for dim in Dimensions.dims(group_data)
             dim_name = String(Dimensions.name(dim))
             NCDatasets.defDim(group_ds, dim_name, length(dim))
-            index = LookupArrays.index(group_data, dim)
+            index = parent(Dimensions.lookup(group_data, dim))
             var = NCDatasets.defVar(group_ds, dim_name, eltype(index), (dim_name,))
             copyto!(var, index)
         end

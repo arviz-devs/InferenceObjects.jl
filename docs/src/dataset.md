@@ -20,7 +20,7 @@ namedtuple_to_dataset
 ## DimensionalData
 
 As a `DimensionalData.AbstractDimStack`, `Dataset` also implements the `AbstractDimStack` API and can be used like a `DimStack`.
-See [DimensionalData's documentation](@extref DimensionalData dimstacks) for example usage.
+See [DimensionalData's documentation](@extref DimensionalData stacks) for example usage.
 
 ## Tables inteface
 

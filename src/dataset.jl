@@ -3,7 +3,7 @@
 
 Container of dimensional arrays sharing some dimensions.
 
-This type is an [`DimensionalData.AbstractDimStack`](@extref DimensionalData dimstacks)
+This type is an [`DimensionalData.AbstractDimStack`](@extref DimensionalData stacks)
 that implements the same interface as `DimensionalData.DimStack` and has identical usage.
 
 # Constructors
@@ -20,18 +20,26 @@ that implements the same interface as `DimensionalData.DimStack` and has identic
 In most cases, use [`convert_to_dataset`](@ref) to create a `Dataset` instead of directly
 using a constructor.
 """
-struct Dataset{K,T,N,L,D<:DimensionalData.AbstractDimStack{K,T,N,L}} <:
-       DimensionalData.AbstractDimStack{K,T,N,L}
-    data::D
-end
+Dataset
+@static if pkgversion(DimensionalData) ≥ v"0.30.0"
+    struct Dataset{K,T,N,L,D,Data<:DimensionalData.AbstractDimStack{K,T,N,L,D}} <:
+           DimensionalData.AbstractDimStack{K,T,N,L,D}
+        data::Data
+    end
+else # DimensionalData < 0.30
+    struct Dataset{K,T,N,L,Data<:DimensionalData.AbstractDimStack{K,T,N,L}} <:
+           DimensionalData.AbstractDimStack{K,T,N,L}
+        data::Data
+    end
 
-function Dataset{K,T,N}(
-    data::L, dims, refdims, layerdims, metadata, layermetadata
-) where {K,T,N,L}
-    data = DimensionalData.DimStack{K,T,N}(
-        data, dims, refdims, layerdims, metadata, layermetadata
-    )
-    return Dataset{K,T,N,L,typeof(data)}(data)
+    function Dataset{K,T,N}(
+        data::L, dims, refdims, layerdims, metadata, layermetadata
+    ) where {K,T,N,L}
+        data = DimensionalData.DimStack{K,T,N}(
+            data, dims, refdims, layerdims, metadata, layermetadata
+        )
+        return Dataset{K,T,N,L,typeof(data)}(data)
+    end
 end
 Dataset(args...; kwargs...) = Dataset(DimensionalData.DimStack(args...; kwargs...))
 Dataset(data::Dataset) = data
@@ -122,9 +130,6 @@ for f in [:data, :dims, :refdims, :metadata, :layerdims, :layermetadata]
 end
 
 DimensionalData.modify(f, s::Dataset) = Dataset(DimensionalData.modify(f, parent(s)))
-
-# Warning: this is not an API function and probably should be implemented abstractly upstream
-DimensionalData.show_after(io, mime, ::Dataset) = nothing
 
 attributes(data::DimensionalData.AbstractDimStack) = DimensionalData.metadata(data)
 
