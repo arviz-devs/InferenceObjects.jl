@@ -16,7 +16,7 @@ concurrency:
 
 jobs:
   test:
-    name: ${{ matrix.downgrade && 'Downgrade / ' || '' }}Julia ${{ matrix.version }} - ${{ matrix.os }}
+    name: Julia ${{ matrix.version }} - ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
@@ -28,30 +28,17 @@ jobs:
           - 'pre'
         os:
           - ubuntu-latest
-        downgrade: [false]
         include:
           - version: '1'
             os: windows-latest
-            downgrade: false
           - version: '1'
             os: macOS-latest
-            downgrade: false
-          - version: 'min'
-            os: ubuntu-latest
-            downgrade: true
     steps:
       - uses: actions/checkout@v7
       - uses: julia-actions/setup-julia@v3
-        id: setup-julia
         with:
           version: ${{ matrix.version }}
       - uses: julia-actions/cache@v3
-      - uses: julia-actions/julia-downgrade-compat@v2
-        with:
-          julia_version: ${{ steps.setup-julia.outputs.julia-version }}
-          skip: Dates,Random
-        if: ${{ matrix.downgrade }}
-        name: Downgrade dependencies to oldest supported versions
       - uses: julia-actions/julia-buildpkg@v1
       - uses: julia-actions/julia-runtest@v1
       - uses: julia-actions/julia-processcoverage@v1
