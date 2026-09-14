@@ -14,13 +14,13 @@ Compute ``R²`` from `idata`, automatically formatting the predictions to the co
 
 # Examples
 
-```jldoctest
+```jldoctest; filter = r"(r2 = \\d\\.\\d{3})\\d+" => s"\\1"
 julia> using ArviZExampleData, PosteriorStats
 
 julia> idata = load_example_data("anes");
 
-julia> round(r2_score(idata).r2; digits=3)
-0.494
+julia> r2_score(idata)
+(r2 = 0.4944850210319484, eti = 0.46184359652436546 .. 0.528018251711097)
 ```
 """
 function PosteriorStats.r2_score(
