@@ -14,7 +14,7 @@ Compute ``R²`` from `idata`, automatically formatting the predictions to the co
 
 # Examples
 
-```jldoctest
+```jldoctest; filter = r"(r2 = \\d\\.\\d{3})\\d+" => s"\\1"
 julia> using ArviZExampleData, PosteriorStats
 
 julia> idata = load_example_data("anes");
