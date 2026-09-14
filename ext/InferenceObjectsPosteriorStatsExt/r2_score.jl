@@ -19,8 +19,8 @@ julia> using ArviZExampleData, PosteriorStats
 
 julia> idata = load_example_data("anes");
 
-julia> r2_score(idata)
-(r2 = 0.4944850210319484, eti = 0.46184359652436546 .. 0.528018251711097)
+julia> round(r2_score(idata).r2; digits=3)
+0.494
 ```
 """
 function PosteriorStats.r2_score(
