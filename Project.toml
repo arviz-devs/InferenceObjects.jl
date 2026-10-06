@@ -3,6 +3,9 @@ uuid = "b5cf5a8d-e756-4ee3-b014-01d49d192c00"
 authors = ["Seth Axen <seth.axen@gmail.com> and contributors"]
 version = "0.4.17"
 
+[workspace]
+projects = ["docs", "test"]
+
 [deps]
 ANSIColoredPrinters = "a4c015fc-c6ff-483c-b24f-f7ea428134e9"
 Dates = "ade2ca70-3891-5945-98fb-dc099432e06a"
