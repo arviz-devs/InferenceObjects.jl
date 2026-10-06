@@ -15,6 +15,9 @@ StatsBase = "2913bbd2-ae8a-5f71-8c99-4fb6c76f3a91"
 Tables = "bd369af6-aec1-5ad0-b16a-f7cc5008161c"
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 
+[sources]
+InferenceObjects = {path = ".."}
+
 [compat]
 ArviZExampleData = "0.3"
 DimensionalData = "0.27, 0.28, 0.29, 0.30"
