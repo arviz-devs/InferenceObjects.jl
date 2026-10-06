@@ -28,7 +28,11 @@ jobs:
       - uses: julia-actions/julia-downgrade-compat@v2.7.0
         with:
           mode: deps
+          projects: ".,test"
+          skip: Random,Statistics,Test
       - uses: julia-actions/julia-buildpkg@v1
+        with:
+          project: "test"
       - uses: julia-actions/julia-runtest@v1
         with:
           allow_reresolve: false
