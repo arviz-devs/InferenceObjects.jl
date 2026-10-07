@@ -3,6 +3,9 @@ uuid = "b5cf5a8d-e756-4ee3-b014-01d49d192c00"
 authors = ["Seth Axen <seth.axen@gmail.com> and contributors"]
 version = "0.4.17"
 
+[workspace]
+projects = ["docs", "test"]
+
 [deps]
 ANSIColoredPrinters = "a4c015fc-c6ff-483c-b24f-f7ea428134e9"
 Dates = "ade2ca70-3891-5945-98fb-dc099432e06a"
@@ -23,34 +26,12 @@ InferenceObjectsPosteriorStatsExt = ["PosteriorStats", "StatsBase"]
 
 [compat]
 ANSIColoredPrinters = "0.0.1"
-ArviZExampleData = "0.3"
 Dates = "1"
 DimensionalData = "0.27, 0.28, 0.29, 0.30"
-EvoTrees = "0.16"
 MCMCDiagnosticTools = "0.3.4"
-MLJBase = "1"
 NCDatasets = "0.12.6, 0.13, 0.14"
-OffsetArrays = "1"
-OrderedCollections = "1.6"
 PosteriorStats = "0.3, 0.4"
 Random = "1"
 StatsBase = "0.33.7, 0.34"
 Tables = "1.11.0"
 julia = "1.10"
-
-[extras]
-ArviZExampleData = "2f96bb34-afd9-46ae-bcd0-9b2d4372fe3c"
-EvoTrees = "f6006082-12f8-11e9-0c9c-0d5d367ab1e5"
-MCMCDiagnosticTools = "be115224-59cd-429b-ad48-344e309966f0"
-MLJBase = "a7f614a8-145f-11e9-1d2a-a57a1082229d"
-NCDatasets = "85f8d34a-cbdd-5861-8df4-14fed0d494ab"
-OffsetArrays = "6fe1bfb0-de20-5000-8ca7-80f57d26f881"
-OrderedCollections = "bac558e1-5e72-5ebc-8fee-abe8a469f55d"
-PosteriorStats = "7f36be82-ad55-44ba-a5c0-b8b5480d7aa5"
-Random = "9a3f8284-a2c9-5f02-9a11-845980a1fd5c"
-Statistics = "10745b16-79ce-11e8-11f9-7d13ad32a3b2"
-StatsBase = "2913bbd2-ae8a-5f71-8c99-4fb6c76f3a91"
-Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
-
-[targets]
-test = ["ArviZExampleData", "EvoTrees", "MCMCDiagnosticTools", "MLJBase", "NCDatasets", "OffsetArrays", "OrderedCollections", "PosteriorStats", "Random", "Statistics", "StatsBase", "Test"]
