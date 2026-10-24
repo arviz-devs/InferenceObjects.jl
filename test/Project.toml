@@ -21,7 +21,7 @@ InferenceObjects = {path = ".."}
 [compat]
 ArviZExampleData = "0.3"
 DimensionalData = "0.27, 0.28, 0.29, 0.30"
-EvoTrees = "0.16"
+EvoTrees = "0.16, 0.19"
 InferenceObjects = "0.4.17"
 MCMCDiagnosticTools = "0.3.4"
 MLJBase = "1"
